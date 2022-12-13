@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/signup.dart';
-import 'package:http/http.dart';
+import 'package:stockv/pages/signup.dart';
+
+import '../Utilities/HttpRequestFunctions.dart';
 
 void main() {
   runApp(LoginScreen());
@@ -78,6 +79,32 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         const SizedBox(
                           height: 20,
                         ),
+                        if (warningMessage != null)
+                          Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.red,
+                                border: Border.all(color: Colors.black)),
+                            child: ListTile(
+                              title: Text(
+                                warningMessage,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              leading: const Icon(Icons.error),
+                              trailing: IconButton(
+                                  icon: const Icon(Icons.close),
+                                  onPressed: () {
+                                    setState(() {
+                                      warningMessage = null;
+                                    });
+                                  }),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
                         TextFormField(
                           validator: (val) =>
                               val!.isEmpty ? "E-mail is empty!" : null,
@@ -147,20 +174,27 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               ),
                             ),
                             onPressed: () async {
-                              /*if (_formKey.currentState!.validate()) {
-                                    showMyDialog(context);
-                                    dynamic result = await loginProvider.signIn(
-                                        _emailController.text.trim(),
-                                        _passwordController.text.trim());
-                                    if (result != null) {}
-                                    else {
-                                      setState(() {
-                                        Navigator.pop(dialogContext);
-                                        warningMessage =
-                                            loginProvider.getErrorMessage();
-                                      });
-                                    }
-                                  }*/
+                              showMyDialog(context);
+                              var response = await login(_emailController.text, _passwordController.text);
+                              if (response) {
+                                setState(() {
+                                  Navigator.pop(dialogContext);
+                                  warningMessage =
+                                  "Success!";
+                                  /*Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginScreen()));*/
+                                });
+                              }
+                              else {
+                                setState(() {
+                                  Navigator.pop(dialogContext);
+                                  warningMessage =
+                                  "Invalid Credentials!";
+                                });
+                              }
                             },
                             child: const Text(
                               'LOG IN',
@@ -170,7 +204,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             )),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff2E159D),
+                            backgroundColor: const Color(0xff2E159D),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -204,7 +238,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff2E159D),
+                            backgroundColor: const Color(0xff2E159D),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -228,29 +262,6 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         const SizedBox(
                           height: 20,
                         ),
-                        if (warningMessage != null)
-                          Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.red,
-                                border: Border.all(color: Colors.black)),
-                            child: ListTile(
-                              title: Text(
-                                warningMessage,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              leading: const Icon(Icons.error),
-                              trailing: IconButton(
-                                  icon: const Icon(Icons.close),
-                                  onPressed: () {
-                                    setState(() {
-                                      warningMessage = null;
-                                    });
-                                  }),
-                            ),
-                          ),
                       ],
                     ),
                   ],

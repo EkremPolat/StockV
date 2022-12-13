@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../Utilities/HttpRequestFunctions.dart';
+import 'login.dart';
+
 void main() {
   runApp(SignUpScreen());
 }
@@ -174,8 +177,14 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                           controller: _confirmPasswordController,
                           obscureText: true,
                           keyboardType: TextInputType.name,
-                          validator: (val) =>
-                              val!.isEmpty ? "Password is empty!" : null,
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return "Password is empty!";
+                            }
+                            if (val != _passwordController.text) {
+                              return "Passwords do not match!";
+                            }
+                          },
                           decoration: InputDecoration(
                             labelText: "Confirm Password",
                             labelStyle: const TextStyle(color: Colors.black),
@@ -209,20 +218,27 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                               ),
                             ),
                             onPressed: () async {
-                              /*if (_formKey.currentState!.validate()) {
+                              if (_formKey.currentState!.validate()) {
                                     showMyDialog(context);
-                                    dynamic result = await loginProvider.signIn(
-                                        _emailController.text.trim(),
-                                        _passwordController.text.trim());
-                                    if (result != null) {}
+                                    var response = await register(_fullNameController.text, _emailController.text, _passwordController.text);
+                                    if (response) {
+                                      setState(() {
+                                        Navigator.pop(dialogContext);
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LoginScreen()));
+                                      });
+                                    }
                                     else {
                                       setState(() {
                                         Navigator.pop(dialogContext);
                                         warningMessage =
-                                            loginProvider.getErrorMessage();
+                                            "An error occured, please try again!";
                                       });
                                     }
-                                  }*/
+                              }
                             },
                             child: const Text(
                               'SIGN UP',
@@ -243,19 +259,19 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff2E159D),
+                            backgroundColor: const Color(0xff2E159D),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
                           ),
                           onPressed: () {
-                            /*setState(() {
+                            setState(() {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  SignUpScreen()));
-                                    });*/
+                                                  LoginScreen()));
+                                    });
                           },
                           child: const Text(
                             "LOG IN",
