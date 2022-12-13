@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stockv/signup.dart';
+import 'package:http/http.dart';
 
 void main() {
   runApp(LoginScreen());
@@ -208,13 +210,13 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                           ),
                           onPressed: () {
-                            /*setState(() {
+                            setState(() {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) =>
                                                   SignUpScreen()));
-                                    });*/
+                                    });
                           },
                           child: const Text(
                             "SIGN UP",

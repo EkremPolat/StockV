@@ -3,18 +3,20 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     username = None
-    userID = models.IntegerField(primary_key=True, unique=True)
-    email = models.EmailField(max_length=30, unique=True)
+    first_name = None
+    last_name = None
+    is_staff = None
+    is_active = None
+    email = models.EmailField(primary_key=True, max_length=30, unique=True)
     password = models.CharField(max_length=255, blank=False, default="")
-    first_name = models.CharField(max_length=30, blank=False)
-    last_name = models.CharField(max_length=30, blank=False)
+    full_name = models.CharField(max_length=50, blank=False)
     userType = models.CharField(max_length=30, blank=False, default="StockVUser")
     
-    USERNAME_FIELD = 'userID'
+    USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
     def __str__(self):
-        return str(self.userID)
+        return str(self.email)
 
 class Coin(models.Model):
     name = models.CharField(max_length=30, blank=False)
@@ -23,7 +25,7 @@ class Wallet(models.Model):
     currency = models.FloatField(max_length=30, blank=False)
 
 class StockVUser(User):
-    appointments = models.ManyToManyField(Coin,blank=True) # check these relationships!
-    prescriptions = models.ForeignKey(Wallet,blank=True, on_delete=models.CASCADE)
+    savedCoins = models.ManyToManyField(Coin,blank=True) # check these relationships!
+    wallet = models.ForeignKey(Wallet,blank=True, on_delete=models.CASCADE)
 
 
