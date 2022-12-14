@@ -14,7 +14,7 @@
 
 ### Description
 
-    Stock vision is a mobile application that works in iOS and Android. It provides a
+  Stock vision is a mobile application that works in iOS and Android. It provides a
 real-time stock/ETF simulation using past stock/ETF data and allows users to make
 investments using our application’s fake currency and get real-time results/tips about their
 investments. At first, the user will sign up, if not signed yet, and then log in to the system.
@@ -28,7 +28,7 @@ values increase/decrease, and receive real-time results when gaining or losing m
 these tips, users can practice their graph reading abilities and see the results in real time. If
 the users run out of the application’s fake currency, they can start over with the initial fake
 currency.
-    Furthermore, Stock Vision has graph reading algorithms using reliable stock graph
+  Furthermore, Stock Vision has graph reading algorithms using reliable stock graph
 patterns and providing a tipping mechanism for the graphs in real time. Analyzing stock
 values will be done with image processing, and a wide range of datasets of stock graph
 patterns will be used. Moreover, users' investments will be stored in our database, and the
