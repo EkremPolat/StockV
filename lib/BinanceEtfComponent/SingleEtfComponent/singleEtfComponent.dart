@@ -1,25 +1,32 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:web_socket_channel/io.dart';
 
 void main() {
   runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false, home: WebsocketDemo()));
+      debugShowCheckedModeBanner: false,
+      home: SingleEtfComponent(etfCode: "btc")));
 }
 
-class WebsocketDemo extends StatefulWidget {
-  const WebsocketDemo({Key? key}) : super(key: key);
+class SingleEtfComponent extends StatefulWidget {
+  final String etfCode;
+  const SingleEtfComponent({Key? key, required this.etfCode}) : super(key: key);
 
   @override
-  State<WebsocketDemo> createState() => _WebsocketDemoState();
+  State<SingleEtfComponent> createState() =>
+      _SingleEtfComponentState(IOWebSocketChannel.connect(
+          'wss://stream.binance.com:9443/ws/${etfCode.toLowerCase()}usdt@trade',
+          pingInterval: Duration(seconds: 5)));
 }
 
-class _WebsocketDemoState extends State<WebsocketDemo> {
-  final channel = IOWebSocketChannel.connect(
-      'wss://stream.binance.com:9443/ws/btcusdt@trade');
-  String btcUsdtPrice = "0";
+class _SingleEtfComponentState extends State<SingleEtfComponent> {
+  String etfPrice = "0";
+  IOWebSocketChannel channel;
+
+  _SingleEtfComponentState(this.channel);
+
   @override
   void initState() {
     super.initState();
@@ -30,7 +37,7 @@ class _WebsocketDemoState extends State<WebsocketDemo> {
     channel.stream.listen((message) {
       Map getData = jsonDecode(message);
       setState(() {
-        btcUsdtPrice = getData['p'];
+        etfPrice = getData['p'];
       });
     });
   }
@@ -42,15 +49,15 @@ class _WebsocketDemoState extends State<WebsocketDemo> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
-            "BTC/USDT Price",
-            style: TextStyle(
+          Text(
+            "${widget.etfCode.toUpperCase()}/USDT Price",
+            style: const TextStyle(
                 fontWeight: FontWeight.bold, fontSize: 30, color: Colors.blue),
           ),
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              btcUsdtPrice,
+              etfPrice,
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
