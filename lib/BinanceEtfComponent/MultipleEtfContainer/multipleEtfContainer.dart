@@ -25,7 +25,7 @@ class MultipleEtfContainer extends StatelessWidget {
             for (var etf in etfCodes)
               SizedBox(
                 width: 400.0,
-                height: 100.0,
+                height: 40.0,
                 child: SingleEtfComponent(etfCode: etf),
               ),
           ],
@@ -43,8 +43,8 @@ fetchExchangeInfos() async {
   for (var symbol in etfList) {
     final tradeSymbol = (symbol as Map)['symbol'];
     if (tradeSymbol.endsWith('USDT')) {
-      final name = (symbol as Map)['baseAsset'];
-      final permissions = (symbol as Map)['permissions'];
+      final name = (symbol)['baseAsset'];
+      final permissions = (symbol)['permissions'];
       print(name + ' ' + permissions.contains("TRD_GRP_005").toString());
       if (permissions.contains("TRD_GRP_005")) {
         if (etfCodes.length < 20) {

@@ -50,19 +50,9 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            "${widget.etfCode.toUpperCase()}/USDT Price",
+            "${widget.etfCode.toUpperCase()}/USD Trade Price: \$${double.parse(etfPrice).toString()}",
             style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 30, color: Colors.blue),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Text(
-              double.parse(etfPrice).toString(),
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 30,
-                  color: Colors.blue),
-            ),
+                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
           ),
         ],
       ),
