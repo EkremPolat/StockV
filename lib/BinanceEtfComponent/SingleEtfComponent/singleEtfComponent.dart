@@ -57,7 +57,7 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
           Padding(
             padding: const EdgeInsets.all(2.0),
             child: Text(
-              etfPrice,
+              double.parse(etfPrice).toString(),
               style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 30,
