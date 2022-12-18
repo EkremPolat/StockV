@@ -70,20 +70,3 @@ class _BottomNavBarState extends State<BottomNavBar> {
         ),
       );
 }
-
-/*
-class BottomNavBarState extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        bottomNavigationBar: BottomAppBar(
-            child: IconButton(
-          icon: Icon(Icons.currency_bitcoin),
-          onPressed: null,
-        )),
-      ),
-    );
-  }
-}
-*/

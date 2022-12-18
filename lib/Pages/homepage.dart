@@ -1,12 +1,13 @@
 import 'package:stockv/Pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/bottomnavbar.dart';
+import 'package:stockv/Widgets/topbar.dart';
 
 void main() {
-  runApp(BottomNavBarApp());
+  runApp(HomePage());
 }
 
-class BottomNavBarApp extends StatelessWidget {
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

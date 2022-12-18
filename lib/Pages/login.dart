@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockv/Pages/homepage.dart';
 import 'package:stockv/pages/signup.dart';
 
 import '../Utilities/HttpRequestFunctions.dart';
@@ -102,9 +103,9 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   }),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         TextFormField(
                           validator: (val) =>
                               val!.isEmpty ? "E-mail is empty!" : null,
@@ -175,24 +176,29 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                             onPressed: () async {
                               showMyDialog(context);
-                              var response = await login(_emailController.text, _passwordController.text);
+                              var response = await login(_emailController.text,
+                                  _passwordController.text);
                               if (response) {
                                 setState(() {
-                                  Navigator.pop(dialogContext);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage()),
+                                  );
+                                  /*Navigator.pop(dialogContext);
                                   warningMessage =
                                   "Success!";
+                                  */
                                   /*Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               LoginScreen()));*/
                                 });
-                              }
-                              else {
+                              } else {
                                 setState(() {
                                   Navigator.pop(dialogContext);
-                                  warningMessage =
-                                  "Invalid Credentials!";
+                                  warningMessage = "Invalid Credentials!";
                                 });
                               }
                             },
@@ -245,12 +251,11 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                           ),
                           onPressed: () {
                             setState(() {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignUpScreen()));
-                                    });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpScreen()));
+                            });
                           },
                           child: const Text(
                             "SIGN UP",

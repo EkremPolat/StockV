@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Dart",
+            "type": "dart",
+            "request": "launch",
+            "program": "/Users/atakan/Desktop/StockV/lib/main.dart"
+        },
+        {
             "name": "homepage",
             "type": "dart",
             "request": "launch",

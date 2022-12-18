@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockv/Pages/homepage.dart';
 
 import '../Utilities/HttpRequestFunctions.dart';
 import 'login.dart';
@@ -219,25 +220,26 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                             ),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
-                                    showMyDialog(context);
-                                    var response = await register(_fullNameController.text, _emailController.text, _passwordController.text);
-                                    if (response) {
-                                      setState(() {
-                                        Navigator.pop(dialogContext);
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginScreen()));
-                                      });
-                                    }
-                                    else {
-                                      setState(() {
-                                        Navigator.pop(dialogContext);
-                                        warningMessage =
-                                            "An error occured, please try again!";
-                                      });
-                                    }
+                                showMyDialog(context);
+                                var response = await register(
+                                    _fullNameController.text,
+                                    _emailController.text,
+                                    _passwordController.text);
+                                if (response) {
+                                  setState(() {
+                                    Navigator.pop(dialogContext);
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => HomePage()));
+                                  });
+                                } else {
+                                  setState(() {
+                                    Navigator.pop(dialogContext);
+                                    warningMessage =
+                                        "An error occured, please try again!";
+                                  });
+                                }
                               }
                             },
                             child: const Text(
@@ -266,12 +268,11 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                           ),
                           onPressed: () {
                             setState(() {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginScreen()));
-                                    });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            });
                           },
                           child: const Text(
                             "LOG IN",
