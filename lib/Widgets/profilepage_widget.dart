@@ -10,5 +10,9 @@ class ProfilePageState extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePageState> {
   @override
   Widget build(BuildContext context) => Scaffold(
+      appBar: AppBar(
+        actions: [],
+        backgroundColor: Color(0xFF3213A4),
+      ),
       body: Center(child: Text('Profile', style: TextStyle(fontSize: 60))));
 }
