@@ -1,5 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
+import 'package:stockv/Widgets/homepage_widget.dart';
+import 'package:stockv/Widgets/coinspage_widget.dart';
+import 'package:stockv/Widgets/preminumpage_widget.dart';
+import 'package:stockv/Widgets/profilepage_widget.dart';
+import 'package:stockv/Widgets/searchpage_widget.dart';
 
 class RootPageState extends StatefulWidget {
   @override
@@ -7,27 +12,14 @@ class RootPageState extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPageState> {
+  // Bottom pages
   int index = 0;
   final pages = [
-    Center(
-      child: Text(
-        'Home',
-        style: TextStyle(fontSize: 72),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Coins',
-        style: TextStyle(fontSize: 72),
-      ),
-    ),
-    Center(
-      child: Text(
-        'Preminum',
-        style: TextStyle(fontSize: 72),
-      ),
-    )
+    HomePageState(),
+    CoinsPageState(),
+    PreminumPageState(),
   ];
+
   @override
   Widget build(BuildContext context) => Scaffold(
         // Top Bar
@@ -39,17 +31,31 @@ class _RootPageState extends State<RootPageState> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPageState()),
+                  );
+                });
+              },
               icon: const Icon(Icons.search),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => ProfilePageState()),
+                  );
+                });
+              },
               icon: const Icon(Icons.person_pin),
             ),
           ],
         ),
-        body: pages[index],
 
+        body: pages[index],
         // Bottom Nav Bar
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
