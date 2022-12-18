@@ -1,11 +1,12 @@
+// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 
-class BottomNavBar extends StatefulWidget {
+class RootPageState extends StatefulWidget {
   @override
-  _BottomNavBarState createState() => _BottomNavBarState();
+  _RootPageState createState() => _RootPageState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
+class _RootPageState extends State<RootPageState> {
   int index = 0;
   final pages = [
     Center(
@@ -29,10 +30,30 @@ class _BottomNavBarState extends State<BottomNavBar> {
   ];
   @override
   Widget build(BuildContext context) => Scaffold(
+        // Top Bar
+        appBar: AppBar(
+          backgroundColor: Color(0xFF3213A4),
+          leading: Icon(
+            Icons.check,
+            color: Color(0xFFFF7500),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.search),
+            ),
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.person_pin),
+            ),
+          ],
+        ),
         body: pages[index],
+
+        // Bottom Nav Bar
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
-            indicatorColor: Colors.orange.shade800,
+            indicatorColor: Color(0xFFFF7500),
             labelTextStyle: MaterialStateProperty.all(
               TextStyle(
                   fontSize: 14,
@@ -42,7 +63,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
           child: NavigationBar(
             height: 60,
-            backgroundColor: Color.fromARGB(255, 33, 0, 104),
+            backgroundColor:
+                Color(0xFF3213A4), //Color.fromARGB(255, 33, 0, 104),
             selectedIndex: index,
             onDestinationSelected: (index) =>
                 setState(() => this.index = index),
