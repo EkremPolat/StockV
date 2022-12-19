@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from stockV.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('signup/', AddUser.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='signup'),
 ]

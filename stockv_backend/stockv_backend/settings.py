@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-mg0huw4&o(#lf^=a#q&xzyh!jhq96hxc02j)-8x8ieergs##nk
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['10.0.2.2', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'stockV',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -75,8 +76,12 @@ WSGI_APPLICATION = 'stockv_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'qA6tWPWb4BxvpKT',
+        'HOST': 'database-2.cstprkgezovf.us-east-1.rds.amazonaws.com',
+        'PORT': '5432'
     }
 }
 
@@ -98,6 +103,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+AUTH_USER_MODEL = 'stockV.User'
 
 
 # Internationalization
