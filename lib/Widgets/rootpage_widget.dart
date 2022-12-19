@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
-import 'package:stockv/Widgets/preminumpage_widget.dart';
+import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/searchpage_widget.dart';
 
@@ -17,7 +17,7 @@ class _RootPageState extends State<RootPageState> {
   final pages = [
     HomePageState(),
     CoinsPageState(),
-    PreminumPageState(),
+    PremiumPageState(),
   ];
 
   @override
@@ -92,7 +92,7 @@ class _RootPageState extends State<RootPageState> {
                     Icons.diamond_outlined,
                     color: Color.fromARGB(255, 255, 255, 255),
                   ),
-                  label: 'Preminum'),
+                  label: 'Premium'),
             ],
           ),
         ),
