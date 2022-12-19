@@ -91,8 +91,11 @@ class _ProfilePageState extends State<ProfilePageState> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomePage(
-                                    )),
+                                builder: (context) {
+                                    return HomePage(
+                                    );
+                                })
+
                           );
                         },
                       ),
