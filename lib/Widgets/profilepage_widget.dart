@@ -4,6 +4,8 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/rootpage_widget.dart';
 import 'package:stockv/Pages/homepage.dart';
+
+import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/pages/login.dart';
 
 class ProfilePageState extends StatefulWidget {
