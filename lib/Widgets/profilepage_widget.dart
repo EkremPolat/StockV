@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PremiumPageState(
+                                builder: (context) => HomePage(
                                     )),
                           );
                         },
