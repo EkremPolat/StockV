@@ -1,18 +1,16 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:web_socket_channel/io.dart';
 
-void main() {
-  runApp(const MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SingleEtfComponent(etfCode: "btc")));
-}
-
 class SingleEtfComponent extends StatefulWidget {
   final String etfCode;
-  const SingleEtfComponent({Key? key, required this.etfCode}) : super(key: key);
+  final String etfDailyChange;
+  final int index;
+
+  const SingleEtfComponent(
+      {Key? key, required this.etfCode, required this.etfDailyChange, required this.index})
+      : super(key: key);
 
   @override
   State<SingleEtfComponent> createState() =>
@@ -36,6 +34,7 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
   streamListener() {
     channel.stream.listen((message) {
       Map getData = jsonDecode(message);
+      if (!mounted) return;
       setState(() {
         etfPrice = getData['p'];
       });
@@ -44,18 +43,79 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
 
   @override
   Widget build(BuildContext context) {
+    String iconName = "${widget.etfCode}.png";
+    final double dailyChange = double.parse(widget.etfDailyChange);
+
     return Scaffold(
-        body: Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "${widget.etfCode.toUpperCase()}/USD Trade Price: \$${double.parse(etfPrice).toString()}",
-            style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 20, color: Colors.blue),
+      backgroundColor: widget.index % 2 == 0 ? Colors.black12 : Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              const SizedBox(width: 30),
+              Image(
+                image: AssetImage('images/coin_icons/$iconName'),
+                fit: BoxFit.cover,
+                width: 25,
+              ),
+              const SizedBox(width: 20), // give it width
+              SizedBox(
+                width: 70,
+                child: Text(
+                  widget.etfCode.toUpperCase(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Brandon Grotesque",
+                      fontSize: 20,
+                      color: Colors.black),
+                ),
+              ),
+              const SizedBox(width: 20), // give it width
+              SizedBox(
+                width: 100,
+                child: Text(
+                  double.parse(etfPrice).toString(),
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Brandon Grotesque",
+                      fontSize: 20,
+                      color: Colors.black),
+                ),
+              ),
+              const SizedBox(width: 20),
+              if(dailyChange > 0)
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    "  ${widget.etfDailyChange}",
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      fontFamily: "Brandon Grotesque",
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              if(dailyChange < 0)
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    widget.etfDailyChange,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontFamily: "Brandon Grotesque",
+                      fontSize: 20,
+                      color: Colors.red,
+                    ),
+                  ),
+                )
+            ],
           ),
-        ],
+        ),
       ),
-    ));
+    );
   }
 }

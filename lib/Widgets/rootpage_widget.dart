@@ -24,10 +24,16 @@ class _RootPageState extends State<RootPageState> {
   Widget build(BuildContext context) => Scaffold(
         // Top Bar
         appBar: AppBar(
-          backgroundColor: Color(0xFF3213A4),
-          leading: Icon(
-            Icons.check,
-            color: Color(0xFFFF7500),
+          backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+          leadingWidth: 200,
+          leading: Container(
+            height: 5.0,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('images/black.png'),
+              ),
+              shape: BoxShape.rectangle,
+            ),
           ),
           actions: [
             IconButton(
@@ -59,7 +65,7 @@ class _RootPageState extends State<RootPageState> {
         // Bottom Nav Bar
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
-            indicatorColor: Color(0xFFFF7500),
+            indicatorColor: Color.fromRGBO(46, 21, 157, 0.6),
             labelTextStyle: MaterialStateProperty.all(
               TextStyle(
                   fontSize: 14,
@@ -69,8 +75,8 @@ class _RootPageState extends State<RootPageState> {
           ),
           child: NavigationBar(
             height: 60,
-            backgroundColor:
-                Color(0xFF3213A4), //Color.fromARGB(255, 33, 0, 104),
+            backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+            //Color.fromARGB(255, 33, 0, 104),
             selectedIndex: index,
             onDestinationSelected: (index) =>
                 setState(() => this.index = index),

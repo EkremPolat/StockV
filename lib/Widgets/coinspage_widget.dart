@@ -9,5 +9,5 @@ class CoinsPageState extends StatefulWidget {
 class _CoinsPageState extends State<CoinsPageState> {
   @override
   Widget build(BuildContext context) => Scaffold(
-      body: Center(child: Text('Coinssss', style: TextStyle(fontSize: 60))));
+      body: Center(child: Text('To be implemented...', style: TextStyle(fontSize: 60))));
 }
