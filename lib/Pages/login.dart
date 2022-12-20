@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stockv/pages/signup.dart';
 
 import '../Utilities/HttpRequestFunctions.dart';
+import 'forgot-password.dart';
 
 void main() {
   runApp(LoginScreen());
@@ -26,6 +27,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
   dynamic warningMessage;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  var _emailValid = true;
+  var _passValid = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -42,6 +45,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
             image: AssetImage('images/background.png'), fit: BoxFit.cover),
       ),
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Container(
@@ -102,9 +106,9 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   }),
                             ),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
+                        const SizedBox(
+                          height: 20,
+                        ),
                         TextFormField(
                           validator: (val) =>
                               val!.isEmpty ? "E-mail is empty!" : null,
@@ -113,6 +117,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                           keyboardType: TextInputType.emailAddress,
                           decoration: InputDecoration(
                             labelText: "E-mail",
+                            errorText: !_emailValid ? "Email is empty!" : null,
                             labelStyle: const TextStyle(color: Colors.black),
                             prefixIcon: const Icon(
                               Icons.account_circle_outlined,
@@ -143,6 +148,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               val!.isEmpty ? "Password is empty!" : null,
                           decoration: InputDecoration(
                             labelText: "Password",
+                            errorText:
+                                !_passValid ? "Password is empty!" : null,
                             labelStyle: const TextStyle(color: Colors.black),
                             prefixIcon: const Icon(
                               Icons.vpn_key_outlined,
@@ -174,26 +181,35 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               ),
                             ),
                             onPressed: () async {
-                              showMyDialog(context);
-                              var response = await login(_emailController.text, _passwordController.text);
-                              if (response) {
+                              if (_emailController.text.isEmpty ||
+                                  _passwordController.text.isEmpty) {
                                 setState(() {
-                                  Navigator.pop(dialogContext);
-                                  warningMessage =
-                                  "Success!";
-                                  /*Navigator.push(
+                                  _emailValid = _emailController.text.isNotEmpty;
+                                  _passValid = _passwordController.text.isNotEmpty;
+                                });
+                              } else {
+                                showMyDialog(context);
+                                var response = await login(
+                                    _emailController.text,
+                                    _passwordController.text);
+                                if (response) {
+                                  setState(() {
+                                    Navigator.pop(dialogContext);
+                                    warningMessage = "Success!";
+                                  });
+                                }
+
+                                /*Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               LoginScreen()));*/
-                                });
-                              }
-                              else {
-                                setState(() {
-                                  Navigator.pop(dialogContext);
-                                  warningMessage =
-                                  "Invalid Credentials!";
-                                });
+                                else {
+                                  setState(() {
+                                    Navigator.pop(dialogContext);
+                                    warningMessage = "Invalid Credentials!";
+                                  });
+                                }
                               }
                             },
                             child: const Text(
@@ -210,13 +226,13 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                           ),
                           onPressed: () {
-                            /*setState(() {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ForgotPasswordScreen()));
-                                    });*/
+                            setState(() {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ForgotPasswordScreen()));
+                            });
                           },
                           child: const Text(
                             'Forgot Password?',
@@ -245,12 +261,11 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                           ),
                           onPressed: () {
                             setState(() {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SignUpScreen()));
-                                    });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => SignUpScreen()));
+                            });
                           },
                           child: const Text(
                             "SIGN UP",
