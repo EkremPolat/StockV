@@ -7,14 +7,21 @@ import 'package:stockv/Pages/homepage.dart';
 
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/pages/login.dart';
+import '../Utilities/HttpRequestFunctions.dart';
 
 class ProfilePageState extends StatefulWidget {
   int index = 2;
+
+  final _formKey = GlobalKey<FormState>();
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePageState> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _oldpasswordController = TextEditingController();
+  final TextEditingController _namecontroller = TextEditingController();
+  final TextEditingController _newpasswordController = TextEditingController();
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
@@ -88,12 +95,10 @@ class _ProfilePageState extends State<ProfilePageState> {
                           ),
                         ),
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => HomePage(
-                                    )),
-                          );
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return HomePage();
+                          }));
                         },
                       ),
                     ),
@@ -114,7 +119,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                 child: Column(
                   children: <Widget>[
                     Container(
-                      child: TextField(
+                      child: TextFormField(
+                        validator: (val) =>
+                            val!.isEmpty ? "E-mail is empty!" : null,
+                        controller: _emailController,
+                        autofocus: true,
+                        keyboardType: TextInputType.emailAddress,
                         //    ...,other fields
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -133,7 +143,11 @@ class _ProfilePageState extends State<ProfilePageState> {
                       endIndent: 10,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
+                          validator: (val) =>
+                            val!.isEmpty ? "Name is empty!" : null,
+                        controller: _namecontroller,
+                        autofocus: true,
                         //    ...,other fields
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -153,7 +167,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                       endIndent: 10,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
+                          validator: (val) =>
+                            val!.isEmpty ? "Old password is empty!" : null,
+                        controller: _oldpasswordController,
+                        autofocus: true,
+                        keyboardType: TextInputType.name,
                         //    ...,other fields
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -173,7 +192,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                       endIndent: 10,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
+                        validator: (val) =>
+                            val!.isEmpty ? "New password is empty!" : null,
+                        controller: _newpasswordController,
+                        autofocus: true,
+                        keyboardType: TextInputType.name,
                         //    ...,other fields
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -193,7 +217,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                       endIndent: 10,
                     ),
                     Container(
-                      child: TextField(
+                      child: TextFormField(
+                        validator: (val) =>
+                            val!.isEmpty ? "New password is empty!" : null,
+                        controller: _newpasswordController,
+                        autofocus: true,
+                        keyboardType: TextInputType.name,
                         //    ...,other fields
                         decoration: InputDecoration(
                           prefixIcon: Icon(
@@ -228,36 +257,58 @@ class _ProfilePageState extends State<ProfilePageState> {
                             color: Colors.white,
                           ),
                         ),
-                        onPressed: () {},
+                        onPressed: () async {
+                          var response = await password_change(_namecontroller.text, _emailController.text,
+                                  _oldpasswordController.text, _newpasswordController.text);
+                                   if (response) {
+                                setState(() {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage()),
+                                  );
+                                  /*Navigator.pop(dialogContext);
+                                  warningMessage =
+                                  "Success!";
+                                  */
+                                  /*Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              LoginScreen()));*/
+                                });
+                              }
+
+                        },
                       ),
                     ),
                   ],
                 ),
               ),
-               Container(
-                      height: 50,
-                      width: 150,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromARGB(255, 211, 9, 9),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Text(
-                          "Log Out",
-                          style: TextStyle(
-                            color: Colors.white,
-                          ),
-                        ),
-                        onPressed: () {
-                             Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => LoginScreen()),
-                            );
-                        },
-                      ),
+              Container(
+                height: 50,
+                width: 150,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color.fromARGB(255, 211, 9, 9),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
                     ),
+                  ),
+                  child: Text(
+                    "Log Out",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
         ),

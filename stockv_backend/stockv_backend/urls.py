@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', AddUser.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='signup'),
+    path('password-change/', Password_change_view.as_view(), name='signup')
 ]
