@@ -44,3 +44,14 @@ class LoginView(APIView):
         }
 
         return response
+
+
+class Password_change_view(APIView):
+ 
+    def put(self, request):
+        print(request.data)
+        serializer = PasswordSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(request.data)
+       
