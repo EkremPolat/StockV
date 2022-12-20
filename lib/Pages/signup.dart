@@ -231,7 +231,7 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => HomePage()));
+                                            builder: (context) => LoginScreen()));
                                   });
                                 } else {
                                   setState(() {

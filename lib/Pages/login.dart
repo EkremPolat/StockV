@@ -139,6 +139,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         TextFormField(
                           controller: _passwordController,
                           obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
                           keyboardType: TextInputType.name,
                           validator: (val) =>
                               val!.isEmpty ? "Password is empty!" : null,
@@ -178,22 +180,14 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               showMyDialog(context);
                               var response = await login(_emailController.text,
                                   _passwordController.text);
-                              if (response) {
+                              if (response != null) {
                                 setState(() {
+                                  Navigator.pop(dialogContext);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomePage()),
+                                        builder: (context) => HomePage(user: response,)),
                                   );
-                                  /*Navigator.pop(dialogContext);
-                                  warningMessage =
-                                  "Success!";
-                                  */
-                                  /*Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              LoginScreen()));*/
                                 });
                               } else {
                                 setState(() {

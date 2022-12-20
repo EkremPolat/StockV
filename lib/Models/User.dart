@@ -1,8 +1,27 @@
 class User
 {
-    String email = "";
-    String hashedPassword = "";
-    String fullName = "";
+    String _email = "";
+    String _fullName = "";
+    double _currency = 1000.0;
 
-    User();
+    User (String email, String fullName){
+        _email = email;
+        _fullName = fullName;
+    }
+
+    String getEmail(){
+        return _email;
+    }
+
+    String getFullName(){
+        return _fullName;
+    }
+
+    void setFullName(String newName){
+        _fullName = newName;
+    }
+
+    double getCurrency(){
+        return _currency;
+    }
 }

@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../Models/User.dart';
+
 Future<bool> register(String fullName, String email, String password) async {
   var url = 'http://10.0.2.2:8000/signup/';
   var response = await http.post(
@@ -11,7 +13,6 @@ Future<bool> register(String fullName, String email, String password) async {
       "Content-Type": "application/json",
     },
   );
-  print(response.statusCode);
   if (response.statusCode == 200) {
     //Or put here your next screen using Navigator.push() method
     return Future.value(true);
@@ -20,7 +21,7 @@ Future<bool> register(String fullName, String email, String password) async {
   }
 }
 
-Future<bool> login(String email, String password) async {
+Future<User?> login(String email, String password) async {
   var url = 'http://10.0.2.2:8000/login/';
   var response = await http.post(
     Uri.parse(url),
@@ -29,33 +30,60 @@ Future<bool> login(String email, String password) async {
       "Content-Type": "application/json",
     },
   );
-  print(response.statusCode);
   if (response.statusCode == 200) {
+    final userData = jsonDecode(response.body);
+    String fullName = userData["full_name"];
+    String email = userData["email"];
+    User user = User(email, fullName);
     //Or put here your next screen using Navigator.push() method
-    return Future.value(true);
+    return Future.value(user);
   } else {
-    return Future.value(false);
+    return Future.value(null);
   }
 }
 
-Future<bool> password_change(String fullName, String email, String old_password,
-    String new_password) async {
-  var url = 'http://10.0.2.2:8000/password-change/';
-  print(new_password);
-  var response = await http.put(
-    Uri.parse(url),
-    body: json.encode(
-        {'full_name': fullName, 'email': email, 'password': new_password}),
+Future<String?> passwordChange(String? fullName, String? email,
+    String oldPassword, String? newPassword) async {
+  var passwordVerificationURL = 'http://10.0.2.2:8000/verify-password/';
+  var passwordVerificationResponse = await http.post(
+    Uri.parse(passwordVerificationURL),
+    body: json.encode({'email': email, 'password': oldPassword}),
     headers: {
-      "Accept": "application/json",
       "Content-Type": "application/json",
     },
   );
-  print(response.statusCode);
-  if (response.statusCode == 200) {
-    //Or put here your next screen using Navigator.push() method
-    return Future.value(true);
+  if (passwordVerificationResponse.statusCode == 200) {
+    var url = 'http://10.0.2.2:8000/password-change/';
+    dynamic response;
+    if (newPassword != null && newPassword.isNotEmpty) {
+      response = await http.patch(
+        Uri.parse(url),
+        body: json.encode(
+            {'full_name': fullName, 'email': email, 'password': newPassword}),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+
+    } else {
+      response = await http.patch(
+        Uri.parse(url),
+        body: json.encode({'full_name': fullName, 'email': email}),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+    }
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print("data");
+      print(data);
+      return Future.value(data["full_name"]);
+    } else {
+      return Future.value(null);
+    }
   } else {
-    return Future.value(false);
+    return Future.value(null);
   }
 }

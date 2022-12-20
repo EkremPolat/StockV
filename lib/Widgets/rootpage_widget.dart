@@ -6,7 +6,12 @@ import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/searchpage_widget.dart';
 
+import '../Models/User.dart';
+
 class RootPageState extends StatefulWidget {
+  User user;
+
+  RootPageState({super.key, required this.user});
   @override
   _RootPageState createState() => _RootPageState();
 }
@@ -52,7 +57,7 @@ class _RootPageState extends State<RootPageState> {
                 setState(() {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ProfilePageState()),
+                    MaterialPageRoute(builder: (context) => ProfilePageState(user: widget.user)),
                   );
                 });
               },
