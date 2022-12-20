@@ -20,5 +20,7 @@ from stockV.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('signup/', AddUser.as_view(), name='signup'),
-    path('login/', LoginView.as_view(), name='signup'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('password-change/', Password_change_view.as_view(), name='password-change'),
+    path('verify-password/', PasswordVerificationView.as_view(), name='verify-password')
 ]

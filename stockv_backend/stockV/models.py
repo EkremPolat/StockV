@@ -22,10 +22,10 @@ class Coin(models.Model):
     name = models.CharField(max_length=30, blank=False)
 
 class Wallet(models.Model):
-    currency = models.FloatField(max_length=30, blank=False)
+    currency = models.FloatField(max_length=30, blank=False, default=1000)
 
 class StockVUser(User):
     savedCoins = models.ManyToManyField(Coin,blank=True) # check these relationships!
-    wallet = models.ForeignKey(Wallet,blank=True, on_delete=models.CASCADE)
+    wallet = models.ForeignKey(Wallet, blank=False, on_delete=models.CASCADE)
 
 
