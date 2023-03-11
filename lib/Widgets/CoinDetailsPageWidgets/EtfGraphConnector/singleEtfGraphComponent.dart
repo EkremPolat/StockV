@@ -51,7 +51,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
       final etfPrice = getData['p'];
       setState(() {
         _data.add(Data(now, double.parse(etfPrice)));
-        if (_data.length > 600) {
+        if (_data.length > 100) {
           _data.removeAt(0);
         }
       });
