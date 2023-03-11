@@ -9,6 +9,7 @@ import 'package:stockv/BinanceEtfComponent/MultipleEtfContainer/multipleEtfConta
 
 class SingleEtfComponent extends StatefulWidget {
   final Function(List<String>) updateStringList;
+  final Function(String) saveCoin;
   final String etfCode;
   final String etfPrice;
   final String etfDailyChange;
@@ -17,6 +18,7 @@ class SingleEtfComponent extends StatefulWidget {
   const SingleEtfComponent(
       {Key? key,
       required this.updateStringList,
+      required this.saveCoin,
       required this.etfCode,
       required this.etfPrice,
       required this.etfDailyChange,

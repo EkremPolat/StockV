@@ -6,11 +6,14 @@ import 'package:http/http.dart' as http;
 
 var etfCodes = <String>{};
 List<String> etfPrices = [];
-var etfDailyChanges = <String>{};
-var itemCount = 1;
+List<String> etfDailyChanges = [];
+var itemCount = 0;
 
 class MultipleEtfContainerState extends StatefulWidget {
-  const MultipleEtfContainerState({Key? key}) : super(key: key);
+  final Function(String) saveCoin;
+
+  const MultipleEtfContainerState({Key? key, required this.saveCoin})
+      : super(key: key);
 
   @override
   State<MultipleEtfContainerState> createState() =>
@@ -30,21 +33,37 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
     });
   }
 
+  void _saveCoin(String etfCode) {
+    widget.saveCoin(etfCode);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: itemCount < 20 ? itemCount - 1 : 20,
-      itemBuilder: (context, index) => SizedBox(
-        width: 400.0,
-        height: 50.0,
-        child: SingleEtfComponent(
-          updateStringList: _updateStringList,
-          etfCode: etfCodes.elementAt(index),
-          etfPrice: etfPrices[index],
-          etfDailyChange: etfDailyChanges.elementAt(index),
-          index: index,
-        ),
-      ),
+    final etfCodesList = etfCodes.toList();
+
+    return PageView.builder(
+      itemCount: (itemCount / 12).ceil(),
+      itemBuilder: (context, pageIndex) {
+        final startIndex = pageIndex * 12;
+        final endIndex = startIndex + 12;
+        final pageEtfList = etfCodesList.sublist(
+            startIndex, endIndex < itemCount ? endIndex : itemCount);
+        return ListView.builder(
+          itemCount: pageEtfList.length,
+          itemBuilder: (context, index) => SizedBox(
+            width: 400.0,
+            height: 50.0,
+            child: SingleEtfComponent(
+              updateStringList: _updateStringList,
+              saveCoin: _saveCoin,
+              etfCode: pageEtfList.elementAt(index),
+              etfPrice: etfPrices[startIndex + index],
+              etfDailyChange: etfDailyChanges[startIndex + index],
+              index: startIndex + index,
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -57,7 +76,6 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
     final etfRequests = <Future>[];
     final etfResponses = <String, dynamic>{};
     final newEtfCodes = <String>[];
-    final newEtfDailyChanges = <String>[];
 
     for (var symbol in etfList) {
       final tradeSymbol = (symbol as Map)['symbol'];
@@ -71,7 +89,7 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
           final dailyChangeData = jsonDecode(etfResponses[tradeSymbol].body);
           final dailyChange = dailyChangeData["priceChangePercent"];
           newEtfCodes.add(name);
-          newEtfDailyChanges.add(dailyChange);
+          etfDailyChanges.add(dailyChange);
           etfRequests.add(fetchEtfPrices(name));
         }
         if (newEtfCodes.length == 50) {
@@ -79,10 +97,11 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
         }
       }
 
-      setState(() {
-        etfCodes.addAll(newEtfCodes);
-        etfDailyChanges.addAll(newEtfDailyChanges);
-      });
+      if (mounted) {
+        setState(() {
+          etfCodes.addAll(newEtfCodes);
+        });
+      }
 
       await Future.wait(etfRequests);
     }
@@ -93,9 +112,11 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
         'https://api.binance.com/api/v3/ticker/price?symbol=${tradeSymbol}USDT'));
     final priceData = jsonDecode(priceResponse.body);
     etfPrices.add(priceData['price']);
-    setState(() {
-      itemCount = etfCodes.length;
-    });
+    if (mounted) {
+      setState(() {
+        itemCount = etfCodes.length;
+      });
+    }
   }
 
   Future<void> fetchCoins() async {

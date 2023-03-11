@@ -178,15 +178,20 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                             onPressed: () async {
                               showMyDialog(context);
-                              var response = await login(_emailController.text,
-                                  _passwordController.text);
+                              var response = await login(
+                                  'ekrempolat416@gmail.oom',
+                                  //_emailController.text,
+                                  '1234');
+                              //_passwordController.text);
                               if (response != null) {
                                 setState(() {
                                   Navigator.pop(dialogContext);
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomePage(user: response,)),
+                                        builder: (context) => HomePage(
+                                              user: response,
+                                            )),
                                   );
                                 });
                               } else {

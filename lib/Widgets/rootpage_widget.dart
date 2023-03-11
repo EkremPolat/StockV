@@ -8,104 +8,116 @@ import 'package:stockv/Widgets/searchpage_widget.dart';
 
 import '../Models/User.dart';
 
+List<String> _savedCoins = ['BTC', 'ETH'];
+
 class RootPageState extends StatefulWidget {
   User user;
 
   RootPageState({super.key, required this.user});
   @override
-  _RootPageState createState() => _RootPageState();
+  State<RootPageState> createState() => _RootPageState();
 }
 
 class _RootPageState extends State<RootPageState> {
+  void _saveCoin(String etfCode) {
+    setState(() {
+      _savedCoins.add(etfCode);
+    });
+  }
+
   // Bottom pages
   int index = 0;
-  final pages = [
-    HomePageState(),
-    CoinsPageState(),
-    PremiumPageState(),
-  ];
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        // Top Bar
-        appBar: AppBar(
-          backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
-          leadingWidth: 200,
-          leading: Container(
-            height: 5.0,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('images/black.png'),
-              ),
-              shape: BoxShape.rectangle,
+  Widget build(BuildContext context) {
+    final pages = [
+      HomePageState(saveCoin: _saveCoin),
+      CoinsPageState(savedEtfCodes: _savedCoins),
+      PremiumPageState(),
+    ];
+
+    return Scaffold(
+      // Top Bar
+      appBar: AppBar(
+        backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+        leadingWidth: 200,
+        leading: Container(
+          height: 5.0,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('images/black.png'),
             ),
+            shape: BoxShape.rectangle,
           ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchPageState()),
-                  );
-                });
-              },
-              icon: const Icon(Icons.search),
-            ),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ProfilePageState(user: widget.user)),
-                  );
-                });
-              },
-              icon: const Icon(Icons.person_pin),
-            ),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPageState()),
+                );
+              });
+            },
+            icon: const Icon(Icons.search),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          ProfilePageState(user: widget.user)),
+                );
+              });
+            },
+            icon: const Icon(Icons.person_pin),
+          ),
+        ],
+      ),
+
+      body: pages[index],
+      // Bottom Nav Bar
+      bottomNavigationBar: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          indicatorColor: Color.fromRGBO(46, 21, 157, 0.6),
+          labelTextStyle: MaterialStateProperty.all(
+            TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ),
+        child: NavigationBar(
+          height: 60,
+          backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+          //Color.fromARGB(255, 33, 0, 104),
+          selectedIndex: index,
+          onDestinationSelected: (index) => setState(() => this.index = index),
+          destinations: [
+            NavigationDestination(
+                icon: Icon(
+                  Icons.home,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                label: 'Home'),
+            NavigationDestination(
+                icon: Icon(
+                  Icons.currency_bitcoin,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                label: 'Coins'),
+            NavigationDestination(
+                icon: Icon(
+                  Icons.diamond_outlined,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                label: 'Premium'),
           ],
         ),
-
-        body: pages[index],
-        // Bottom Nav Bar
-        bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            indicatorColor: Color.fromRGBO(46, 21, 157, 0.6),
-            labelTextStyle: MaterialStateProperty.all(
-              TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: Color.fromARGB(255, 255, 255, 255)),
-            ),
-          ),
-          child: NavigationBar(
-            height: 60,
-            backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
-            //Color.fromARGB(255, 33, 0, 104),
-            selectedIndex: index,
-            onDestinationSelected: (index) =>
-                setState(() => this.index = index),
-            destinations: [
-              NavigationDestination(
-                  icon: Icon(
-                    Icons.home,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  label: 'Home'),
-              NavigationDestination(
-                  icon: Icon(
-                    Icons.currency_bitcoin,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  label: 'Coins'),
-              NavigationDestination(
-                  icon: Icon(
-                    Icons.diamond_outlined,
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  label: 'Premium'),
-            ],
-          ),
-        ),
-      );
+      ),
+    );
+  }
 }
