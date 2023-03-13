@@ -184,11 +184,22 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               ),
                             ),
                             onPressed: () async {
-                              if (_emailController.text.isEmpty ||
-                                  _passwordController.text.isEmpty) {
+                              showMyDialog(context);
+                              var response = await login(
+                                  'ekrempolat416@gmail.oom',
+                                  //_emailController.text,
+                                  '1234');
+                              //_passwordController.text);
+                              if (response != null) {
                                 setState(() {
-                                  _emailValid = _emailController.text.isNotEmpty;
-                                  _passValid = _passwordController.text.isNotEmpty;
+                                  Navigator.pop(dialogContext);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage(
+                                              user: response,
+                                            )),
+                                  );
                                 });
                               } else {
                                 showMyDialog(context);
