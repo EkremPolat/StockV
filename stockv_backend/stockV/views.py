@@ -7,7 +7,7 @@ import jwt
 
 class AddUser(APIView):
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = StockVUser(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -40,7 +40,44 @@ class LoginView(APIView):
         
         response.data = {
             'jwt': token,
-            'email' : user.email
+            'email' : user.email,
+            'full_name' : user.full_name
         }
 
         return response
+
+
+class Password_change_view(APIView):
+    def patch(self, request):
+        email = request.data['email']
+        user = User.objects.filter(email=email).first()
+
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+
+        user_serializer = UserSerializer(user, data=request.data)
+        user_serializer.is_valid(raise_exception=True)
+        user_serializer.save()
+        return Response(request.data)
+
+class PasswordVerificationView(APIView):
+    def post(self, request):
+        email = request.data['email']
+        password = request.data['password']
+
+        user = User.objects.filter(email=email).first()
+
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+            
+        if not user.check_password(password):
+            raise AuthenticationFailed("Password is incorrect!")
+
+        response = Response()
+        
+        response.data = {
+            'success': True
+        }
+
+        return response
+       

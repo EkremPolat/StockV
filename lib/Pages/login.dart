@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stockv/Pages/homepage.dart';
 import 'package:stockv/pages/signup.dart';
 
 import '../Utilities/HttpRequestFunctions.dart';
@@ -143,6 +144,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         TextFormField(
                           controller: _passwordController,
                           obscureText: true,
+                          enableSuggestions: false,
+                          autocorrect: false,
                           keyboardType: TextInputType.name,
                           validator: (val) =>
                               val!.isEmpty ? "Password is empty!" : null,
