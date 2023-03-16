@@ -4,7 +4,6 @@ import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
-import 'package:stockv/Widgets/searchpage_widget.dart';
 
 import '../Models/User.dart';
 
@@ -52,14 +51,22 @@ class _RootPageState extends State<RootPageState> {
         ),
         actions: [
           IconButton(
+            /////////////////////////////
             onPressed: () {
-              setState(() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPageState()),
-                );
-              });
+              showSearch(
+                context: context,
+                delegate: CustomSearch(
+                  onCoinSelected: (selectedCoin) {
+                    setState(() {
+                      index = 1;
+                      _savedCoins.add(selectedCoin);
+                    });
+                    Navigator.pop(context);
+                  },
+                ),
+              );
             },
+            /////////////////////////////
             icon: const Icon(Icons.search),
           ),
           IconButton(
@@ -119,5 +126,80 @@ class _RootPageState extends State<RootPageState> {
         ),
       ),
     );
+  }
+}
+
+class CustomSearch extends SearchDelegate {
+  List<String> allData = ['BTC', 'ETH', 'ADA', 'SAND', 'AVAX', 'MATIC'];
+
+  final Function(String) onCoinSelected;
+
+  CustomSearch({required this.onCoinSelected});
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    return [
+      IconButton(
+          icon: const Icon(Icons.clear),
+          onPressed: () {
+            query = '';
+          })
+    ];
+    throw UnimplementedError();
+  }
+
+  @override
+  Widget? buildLeading(BuildContext context) {
+    return IconButton(
+        icon: const Icon(Icons.arrow_back),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var item in allData) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+      }
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = matchQuery[index];
+          return GestureDetector(
+            onTap: () {
+              onCoinSelected(result);
+            },
+            child: ListTile(
+              title: Text(result),
+            ),
+          );
+        });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> matchQuery = [];
+    for (var item in allData) {
+      if (item.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(item);
+      }
+    }
+    return ListView.builder(
+        itemCount: matchQuery.length,
+        itemBuilder: (context, index) {
+          var result = matchQuery[index];
+          return GestureDetector(
+            onTap: () {
+              onCoinSelected(result);
+            },
+            child: ListTile(
+              title: Text(result),
+            ),
+          );
+        });
   }
 }
