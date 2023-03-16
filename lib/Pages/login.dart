@@ -206,7 +206,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                 var response = await login(
                                     _emailController.text,
                                     _passwordController.text);
-                                if (response) {
+                                // if (response){
+                                if (response != null) {
                                   setState(() {
                                     Navigator.pop(dialogContext);
                                     warningMessage = "Success!";
