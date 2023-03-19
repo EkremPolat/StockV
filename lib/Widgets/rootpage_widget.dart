@@ -4,6 +4,7 @@ import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
+import 'package:stockv/Widgets/walletpage_widget.dart';
 
 import '../Models/User.dart';
 
@@ -33,6 +34,7 @@ class _RootPageState extends State<RootPageState> {
       HomePageState(saveCoin: _saveCoin),
       CoinsPageState(savedEtfCodes: _savedCoins),
       PremiumPageState(),
+      WalletPageState(),
     ];
 
     return Scaffold(
@@ -122,6 +124,12 @@ class _RootPageState extends State<RootPageState> {
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
                 label: 'Premium'),
+            NavigationDestination(
+                icon: Icon(
+                  Icons.wallet,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                label: 'Wallet'),
           ],
         ),
       ),
