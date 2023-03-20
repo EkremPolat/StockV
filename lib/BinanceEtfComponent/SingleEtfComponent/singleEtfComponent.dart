@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,7 +61,7 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
     if (data is Map && data.containsKey('price')) {
       etfUpdatedPrice = double.tryParse(data['price'] ?? '') ?? 0.0;
     }
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         _etfPrice = etfUpdatedPrice.toStringAsFixed(2);
       });
@@ -75,7 +74,7 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
 
   @override
   Widget build(BuildContext context) {
-    var dailyChange;
+    double dailyChange;
 
     try {
       dailyChange = double.parse(widget.etfDailyChange);

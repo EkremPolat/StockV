@@ -3,8 +3,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
-import 'package:web_socket_channel/io.dart';
 import 'package:http/http.dart' as http;
 
 class Data {
@@ -65,7 +63,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 400,
       child: SfCartesianChart(
         primaryXAxis: DateTimeAxis(),
@@ -81,6 +79,3 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     );
   }
 }
-
-// Global variable to store WebSocket instance
-IOWebSocketChannel? _globalWebSocket;

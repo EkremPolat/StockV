@@ -6,10 +6,12 @@ import '../Utilities/HttpRequestFunctions.dart';
 import 'forgot-password.dart';
 
 void main() {
-  runApp(LoginScreen());
+  runApp(const LoginScreen());
 }
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -21,7 +23,7 @@ class LoginScreenHome extends StatefulWidget {
   const LoginScreenHome({super.key});
 
   @override
-  _LoginScreenHomeState createState() => _LoginScreenHomeState();
+  State<LoginScreenHome> createState() => _LoginScreenHomeState();
 }
 
 class _LoginScreenHomeState extends State<LoginScreenHome> {
@@ -178,7 +180,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff2E159D),
+                              backgroundColor: const Color(0xff2E159D),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -206,7 +208,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                 var response = await login(
                                     _emailController.text,
                                     _passwordController.text);
-                                if (response) {
+                                if (response != null) {
                                   setState(() {
                                     Navigator.pop(dialogContext);
                                     warningMessage = "Success!";

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/BinanceEtfComponent/SingleEtfComponent/singleEtfComponent.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/EtfGraphConnector/singleEtfGraphComponent.dart';
 
 var itemCount = 0;
