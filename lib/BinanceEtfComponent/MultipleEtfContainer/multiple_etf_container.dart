@@ -157,7 +157,6 @@ List<String> etfDailyChanges = [
   '0.0',
   '0.0'
 ];
-var itemCount = 0;
 
 class MultipleEtfContainerState extends StatefulWidget {
   final Function(String) saveCoin;
@@ -192,12 +191,12 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
     final etfCodesList = etfCodes.toList();
 
     return PageView.builder(
-      itemCount: (itemCount / 12).ceil(),
+      itemCount: (etfCodes.length / 12).ceil(),
       itemBuilder: (context, pageIndex) {
         final startIndex = pageIndex * 12;
         final endIndex = startIndex + 12;
-        final pageEtfList = etfCodesList.sublist(
-            startIndex, endIndex < itemCount ? endIndex : itemCount);
+        final pageEtfList = etfCodesList.sublist(startIndex,
+            endIndex < etfCodes.length ? endIndex : etfCodes.length);
         return ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           itemCount: pageEtfList.length,
@@ -218,40 +217,7 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
     );
   }
 
-  Future<void> fetchExchangeInfo() async {
-    final etfRequests = <Future>[];
-    final etfResponses = <String, dynamic>{};
-
-    var counter = 0;
-
-    for (var etfCode in etfCodes) {
-      etfResponses[etfCode] = await http.get(Uri.parse(
-          "https://api.binance.com/api/v1/ticker/24hr?symbol=${etfCode}USDT"));
-      final dailyChangeData = jsonDecode(etfResponses[etfCode].body);
-      final dailyChange = dailyChangeData["priceChangePercent"];
-      setState(() {
-        etfDailyChanges[counter] = dailyChange;
-      });
-      etfRequests.add(fetchEtfPrices(etfCode));
-      counter++;
-
-      await Future.wait(etfRequests);
-    }
-  }
-
-  Future<void> fetchEtfPrices(String tradeSymbol) async {
-    final priceResponse = await http.get(Uri.parse(
-        'https://api.binance.com/api/v3/ticker/price?symbol=${tradeSymbol}USDT'));
-    final priceData = jsonDecode(priceResponse.body);
-    etfPrices.add(priceData['price']);
-    if (mounted) {
-      setState(() {
-        itemCount = etfCodes.length;
-      });
-    }
-  }
-
   Future<void> fetchCoins() async {
-    await fetchExchangeInfo();
+    //TODO: Back-end connection will be implemented.
   }
 }
