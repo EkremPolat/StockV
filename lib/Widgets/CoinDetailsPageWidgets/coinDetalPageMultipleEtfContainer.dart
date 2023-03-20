@@ -26,6 +26,8 @@ class _CoinDetailPageMultipleEtfContainerState
     });
   }
 
+  // ignore: todo
+  //TODO: Graph counts and coins will be adjusted.
   @override
   Widget build(BuildContext context) {
     return PageView.builder(
@@ -36,7 +38,7 @@ class _CoinDetailPageMultipleEtfContainerState
         final pageEtfList = widget.savedEtfCodes
             .sublist(startIndex, endIndex < itemCount ? endIndex : itemCount);
         return ListView.builder(
-          itemCount: 1,
+          itemCount: 2,
           itemBuilder: (context, index) => SizedBox(
             width: 400.0,
             height: 400.0,

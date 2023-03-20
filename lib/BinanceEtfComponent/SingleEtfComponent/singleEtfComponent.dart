@@ -128,7 +128,7 @@ class _SingleEtfComponentState extends State<SingleEtfComponent> {
                     ),
                   ),
                   const SizedBox(width: 20),
-                  if (dailyChange > 0)
+                  if (dailyChange >= 0)
                     SizedBox(
                       width: 100,
                       child: Text(

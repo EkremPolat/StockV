@@ -4,9 +4,159 @@ import 'package:flutter/material.dart';
 import 'package:stockv/BinanceEtfComponent/SingleEtfComponent/singleEtfComponent.dart';
 import 'package:http/http.dart' as http;
 
-var etfCodes = <String>{};
-List<String> etfPrices = [];
-List<String> etfDailyChanges = [];
+var etfCodes = <String>{
+  'BTC',
+  'ETH',
+  'BNB',
+  'LTC',
+  'ADA',
+  'XRP',
+  'XLM',
+  'TRX',
+  'ETC',
+  'ICX',
+  'LINK',
+  'HOT',
+  'ZIL',
+  'ZRX',
+  'FET',
+  'BAT',
+  'CELR',
+  'OMG',
+  'ENJ',
+  'MITH',
+  'MATIC',
+  'ATOM',
+  'ALGO',
+  'DOGE',
+  'WIN',
+  'MTL',
+  'DENT',
+  'MFT',
+  'FUN',
+  'CVC',
+  'CHZ',
+  'BAND',
+  'BUSD',
+  'XTZ',
+  'REN',
+  'NKN',
+  'ARPA',
+  'RLC',
+  'BCH',
+  'FTT',
+  'OGN',
+  'BNT',
+  'STPT',
+  'DATA',
+  'SOL',
+  'CHR',
+  'MDT',
+  'STMX',
+  'KNC'
+};
+List<String> etfPrices = [
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0'
+];
+List<String> etfDailyChanges = [
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0',
+  '0.0'
+];
 var itemCount = 0;
 
 class MultipleEtfContainerState extends StatefulWidget {
@@ -49,6 +199,7 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
         final pageEtfList = etfCodesList.sublist(
             startIndex, endIndex < itemCount ? endIndex : itemCount);
         return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           itemCount: pageEtfList.length,
           itemBuilder: (context, index) => SizedBox(
             width: 400.0,
@@ -68,40 +219,21 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
   }
 
   Future<void> fetchExchangeInfo() async {
-    final response = await http
-        .get(Uri.parse('https://www.binance.com/api/v3/exchangeInfo'));
-    final data = jsonDecode(response.body);
-    final etfList = (data as Map)['symbols'];
-
     final etfRequests = <Future>[];
     final etfResponses = <String, dynamic>{};
-    final newEtfCodes = <String>[];
 
-    for (var symbol in etfList) {
-      final tradeSymbol = (symbol as Map)['symbol'];
-      if (tradeSymbol.endsWith('USDT') &&
-          !etfResponses.containsKey(tradeSymbol)) {
-        final name = (symbol)['baseAsset'];
-        final permissions = (symbol)['permissions'];
-        if (permissions.contains("TRD_GRP_005")) {
-          etfResponses[tradeSymbol] = await http.get(Uri.parse(
-              "https://api.binance.com/api/v1/ticker/24hr?symbol=$tradeSymbol"));
-          final dailyChangeData = jsonDecode(etfResponses[tradeSymbol].body);
-          final dailyChange = dailyChangeData["priceChangePercent"];
-          newEtfCodes.add(name);
-          etfDailyChanges.add(dailyChange);
-          etfRequests.add(fetchEtfPrices(name));
-        }
-        if (newEtfCodes.length == 50) {
-          break;
-        }
-      }
+    var counter = 0;
 
-      if (mounted) {
-        setState(() {
-          etfCodes.addAll(newEtfCodes);
-        });
-      }
+    for (var etfCode in etfCodes) {
+      etfResponses[etfCode] = await http.get(Uri.parse(
+          "https://api.binance.com/api/v1/ticker/24hr?symbol=${etfCode}USDT"));
+      final dailyChangeData = jsonDecode(etfResponses[etfCode].body);
+      final dailyChange = dailyChangeData["priceChangePercent"];
+      setState(() {
+        etfDailyChanges[counter] = dailyChange;
+      });
+      etfRequests.add(fetchEtfPrices(etfCode));
+      counter++;
 
       await Future.wait(etfRequests);
     }

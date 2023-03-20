@@ -1,11 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:web_socket_channel/io.dart';
-
-List<Data> _data = [];
+import 'package:http/http.dart' as http;
 
 class Data {
   final DateTime time;
@@ -26,56 +26,41 @@ class SingleEtfGraphComponent extends StatefulWidget {
 }
 
 class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
-  late IOWebSocketChannel _channel;
+  late Timer _timer;
+
+  final List<Data> _data = [];
 
   @override
   void initState() {
     super.initState();
-    _connectToWebSocket();
+    _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      fetchEtfPrice();
+    });
   }
 
   @override
   void dispose() {
-    _closeWebSocket();
     super.dispose();
+    // Cancel the timer when the widget is disposed
+    _timer.cancel();
   }
 
-  void _connectToWebSocket() {
-    _channel = _globalWebSocket ??
-        IOWebSocketChannel.connect(
-            'wss://stream.binance.com:9443/ws/${widget.etfCode.toLowerCase()}usdt@trade');
-    _channel.stream.listen((message) {
-      Map getData = jsonDecode(message);
-      if (!mounted) return;
-      final now = DateTime.now();
-      final etfPrice = getData['p'];
-      setState(() {
-        _data.add(Data(now, double.parse(etfPrice)));
-        if (_data.length > 100) {
-          _data.removeAt(0);
-        }
-      });
-    }, onError: (error) {
-      print('WebSocket error: $error');
-      _reconnectToWebSocket();
-    }, onDone: () {
-      print('WebSocket closed');
-      _reconnectToWebSocket();
+  Future<void> fetchEtfPrice() async {
+    final response = await http.get(Uri.parse(
+        'https://api.binance.com/api/v3/ticker/price?symbol=${widget.etfCode}USDT'));
+    final data = jsonDecode(response.body);
+    double etfUpdatedPrice = 0.0;
+    if (data is Map && data.containsKey('price')) {
+      etfUpdatedPrice = double.tryParse(data['price'] ?? '') ?? 0.0;
+    }
+    if (!mounted) return;
+    final now = DateTime.now();
+    setState(() {
+      _data.add(Data(now, etfUpdatedPrice));
+      if (_data.length > 100) {
+        _data.removeAt(0);
+      }
     });
-  }
-
-  void _closeWebSocket() {
-    if (_channel != null && _channel.sink != null) {
-      _channel.sink.close();
-    }
-  }
-
-  void _reconnectToWebSocket() async {
-    await Future.delayed(const Duration(seconds: 5));
-    if (mounted) {
-      _closeWebSocket();
-      _connectToWebSocket();
-    }
   }
 
   @override
