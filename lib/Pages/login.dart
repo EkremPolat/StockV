@@ -30,8 +30,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
   dynamic warningMessage;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  var _emailValid = true;
-  var _passValid = true;
+  final _emailValid = true;
+  final _passValid = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -188,6 +188,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             onPressed: () async {
                               showMyDialog(context);
                               var response = await login(
+                                  //TODO: This is for development purposes and will be deleted later on.
                                   'ekrempolat416@gmail.oom',
                                   //_emailController.text,
                                   '1234');
@@ -204,6 +205,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   );
                                 });
                               } else {
+                                // ignore: use_build_context_synchronously
                                 showMyDialog(context);
                                 var response = await login(
                                     _emailController.text,
