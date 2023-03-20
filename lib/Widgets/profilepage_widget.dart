@@ -1,22 +1,17 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
 
 import 'package:stockv/pages/login.dart';
-import '../Models/User.dart';
-import '../Utilities/HttpRequestFunctions.dart';
+import '../Models/_user.dart';
+import '../Utilities/http_request_functions.dart';
 
 class ProfilePageState extends StatefulWidget {
-  int index = 2;
-  User user;
+  final User user;
 
-  final _formKey = GlobalKey<FormState>();
-
-  ProfilePageState({super.key, required this.user});
+  const ProfilePageState({super.key, required this.user});
 
   @override
-  _ProfilePageState createState() => _ProfilePageState();
+  State<ProfilePageState> createState() => _ProfilePageState();
 }
 
 class _ProfilePageState extends State<ProfilePageState> {
@@ -36,7 +31,7 @@ class _ProfilePageState extends State<ProfilePageState> {
     );
   }
 
-  final successSnackBar = SnackBar(
+  final successSnackBar = const SnackBar(
     backgroundColor: Colors.green,
     dismissDirection: DismissDirection.vertical,
     content: Text('Successfully updated!'),
@@ -69,7 +64,7 @@ class _ProfilePageState extends State<ProfilePageState> {
             icon: const Icon(Icons.person_pin),
           ),
         ],
-        backgroundColor: Color(0xFF3213A4),
+        backgroundColor: const Color(0xFF3213A4),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -90,8 +85,8 @@ class _ProfilePageState extends State<ProfilePageState> {
                   children: <Widget>[
                     Container(
                       height: 30,
-                      margin: EdgeInsets.only(top: 30),
-                      child: Text(
+                      margin: const EdgeInsets.only(top: 30),
+                      child: const Text(
                         "Current Amount",
                         style: TextStyle(
                           fontSize: 17,
@@ -100,11 +95,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                         ),
                       ),
                     ),
-                    Container(
+                    SizedBox(
                       height: 40,
                       child: Text(
                         "\$${user?.getCurrency()}",
-                        style: TextStyle(fontSize: 20, color: Colors.green),
+                        style:
+                            const TextStyle(fontSize: 20, color: Colors.green),
                       ),
                     ),
                     SizedBox(
@@ -112,12 +108,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                       width: 150,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff2E159D),
+                          backgroundColor: const Color(0xff2E159D),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           "Get Premium",
                           style: TextStyle(
                             fontSize: 17,
@@ -155,7 +151,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                       enabled: false,
                       keyboardType: TextInputType.emailAddress,
                       //    ...,other fields
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(
                           Icons.email_sharp,
                           color: Color.fromARGB(255, 14, 14, 14),
@@ -164,7 +160,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         labelText: "Email",
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black38,
                       thickness: 3,
                       indent: 10,
@@ -175,7 +171,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                           val!.isEmpty ? "Name is empty!" : null,
                       controller: _namecontroller,
                       //    ...,other fields
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(
                           Icons.person,
                           color: Color.fromARGB(255, 14, 14, 14),
@@ -185,7 +181,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         labelText: "Full Name",
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black38,
                       thickness: 3,
                       indent: 10,
@@ -200,7 +196,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                       autocorrect: false,
                       keyboardType: TextInputType.name,
                       //    ...,other fields
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(
                           Icons.lock,
                           color: Color.fromARGB(255, 14, 14, 14),
@@ -210,7 +206,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         labelText: "Old Password",
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black38,
                       thickness: 3,
                       indent: 10,
@@ -225,7 +221,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                       autocorrect: false,
                       keyboardType: TextInputType.name,
                       //    ...,other fields
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(
                           Icons.lock,
                           color: Color.fromARGB(255, 14, 14, 14),
@@ -235,7 +231,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         labelText: "New Password",
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black38,
                       thickness: 3,
                       indent: 10,
@@ -250,7 +246,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                       autocorrect: false,
                       keyboardType: TextInputType.name,
                       //    ...,other fields
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         prefixIcon: Icon(
                           Icons.lock,
                           color: Color.fromARGB(255, 14, 14, 14),
@@ -260,7 +256,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         labelText: "New Password",
                       ),
                     ),
-                    Divider(
+                    const Divider(
                       color: Colors.black38,
                       thickness: 3,
                       indent: 10,
@@ -271,12 +267,12 @@ class _ProfilePageState extends State<ProfilePageState> {
                       width: 150,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xff2E159D),
+                          backgroundColor: const Color(0xff2E159D),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: Text(
+                        child: const Text(
                           "Save",
                           style: TextStyle(
                             color: Colors.white,
@@ -323,19 +319,20 @@ class _ProfilePageState extends State<ProfilePageState> {
                 width: 150,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 211, 9, 9),
+                    backgroundColor: const Color.fromARGB(255, 211, 9, 9),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                     ),
                   ),
-                  child: Text(
+                  child: const Text(
                     "Log Out",
                     style: TextStyle(color: Colors.white, fontSize: 17),
                   ),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => const LoginScreen()),
                     );
                   },
                 ),

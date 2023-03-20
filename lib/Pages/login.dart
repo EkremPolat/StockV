@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
 import 'package:stockv/pages/signup.dart';
 
-import '../Utilities/HttpRequestFunctions.dart';
-import 'forgot-password.dart';
+import '../Utilities/http_request_functions.dart';
+import 'forgot_password.dart';
 
 void main() {
   runApp(const LoginScreen());
@@ -249,7 +249,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ForgotPasswordScreen()));
+                                          const ForgotPasswordScreen()));
                             });
                           },
                           child: const Text(

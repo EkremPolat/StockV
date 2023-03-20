@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 
-import '../BinanceEtfComponent/MultipleEtfContainer/multipleEtfContainer.dart';
+import '../BinanceEtfComponent/MultipleEtfContainer/multiple_etf_container.dart';
 
 class HomePageState extends StatefulWidget {
   final Function(String) saveCoin;

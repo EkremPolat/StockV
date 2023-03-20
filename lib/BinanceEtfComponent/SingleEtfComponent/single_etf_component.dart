@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:stockv/BinanceEtfComponent/MultipleEtfContainer/multipleEtfContainer.dart';
+import 'package:stockv/BinanceEtfComponent/MultipleEtfContainer/multiple_etf_container.dart';
 
 class SingleEtfComponent extends StatefulWidget {
   final Function(List<String>) updateStringList;

@@ -6,14 +6,14 @@ import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/searchpage_widget.dart';
 
-import '../Models/User.dart';
+import '../Models/_user.dart';
 
 List<String> _savedCoins = ['BTC', 'ETH'];
 
 class RootPageState extends StatefulWidget {
-  User user;
+  final User user;
 
-  RootPageState({super.key, required this.user});
+  const RootPageState({super.key, required this.user});
   @override
   State<RootPageState> createState() => _RootPageState();
 }

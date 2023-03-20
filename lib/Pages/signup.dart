@@ -1,29 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/Pages/homepage.dart';
 
-import '../Utilities/HttpRequestFunctions.dart';
+import '../Utilities/http_request_functions.dart';
 import 'login.dart';
 
 void main() {
-  runApp(SignUpScreen());
+  runApp(const SignUpScreen());
 }
 
 class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: SignUpScreenHome());
+        debugShowCheckedModeBanner: false, home: SignUpScreenHomeState());
   }
 }
 
-class SignUpScreenHome extends StatefulWidget {
-  const SignUpScreenHome({super.key});
+class SignUpScreenHomeState extends StatefulWidget {
+  const SignUpScreenHomeState({super.key});
 
   @override
-  _SignUpScreenHomeState createState() => _SignUpScreenHomeState();
+  State<SignUpScreenHomeState> createState() => _SignUpScreenHomeState();
 }
 
-class _SignUpScreenHomeState extends State<SignUpScreenHome> {
+class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
   dynamic warningMessage;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
@@ -185,6 +186,7 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                             if (val != _passwordController.text) {
                               return "Passwords do not match!";
                             }
+                            return null;
                           },
                           decoration: InputDecoration(
                             labelText: "Confirm Password",
@@ -213,7 +215,7 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff2E159D),
+                              backgroundColor: const Color(0xff2E159D),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -231,7 +233,8 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => LoginScreen()));
+                                            builder: (context) =>
+                                                const LoginScreen()));
                                   });
                                 } else {
                                   setState(() {
@@ -271,7 +274,8 @@ class _SignUpScreenHomeState extends State<SignUpScreenHome> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => LoginScreen()));
+                                      builder: (context) =>
+                                          const LoginScreen()));
                             });
                           },
                           child: const Text(

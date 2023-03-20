@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/rootpage_widget.dart';
 
-import '../Models/User.dart';
+import '../Models/_user.dart';
 
 void main() {
   User user = User("test@gmail.com", "Test");
