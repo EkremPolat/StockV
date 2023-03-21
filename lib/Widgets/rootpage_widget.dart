@@ -19,11 +19,7 @@ class RootPageState extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPageState> {
-  void _saveCoin(String etfCode) {
-    setState(() {
-      _savedCoins.add(etfCode);
-    });
-  }
+
 
   // Bottom pages
   int index = 0;
@@ -31,7 +27,7 @@ class _RootPageState extends State<RootPageState> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomePageState(saveCoin: _saveCoin),
+      HomePageState(user: widget.user),
       CoinsPageState(savedEtfCodes: _savedCoins),
       PremiumPageState(),
       WalletPageState(),

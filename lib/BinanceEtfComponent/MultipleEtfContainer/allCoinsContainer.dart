@@ -1,26 +1,24 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../Models/Coin.dart';
+import '../../Models/User.dart';
 import '../../Utilities/HttpRequestFunctions.dart';
 import '../SingleEftListTile/singleEftListTile.dart';
 
 List<Coin> coinList = [];
 
-class MultipleEtfContainerState extends StatefulWidget {
-  final Function(String) saveCoin;
-
-  const MultipleEtfContainerState({Key? key, required this.saveCoin})
-      : super(key: key);
+class AllCoinsContainerState extends StatefulWidget {
+  User user;
+  AllCoinsContainerState({super.key, required this.user});
 
   @override
-  State<MultipleEtfContainerState> createState() =>
+  State<AllCoinsContainerState> createState() =>
       _MultipleEtfContainerState();
 }
 
-class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
+class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
   late Timer _timer;
   @override
   void initState() {
@@ -41,6 +39,7 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
     _timer.cancel();
   }
 
+
   @override
   Widget build(BuildContext context) {
 
@@ -54,7 +53,7 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
         return Card(
           elevation: 4.0,
           margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon)
+          child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon, user: widget.user, fromHomePage: true)
         );
       },
     );
@@ -69,13 +68,5 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
     }
   }
 
-  Future<bool> assetExists(String assetName) async {
-    try {
-      await rootBundle.load(assetName);
-      return true;
-    } catch (_) {
-      return false;
-    }
-  }
 
 }

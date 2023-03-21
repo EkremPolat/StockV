@@ -1,27 +1,25 @@
 class User
 {
-    String _email = "";
-    String _fullName = "";
-    double _currency = 1000.0;
+    String email = "";
+    String fullName = "";
+    double currency = 1000.0;
+    String id = "";
 
-    User (String email, String fullName){
-        _email = email;
-        _fullName = fullName;
-    }
+    User({required this.id, required this.email});
 
     String getEmail(){
-        return _email;
+        return email;
     }
 
     String getFullName(){
-        return _fullName;
+        return fullName;
     }
 
     void setFullName(String newName){
-        _fullName = newName;
+        fullName = newName;
     }
 
     double getCurrency(){
-        return _currency;
+        return currency;
     }
 }
