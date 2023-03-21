@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import '../Models/User.dart';
+import '../Models/Coin.dart';
 
 Future<bool> register(String fullName, String email, String password) async {
   var url = 'http://10.0.2.2:8000/signup/';
@@ -85,5 +86,22 @@ Future<String?> passwordChange(String? fullName, String? email,
     }
   } else {
     return Future.value(null);
+  }
+}
+
+Future<List<Coin>> fetchCoinsFromDB() async {
+  var url = 'http://10.0.2.2:8000/coins/';
+  var response = await http.get(
+    Uri.parse(url),
+  );
+  if (response.statusCode == 200) {
+    final coinList = (jsonDecode(response.body) as List)
+        .map((json) => Coin.fromJson(json))
+        .toList();
+
+    coinList.sort((a, b) => b.price.compareTo(a.price));
+    return coinList;
+  } else {
+    return Future.value([]);
   }
 }

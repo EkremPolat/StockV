@@ -1,13 +1,13 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:stockv/BinanceEtfComponent/SingleEtfComponent/singleEtfComponent.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 
-var etfCodes = <String>{};
-List<String> etfPrices = [];
-List<String> etfDailyChanges = [];
-var itemCount = 0;
+import '../../Models/Coin.dart';
+import '../../Utilities/HttpRequestFunctions.dart';
+import '../SingleEftListTile/singleEftListTile.dart';
+
+List<Coin> coinList = [];
 
 class MultipleEtfContainerState extends StatefulWidget {
   final Function(String) saveCoin;
@@ -21,105 +21,61 @@ class MultipleEtfContainerState extends StatefulWidget {
 }
 
 class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
+  late Timer _timer;
   @override
   void initState() {
     super.initState();
     fetchCoins();
-  }
 
-  void _updateStringList(List<String> newList) {
-    setState(() {
-      etfPrices = newList;
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted) {
+        fetchCoins();
+      }
     });
   }
 
-  void _saveCoin(String etfCode) {
-    widget.saveCoin(etfCode);
+  @override
+  void dispose() {
+    super.dispose();
+    // Cancel the timer when the widget is disposed
+    _timer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final etfCodesList = etfCodes.toList();
 
-    return PageView.builder(
-      itemCount: (itemCount / 12).ceil(),
-      itemBuilder: (context, pageIndex) {
-        final startIndex = pageIndex * 12;
-        final endIndex = startIndex + 12;
-        final pageEtfList = etfCodesList.sublist(
-            startIndex, endIndex < itemCount ? endIndex : itemCount);
-        return ListView.builder(
-          itemCount: pageEtfList.length,
-          itemBuilder: (context, index) => SizedBox(
-            width: 400.0,
-            height: 50.0,
-            child: SingleEtfComponent(
-              updateStringList: _updateStringList,
-              saveCoin: _saveCoin,
-              etfCode: pageEtfList.elementAt(index),
-              etfPrice: etfPrices[startIndex + index],
-              etfDailyChange: etfDailyChanges[startIndex + index],
-              index: startIndex + index,
-            ),
-          ),
+    return ListView.builder(
+      itemCount: coinList.length,
+      itemBuilder: (context, index) {
+        final coinValue = coinList[index];
+        final coinSymbol = coinValue.symbol;
+        final coinIcon = 'images/coin_icons/$coinSymbol.png';
+
+        return Card(
+          elevation: 4.0,
+          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+          child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon)
         );
       },
     );
   }
 
-  Future<void> fetchExchangeInfo() async {
-    final response = await http
-        .get(Uri.parse('https://www.binance.com/api/v3/exchangeInfo'));
-    final data = jsonDecode(response.body);
-    final etfList = (data as Map)['symbols'];
-
-    final etfRequests = <Future>[];
-    final etfResponses = <String, dynamic>{};
-    final newEtfCodes = <String>[];
-
-    for (var symbol in etfList) {
-      final tradeSymbol = (symbol as Map)['symbol'];
-      if (tradeSymbol.endsWith('USDT') &&
-          !etfResponses.containsKey(tradeSymbol)) {
-        final name = (symbol)['baseAsset'];
-        final permissions = (symbol)['permissions'];
-        if (permissions.contains("TRD_GRP_005")) {
-          etfResponses[tradeSymbol] = await http.get(Uri.parse(
-              "https://api.binance.com/api/v1/ticker/24hr?symbol=$tradeSymbol"));
-          final dailyChangeData = jsonDecode(etfResponses[tradeSymbol].body);
-          final dailyChange = dailyChangeData["priceChangePercent"];
-          newEtfCodes.add(name);
-          etfDailyChanges.add(dailyChange);
-          etfRequests.add(fetchEtfPrices(name));
-        }
-        if (newEtfCodes.length == 50) {
-          break;
-        }
-      }
-
-      if (mounted) {
-        setState(() {
-          etfCodes.addAll(newEtfCodes);
-        });
-      }
-
-      await Future.wait(etfRequests);
-    }
-  }
-
-  Future<void> fetchEtfPrices(String tradeSymbol) async {
-    final priceResponse = await http.get(Uri.parse(
-        'https://api.binance.com/api/v3/ticker/price?symbol=${tradeSymbol}USDT'));
-    final priceData = jsonDecode(priceResponse.body);
-    etfPrices.add(priceData['price']);
-    if (mounted) {
+  Future<void> fetchCoins() async {
+    List<Coin> coins = await fetchCoinsFromDB();
+    if(mounted) {
       setState(() {
-        itemCount = etfCodes.length;
+        coinList = coins;
       });
     }
   }
 
-  Future<void> fetchCoins() async {
-    await fetchExchangeInfo();
+  Future<bool> assetExists(String assetName) async {
+    try {
+      await rootBundle.load(assetName);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
+
 }
