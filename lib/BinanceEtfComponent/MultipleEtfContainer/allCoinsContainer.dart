@@ -5,9 +5,8 @@ import 'package:flutter/material.dart';
 import '../../Models/Coin.dart';
 import '../../Models/User.dart';
 import '../../Utilities/HttpRequestFunctions.dart';
+import '../../Utilities/SavedCoinList.dart';
 import '../SingleEftListTile/singleEftListTile.dart';
-
-List<Coin> coinList = [];
 
 class AllCoinsContainerState extends StatefulWidget {
   User user;
@@ -23,7 +22,6 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
   @override
   void initState() {
     super.initState();
-    fetchCoins();
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       if (mounted) {
@@ -67,6 +65,5 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
       });
     }
   }
-
 
 }
