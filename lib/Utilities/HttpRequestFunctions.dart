@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:http/http.dart' as http;
 
 import '../Models/User.dart';
@@ -33,9 +34,9 @@ Future<User?> login(String email, String password) async {
   );
   if (response.statusCode == 200) {
     final userData = jsonDecode(response.body);
-    String fullName = userData["full_name"];
+    String id = userData["id"];
     String email = userData["email"];
-    User user = User(email, fullName);
+    User user = User(id: id, email: email);
     //Or put here your next screen using Navigator.push() method
     return Future.value(user);
   } else {
@@ -101,6 +102,65 @@ Future<List<Coin>> fetchCoinsFromDB() async {
 
     coinList.sort((a, b) => b.price.compareTo(a.price));
     return coinList;
+  } else {
+    return Future.value([]);
+  }
+}
+
+Future<List<Coin>> fetchSavedCoinsFromDB(String userID) async {
+  var url = 'http://10.0.2.2:8000/saved-coins/$userID/';
+  var response = await http.get(
+    Uri.parse(url),
+  );
+  if (response.statusCode == 200) {
+    final coinList = (jsonDecode(response.body) as List)
+        .map((json) => Coin.fromJson(json))
+        .toList();
+
+    coinList.sort((a, b) => b.price.compareTo(a.price));
+    return coinList;
+  } else {
+    return Future.value([]);
+  }
+}
+
+Future<List<Coin>> addSavedCoinsToUser(String userId, int coinId) async {
+  var url = 'http://10.0.2.2:8000/add-saved-coin/';
+  var response = await http.post(
+    Uri.parse(url),
+    body: json.encode({'userId': userId, 'coinId': coinId}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+  if (response.statusCode == 200) {
+    final coinList = (jsonDecode(response.body) as List)
+        .map((json) => Coin.fromJson(json))
+        .toList();
+
+    coinList.sort((a, b) => b.price.compareTo(a.price));
+    return Future.value(coinList);
+  } else {
+    return Future.value([]);
+  }
+}
+
+Future<List<Coin>> removeSavedCoinsFromUser(String userId, int coinId) async {
+  var url = 'http://10.0.2.2:8000/remove-saved-coin/';
+  var response = await http.post(
+    Uri.parse(url),
+    body: json.encode({'userId': userId, 'coinId': coinId}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+  if (response.statusCode == 200) {
+    final coinList = (jsonDecode(response.body) as List)
+        .map((json) => Coin.fromJson(json))
+        .toList();
+
+    coinList.sort((a, b) => b.price.compareTo(a.price));
+    return Future.value(coinList);
   } else {
     return Future.value([]);
   }

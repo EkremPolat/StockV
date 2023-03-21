@@ -19,11 +19,7 @@ class RootPageState extends StatefulWidget {
 }
 
 class _RootPageState extends State<RootPageState> {
-  void _saveCoin(String etfCode) {
-    setState(() {
-      _savedCoins.add(etfCode);
-    });
-  }
+
 
   // Bottom pages
   int index = 0;
@@ -31,7 +27,7 @@ class _RootPageState extends State<RootPageState> {
   @override
   Widget build(BuildContext context) {
     final pages = [
-      HomePageState(saveCoin: _saveCoin),
+      HomePageState(user: widget.user),
       CoinsPageState(savedEtfCodes: _savedCoins),
       PremiumPageState(),
       WalletPageState(),
@@ -40,7 +36,7 @@ class _RootPageState extends State<RootPageState> {
     return Scaffold(
       // Top Bar
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+        backgroundColor: Colors.deepPurpleAccent,
         leadingWidth: 200,
         leading: Container(
           height: 5.0,
@@ -91,7 +87,7 @@ class _RootPageState extends State<RootPageState> {
       // Bottom Nav Bar
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Color.fromRGBO(46, 21, 157, 0.6),
+          indicatorColor: Colors.deepPurpleAccent,
           labelTextStyle: MaterialStateProperty.all(
             TextStyle(
                 fontSize: 14,
@@ -101,7 +97,7 @@ class _RootPageState extends State<RootPageState> {
         ),
         child: NavigationBar(
           height: 60,
-          backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+          backgroundColor: Colors.deepPurpleAccent,
           //Color.fromARGB(255, 33, 0, 104),
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),

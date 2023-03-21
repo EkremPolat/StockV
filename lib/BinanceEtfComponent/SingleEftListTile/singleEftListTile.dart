@@ -1,20 +1,24 @@
 
 import 'package:flutter/material.dart';
+import 'package:stockv/Utilities/HttpRequestFunctions.dart';
 
 import '../../Models/Coin.dart';
+import '../../Models/User.dart';
+import '../../Utilities/SavedCoinList.dart';
 
 class CoinListTile extends StatefulWidget {
-  final Coin coinValue;
-  final String coinIcon;
+  Coin coinValue;
+  String coinIcon;
+  User user;
+  bool fromHomePage;
 
-  const CoinListTile({super.key, required this.coinValue, required this.coinIcon});
+  CoinListTile({super.key, required this.coinValue, required this.coinIcon, required this.user, required this.fromHomePage});
 
   @override
   _CoinListTileState createState() => _CoinListTileState();
 }
 
 class _CoinListTileState extends State<CoinListTile> {
-  bool isStarred = false;
 
   @override
   Widget build(BuildContext context) {
@@ -79,17 +83,38 @@ class _CoinListTileState extends State<CoinListTile> {
         ],
       ),
 
-      trailing: IconButton(
-        icon: isStarred ? const Icon(Icons.star, color: Colors.yellow) : const Icon(Icons.star_border),
-        onPressed: () {
+      trailing: widget.fromHomePage ? savedCoinList.map((e) => e.id).contains(widget.coinValue.id) ? IconButton(
+        icon: const Icon(Icons.star, color: Colors.yellow),
+        onPressed: () async {
           setState(() {
-            isStarred = !isStarred;
+            savedCoinList.removeWhere((coin) => coin.id == widget.coinValue.id);
           });
+          await removeSavedCoins(widget.coinValue.id);
         },
-      ),
+      ) : IconButton(
+        icon: const Icon(Icons.star_border),
+        onPressed: () async {
+          setState(() {
+            savedCoinList.add(Coin(id: widget.coinValue.id, name: widget.coinValue.name, price: widget.coinValue.price, dailyChange: widget.coinValue.dailyChange, symbol: widget.coinValue.symbol));
+            savedCoinList.sort((a, b) => b.price.compareTo(a.price));
+          });
+          await addSavedCoins(widget.coinValue.id);
+        },
+      ) : const SizedBox(),
       onTap: () {
-        // TODO: Handle tapping on a coin value
+
       },
     );
+
   }
+
+  Future<void> addSavedCoins(int coinId) async {
+    await addSavedCoinsToUser(widget.user.id, coinId);
+  }
+
+  Future<void> removeSavedCoins(int coinId) async {
+    await removeSavedCoinsFromUser(widget.user.id, coinId);
+  }
+
 }
+

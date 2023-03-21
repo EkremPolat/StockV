@@ -28,8 +28,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
   dynamic warningMessage;
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  var _emailValid = true;
-  var _passValid = true;
+  final _emailValid = true;
+  final _passValid = true;
   final _formKey = GlobalKey<FormState>();
 
   @override
