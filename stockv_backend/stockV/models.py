@@ -20,6 +20,9 @@ class User(AbstractUser):
 
 class Coin(models.Model):
     name = models.CharField(max_length=30, blank=False)
+    price = models.FloatField(max_length=30, blank=False, default=0)
+    dailyChange = models.FloatField(max_length=8, blank=False, default=0)
+    symbol = models.CharField(max_length=10, blank=False)
 
 class Wallet(models.Model):
     currency = models.FloatField(max_length=30, blank=False, default=1000)

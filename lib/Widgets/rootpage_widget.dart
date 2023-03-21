@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
@@ -6,7 +5,7 @@ import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/searchpage_widget.dart';
 
-import '../Models/_user.dart';
+import '../Models/user.dart';
 
 List<String> _savedCoins = ['BTC', 'ETH'];
 
@@ -33,13 +32,13 @@ class _RootPageState extends State<RootPageState> {
     final pages = [
       HomePageState(saveCoin: _saveCoin),
       CoinsPageState(savedEtfCodes: _savedCoins),
-      PremiumPageState(),
+      const PremiumPageState(),
     ];
 
     return Scaffold(
       // Top Bar
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+        backgroundColor: const Color.fromRGBO(46, 21, 157, 0.6),
         leadingWidth: 200,
         leading: Container(
           height: 5.0,
@@ -56,7 +55,8 @@ class _RootPageState extends State<RootPageState> {
               setState(() {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SearchPageState()),
+                  MaterialPageRoute(
+                      builder: (context) => const SearchPageState()),
                 );
               });
             },
@@ -82,9 +82,9 @@ class _RootPageState extends State<RootPageState> {
       // Bottom Nav Bar
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-          indicatorColor: Color.fromRGBO(46, 21, 157, 0.6),
+          indicatorColor: const Color.fromRGBO(46, 21, 157, 0.6),
           labelTextStyle: MaterialStateProperty.all(
-            TextStyle(
+            const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Color.fromARGB(255, 255, 255, 255)),
@@ -92,11 +92,11 @@ class _RootPageState extends State<RootPageState> {
         ),
         child: NavigationBar(
           height: 60,
-          backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+          backgroundColor: const Color.fromRGBO(46, 21, 157, 0.6),
           //Color.fromARGB(255, 33, 0, 104),
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),
-          destinations: [
+          destinations: const [
             NavigationDestination(
                 icon: Icon(
                   Icons.home,

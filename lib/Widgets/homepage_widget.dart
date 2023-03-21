@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
 
-import '../BinanceEtfComponent/MultipleEtfContainer/multiple_etf_container.dart';
+import '../BinanceEtfComponent/MultipleEtfContainer/multipleEtfContainer.dart';
 
 class HomePageState extends StatefulWidget {
   final Function(String) saveCoin;
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePageState> {
           margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           child: Column(
             children: [
-              Text(
+              const Text(
                 'COINS',
                 style: TextStyle(
                   fontSize: 28.0,
@@ -35,12 +34,12 @@ class _HomePageState extends State<HomePageState> {
                   letterSpacing: 1,
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Row(
-                children: [
-                  const SizedBox(width: 22),
+                children: const [
+                  SizedBox(width: 22),
                   SizedBox(
                     width: 50,
                     child: Text(
@@ -95,7 +94,7 @@ class _HomePageState extends State<HomePageState> {
                   ),
                 ],
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               Expanded(child: MultipleEtfContainerState(saveCoin: _saveCoin)),

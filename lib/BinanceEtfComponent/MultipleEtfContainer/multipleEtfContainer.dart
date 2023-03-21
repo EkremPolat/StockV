@@ -1,162 +1,13 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:stockv/BinanceEtfComponent/SingleEtfComponent/singleEtfComponent.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter/services.dart';
 
-var etfCodes = <String>{
-  'BTC',
-  'ETH',
-  'BNB',
-  'LTC',
-  'ADA',
-  'XRP',
-  'XLM',
-  'TRX',
-  'ETC',
-  'ICX',
-  'LINK',
-  'HOT',
-  'ZIL',
-  'ZRX',
-  'FET',
-  'BAT',
-  'CELR',
-  'OMG',
-  'ENJ',
-  'MITH',
-  'MATIC',
-  'ATOM',
-  'ALGO',
-  'DOGE',
-  'WIN',
-  'MTL',
-  'DENT',
-  'MFT',
-  'FUN',
-  'CVC',
-  'CHZ',
-  'BAND',
-  'BUSD',
-  'XTZ',
-  'REN',
-  'NKN',
-  'ARPA',
-  'RLC',
-  'BCH',
-  'FTT',
-  'OGN',
-  'BNT',
-  'STPT',
-  'DATA',
-  'SOL',
-  'CHR',
-  'MDT',
-  'STMX',
-  'KNC'
-};
-List<String> etfPrices = [
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0'
-];
-List<String> etfDailyChanges = [
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0',
-  '0.0'
-];
+import '../../Models/Coin.dart';
+import '../../Utilities/http_request_functions.dart';
+import '../SingleEftListTile/singleEftListTile.dart';
+
+List<Coin> coinList = [];
 
 class MultipleEtfContainerState extends StatefulWidget {
   final Function(String) saveCoin;
@@ -170,54 +21,58 @@ class MultipleEtfContainerState extends StatefulWidget {
 }
 
 class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
+  late Timer _timer;
   @override
   void initState() {
     super.initState();
     fetchCoins();
-  }
 
-  void _updateStringList(List<String> newList) {
-    setState(() {
-      etfPrices = newList;
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted) {
+        fetchCoins();
+      }
     });
   }
 
-  void _saveCoin(String etfCode) {
-    widget.saveCoin(etfCode);
+  @override
+  void dispose() {
+    super.dispose();
+    // Cancel the timer when the widget is disposed
+    _timer.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    final etfCodesList = etfCodes.toList();
+    return ListView.builder(
+      itemCount: coinList.length,
+      itemBuilder: (context, index) {
+        final coinValue = coinList[index];
+        final coinSymbol = coinValue.symbol;
+        final coinIcon = 'images/coin_icons/$coinSymbol.png';
 
-    return PageView.builder(
-      itemCount: (etfCodes.length / 12).ceil(),
-      itemBuilder: (context, pageIndex) {
-        final startIndex = pageIndex * 12;
-        final endIndex = startIndex + 12;
-        final pageEtfList = etfCodesList.sublist(startIndex,
-            endIndex < etfCodes.length ? endIndex : etfCodes.length);
-        return ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: pageEtfList.length,
-          itemBuilder: (context, index) => SizedBox(
-            width: 400.0,
-            height: 50.0,
-            child: SingleEtfComponent(
-              updateStringList: _updateStringList,
-              saveCoin: _saveCoin,
-              etfCode: pageEtfList.elementAt(index),
-              etfPrice: etfPrices[startIndex + index],
-              etfDailyChange: etfDailyChanges[startIndex + index],
-              index: startIndex + index,
-            ),
-          ),
-        );
+        return Card(
+            elevation: 4.0,
+            margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+            child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon));
       },
     );
   }
 
   Future<void> fetchCoins() async {
-    //TODO: Back-end connection will be implemented.
+    List<Coin> coins = await fetchCoinsFromDB();
+    if (mounted) {
+      setState(() {
+        coinList = coins;
+      });
+    }
+  }
+
+  Future<bool> assetExists(String assetName) async {
+    try {
+      await rootBundle.load(assetName);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 }

@@ -49,3 +49,10 @@ class StockVUserSerializer(UserSerializer):
                 instance.set_password(password)
             instance.save()
             return instance
+        
+class CoinSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Coin
+        fields = ('id', 'name', 'price', 'dailyChange', 'symbol')
+        

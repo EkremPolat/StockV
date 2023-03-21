@@ -1,9 +1,12 @@
 from .serializers import *
 from rest_framework.views import APIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
+from django.http import JsonResponse
 import datetime
 import jwt
+
 
 class AddUser(APIView):
     def post(self, request):
@@ -80,4 +83,12 @@ class PasswordVerificationView(APIView):
         }
 
         return response
-       
+    
+class CoinListView(generics.ListCreateAPIView): # This function provides receiving the list of coins and create new coins
+    queryset = Coin.objects.all()
+    serializer_class = CoinSerializer
+
+class UpdateCoinView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Coin.objects.all()
+    serializer_class = CoinSerializer
+

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
 
 import 'package:stockv/pages/login.dart';
-import '../Models/_user.dart';
+import '../Models/user.dart';
 import '../Utilities/http_request_functions.dart';
 
 class ProfilePageState extends StatefulWidget {
