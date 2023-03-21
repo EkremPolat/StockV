@@ -99,8 +99,6 @@ class AddSavedCoinView(APIView):
             raise AuthenticationFailed("User is not found!")
         
         coin = Coin.objects.filter(id=coinId).first()
-        print(coin.name)
-
 
         if coin is None:
             raise AuthenticationFailed("Coin is not found!")

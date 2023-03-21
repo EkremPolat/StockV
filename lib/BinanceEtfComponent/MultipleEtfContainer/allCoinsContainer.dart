@@ -22,6 +22,7 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
   @override
   void initState() {
     super.initState();
+    fetchCoins();
 
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       if (mounted) {
