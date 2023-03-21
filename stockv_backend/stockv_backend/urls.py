@@ -22,5 +22,7 @@ urlpatterns = [
     path('signup/', AddUser.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('password-change/', Password_change_view.as_view(), name='password-change'),
-    path('verify-password/', PasswordVerificationView.as_view(), name='verify-password')
+    path('verify-password/', PasswordVerificationView.as_view(), name='verify-password'),
+    path('coins/', CoinListView.as_view(), name='coins'),
+    path('update-coin/<int:pk>/', UpdateCoinView.as_view(), name='update-coin'),
 ]
