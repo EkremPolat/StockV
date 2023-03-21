@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:stockv/BinanceEtfComponent/SingleEtfComponent/single_etf_component.dart';
+import 'package:stockv/BinanceEtfComponent/SingleEtfComponent/singleEtfComponent.dart';
 import 'package:http/http.dart' as http;
 
 var etfCodes = <String>{
