@@ -49,21 +49,6 @@ class _ProfilePageState extends State<ProfilePageState> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          ProfilePageState(user: widget.user)),
-                );
-              });
-            },
-            icon: const Icon(Icons.person_pin),
-          ),
-        ],
         backgroundColor: const Color.fromRGBO(46, 21, 157, 0.6),
       ),
       body: Center(
