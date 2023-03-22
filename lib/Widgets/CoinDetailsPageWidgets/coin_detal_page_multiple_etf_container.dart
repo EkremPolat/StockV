@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/BinanceEtfComponent/SingleEftListTile/singleEftListTile.dart';
-import 'package:stockv/Models/Coin.dart';
+import 'package:stockv/BinanceEtfComponent/SingleEftListTile/single_eft_list_tile.dart';
+import 'package:stockv/Models/coin.dart';
+import 'package:stockv/Models/user.dart';
 import 'package:stockv/Utilities/http_request_functions.dart';
-import 'package:stockv/Widgets/CoinDetailsPageWidgets/EtfGraphConnector/single_etf_graph_component.dart';
 
 List<Coin> coinList = [];
 bool showDetails = false;
 
 class CoinDetailPageMultipleEtfContainerState extends StatefulWidget {
   final List<String> savedEtfCodes;
+  final User user;
 
   const CoinDetailPageMultipleEtfContainerState(
-      {Key? key, required this.savedEtfCodes})
+      {Key? key, required this.savedEtfCodes, required this.user})
       : super(key: key);
 
   @override
@@ -41,7 +42,11 @@ class _CoinDetailPageMultipleEtfContainerState
         return Card(
             elevation: 4.0,
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-            child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon));
+            child: CoinListTile(
+                coinValue: coinValue,
+                coinIcon: coinIcon,
+                user: widget.user,
+                fromHomePage: true));
       },
     );
   }

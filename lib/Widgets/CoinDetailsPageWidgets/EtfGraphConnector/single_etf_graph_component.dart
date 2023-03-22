@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:stockv/Models/Coin.dart';
+import 'package:stockv/Models/coin.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 
@@ -69,7 +69,6 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     final response = await http.get(Uri.parse(
         'https://api.binance.com/api/v3/ticker/price?symbol=${widget.coin.symbol}USDT'));
     final data = jsonDecode(response.body);
-    print(data);
     double etfUpdatedPrice = 0.0;
     if (data is Map && data.containsKey('price')) {
       etfUpdatedPrice = double.tryParse(data['price'] ?? '') ?? 0.0;

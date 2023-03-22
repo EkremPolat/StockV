@@ -110,7 +110,7 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff2E159D),
+                              backgroundColor: const Color(0xff2E159D),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),

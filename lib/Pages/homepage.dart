@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/rootpage_widget.dart';
-
-import '../Models/user.dart';
+import '../Models/coin.dart';
+import '../../Models/user.dart';
+import '../../Utilities/http_request_functions.dart';
+import '../Utilities/saved_coin_list.dart';
+import '../Widgets/CoinDetailsPageWidgets/loading_page.dart';
 
 void main() {
-  User user = User("test@gmail.com", "Test");
+  User user = User(
+      id: 'cc3ec591-e9bc-4450-b969-018957a4ab12',
+      email: 'ekrempolat416@gmail.oom');
   runApp(HomePage(user: user));
 }
 
@@ -17,12 +22,32 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  bool isLoading = true;
+  @override
+  void initState() {
+    super.initState();
+    fetchCoins();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RootPageState(user: widget.user),
+      home:
+          isLoading ? const LoadingScreen() : RootPageState(user: widget.user),
       //TopNavBar(),
     );
+  }
+
+  Future<void> fetchCoins() async {
+    List<Coin> coins = await fetchCoinsFromDB();
+    List<Coin> savedCoins = await fetchSavedCoinsFromDB(widget.user.id);
+    if (mounted) {
+      setState(() {
+        coinList = coins;
+        savedCoinList = savedCoins;
+        isLoading = false;
+      });
+    }
   }
 }

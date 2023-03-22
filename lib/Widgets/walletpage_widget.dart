@@ -2,8 +2,10 @@
 import 'package:flutter/material.dart';
 
 class WalletPageState extends StatefulWidget {
+  const WalletPageState({super.key});
+
   @override
-  _WalletPageState createState() => _WalletPageState();
+  State<WalletPageState> createState() => _WalletPageState();
 }
 
 class _WalletPageState extends State<WalletPageState> {

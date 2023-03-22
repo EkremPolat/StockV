@@ -10,7 +10,7 @@ import jwt
 
 class AddUser(APIView):
     def post(self, request):
-        serializer = StockVUser(data=request.data)
+        serializer = StockVUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
@@ -29,22 +29,12 @@ class LoginView(APIView):
         if not user.check_password(password):
             raise AuthenticationFailed("Password is incorrect!")
 
-        payload = {
-            'email' : user.email,
-            'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
-            'iat' : datetime.datetime.utcnow(),
-        }
-
-        token = jwt.encode(payload, 'secret', algorithm='HS256')
-
         response = Response()
-
-        response.set_cookie(key='jwt', value=token, httponly=True, samesite="None", secure=True)
         
         response.data = {
-            'jwt': token,
             'email' : user.email,
-            'full_name' : user.full_name
+            'full_name' : user.full_name,
+            'id' : user.id
         }
 
         return response
@@ -88,7 +78,55 @@ class CoinListView(generics.ListCreateAPIView): # This function provides receivi
     queryset = Coin.objects.all()
     serializer_class = CoinSerializer
 
-class UpdateCoinView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Coin.objects.all()
-    serializer_class = CoinSerializer
+class GetSavedCoinListView(APIView):
+    def get(self, request, pk):
+        user = StockVUser.objects.filter(id=pk).first()
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+        
+        savedCoins = user.savedCoins.all()
+        coins = Coin.objects.filter(id__in=[coin.id for coin in savedCoins])
+        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price, 'id': coin.id, 'dailyChange' : coin.dailyChange} for coin in coins]
+        return JsonResponse(coin_list, safe=False)
 
+class AddSavedCoinView(APIView):
+    def post(self, request):
+        userId = request.data['userId']
+        coinId = request.data['coinId']
+        user = StockVUser.objects.filter(id=userId).first()
+
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+        
+        coin = Coin.objects.filter(id=coinId).first()
+
+        if coin is None:
+            raise AuthenticationFailed("Coin is not found!")
+        
+        user.savedCoins.add(coin)
+
+        coins = Coin.objects.filter(id__in=[coin.id for coin in user.savedCoins.all()])
+
+        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price, 'id': coin.id, 'dailyChange' : coin.dailyChange} for coin in coins]
+        return JsonResponse(coin_list, safe=False)
+
+class RemoveSavedCoinView(APIView):
+    def post(self, request):
+        userId = request.data['userId']
+        coinId = request.data['coinId']
+        user = StockVUser.objects.filter(id=userId).first()
+
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+        
+        coin = Coin.objects.filter(id=coinId).first()
+
+        if coin is None:
+            raise AuthenticationFailed("Coin is not found!")
+        
+        user.savedCoins.remove(coin)
+        
+        coins = Coin.objects.filter(id__in=[coin.id for coin in user.savedCoins.all()])
+
+        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price, 'id': coin.id, 'dailyChange' : coin.dailyChange} for coin in coins]
+        return JsonResponse(coin_list, safe=False)

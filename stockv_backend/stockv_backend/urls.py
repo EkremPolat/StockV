@@ -24,5 +24,7 @@ urlpatterns = [
     path('password-change/', Password_change_view.as_view(), name='password-change'),
     path('verify-password/', PasswordVerificationView.as_view(), name='verify-password'),
     path('coins/', CoinListView.as_view(), name='coins'),
-    path('update-coin/<int:pk>/', UpdateCoinView.as_view(), name='update-coin'),
+    path('saved-coins/<str:pk>/', GetSavedCoinListView.as_view(), name='saved-coins'),
+    path('add-saved-coin/', AddSavedCoinView.as_view(), name='add-saved-coin'),
+    path('remove-saved-coin/', RemoveSavedCoinView.as_view(), name='remove-saved-coin'),
 ]

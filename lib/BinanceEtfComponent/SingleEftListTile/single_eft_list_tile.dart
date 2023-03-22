@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/EtfGraphConnector/single_etf_graph_component.dart';
-
-import '../../Models/Coin.dart';
+import '../../Models/user.dart';
+import '../../Utilities/http_request_functions.dart';
+import '../../Models/coin.dart';
+import '../../Utilities/saved_coin_list.dart';
 
 class CoinListTile extends StatefulWidget {
   final Coin coinValue;
   final String coinIcon;
+  final User user;
+  final bool fromHomePage;
 
   const CoinListTile(
-      {super.key, required this.coinValue, required this.coinIcon});
+      {super.key,
+      required this.coinValue,
+      required this.coinIcon,
+      required this.user,
+      required this.fromHomePage});
 
   @override
   State<CoinListTile> createState() => _CoinListTileState();
 }
 
 class _CoinListTileState extends State<CoinListTile> {
-  bool isStarred = false;
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -81,16 +87,34 @@ class _CoinListTileState extends State<CoinListTile> {
             )
         ],
       ),
-      trailing: IconButton(
-        icon: isStarred
-            ? const Icon(Icons.star, color: Colors.yellow)
-            : const Icon(Icons.star_border),
-        onPressed: () {
-          setState(() {
-            isStarred = !isStarred;
-          });
-        },
-      ),
+      trailing: widget.fromHomePage
+          ? savedCoinList.map((e) => e.id).contains(widget.coinValue.id)
+              ? IconButton(
+                  icon: const Icon(Icons.star, color: Colors.yellow),
+                  onPressed: () async {
+                    setState(() {
+                      savedCoinList.removeWhere(
+                          (coin) => coin.id == widget.coinValue.id);
+                    });
+                    await removeSavedCoins(widget.coinValue.id);
+                  },
+                )
+              : IconButton(
+                  icon: const Icon(Icons.star_border),
+                  onPressed: () async {
+                    setState(() {
+                      savedCoinList.add(Coin(
+                          id: widget.coinValue.id,
+                          name: widget.coinValue.name,
+                          price: widget.coinValue.price,
+                          dailyChange: widget.coinValue.dailyChange,
+                          symbol: widget.coinValue.symbol));
+                      savedCoinList.sort((a, b) => b.price.compareTo(a.price));
+                    });
+                    await addSavedCoins(widget.coinValue.id);
+                  },
+                )
+          : const SizedBox(),
       onTap: () {
         setState(() {
           Navigator.push(
@@ -101,5 +125,13 @@ class _CoinListTileState extends State<CoinListTile> {
         });
       },
     );
+  }
+
+  Future<void> addSavedCoins(int coinId) async {
+    await addSavedCoinsToUser(widget.user.id, coinId);
+  }
+
+  Future<void> removeSavedCoins(int coinId) async {
+    await removeSavedCoinsFromUser(widget.user.id, coinId);
   }
 }

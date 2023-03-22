@@ -1,26 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
-import '../../Models/Coin.dart';
+import '../../Models/coin.dart';
+import '../../Models/user.dart';
 import '../../Utilities/http_request_functions.dart';
-import '../SingleEftListTile/singleEftListTile.dart';
+import '../../Utilities/saved_coin_list.dart';
+import '../SingleEftListTile/single_eft_list_tile.dart';
 
-List<Coin> coinList = [];
+class AllCoinsContainerState extends StatefulWidget {
+  final User user;
 
-class MultipleEtfContainerState extends StatefulWidget {
-  final Function(String) saveCoin;
-
-  const MultipleEtfContainerState({Key? key, required this.saveCoin})
-      : super(key: key);
+  const AllCoinsContainerState({super.key, required this.user});
 
   @override
-  State<MultipleEtfContainerState> createState() =>
-      _MultipleEtfContainerState();
+  State<AllCoinsContainerState> createState() => _MultipleEtfContainerState();
 }
 
-class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
+class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
   late Timer _timer;
   @override
   void initState() {
@@ -53,7 +50,11 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
         return Card(
             elevation: 4.0,
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-            child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon));
+            child: CoinListTile(
+                coinValue: coinValue,
+                coinIcon: coinIcon,
+                user: widget.user,
+                fromHomePage: true));
       },
     );
   }
@@ -64,15 +65,6 @@ class _MultipleEtfContainerState extends State<MultipleEtfContainerState> {
       setState(() {
         coinList = coins;
       });
-    }
-  }
-
-  Future<bool> assetExists(String assetName) async {
-    try {
-      await rootBundle.load(assetName);
-      return true;
-    } catch (_) {
-      return false;
     }
   }
 }

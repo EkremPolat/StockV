@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
-
-import '../BinanceEtfComponent/MultipleEtfContainer/multipleEtfContainer.dart';
+import 'package:stockv/BinanceEtfComponent/MultipleEtfContainer/saved_coins_container.dart';
+import 'package:stockv/Widgets/horizontal_drawer.dart';
+import '../BinanceEtfComponent/MultipleEtfContainer/all_coins_container.dart';
+import '../Models/user.dart';
 
 class HomePageState extends StatefulWidget {
-  final Function(String) saveCoin;
+  final User user;
 
-  const HomePageState({Key? key, required this.saveCoin}) : super(key: key);
+  const HomePageState({super.key, required this.user});
 
   @override
   State<HomePageState> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePageState> {
-  void _saveCoin(String etfCode) {
-    widget.saveCoin(etfCode);
+  int drawerIndex = 0;
+
+  void _handleCallback(int value) {
+    setState(() {
+      drawerIndex = value;
+    });
   }
 
   @override
@@ -24,80 +30,11 @@ class _HomePageState extends State<HomePageState> {
           margin: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
           child: Column(
             children: [
-              const Text(
-                'COINS',
-                style: TextStyle(
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: "Brandon Grotesque",
-                  color: Colors.black,
-                  letterSpacing: 1,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                children: const [
-                  SizedBox(width: 22),
-                  SizedBox(
-                    width: 50,
-                    child: Text(
-                      'Icon',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Brandon Grotesque",
-                        color: Colors.black,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 92,
-                    child: Text(
-                      'Symbol',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Brandon Grotesque",
-                        color: Colors.black,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 128,
-                    child: Text(
-                      'Price (\$)',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Brandon Grotesque",
-                        color: Colors.black,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 70,
-                    child: Text(
-                      '24H (%)',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: "Brandon Grotesque",
-                        color: Colors.black,
-                        letterSpacing: 1,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Expanded(child: MultipleEtfContainerState(saveCoin: _saveCoin)),
+              HorizontalDrawerMenuState(callback: _handleCallback),
+              if (drawerIndex == 0)
+                Expanded(child: AllCoinsContainerState(user: widget.user)),
+              if (drawerIndex == 1)
+                Expanded(child: SavedCoinsContainerState(user: widget.user)),
             ],
           ),
         ),
