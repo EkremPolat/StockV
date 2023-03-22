@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/EtfGraphConnector/single_etf_graph_component.dart';
 
 import '../../Models/Coin.dart';
 
@@ -7,10 +7,11 @@ class CoinListTile extends StatefulWidget {
   final Coin coinValue;
   final String coinIcon;
 
-  const CoinListTile({super.key, required this.coinValue, required this.coinIcon});
+  const CoinListTile(
+      {super.key, required this.coinValue, required this.coinIcon});
 
   @override
-  _CoinListTileState createState() => _CoinListTileState();
+  State<CoinListTile> createState() => _CoinListTileState();
 }
 
 class _CoinListTileState extends State<CoinListTile> {
@@ -19,7 +20,8 @@ class _CoinListTileState extends State<CoinListTile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       leading: Image(
         image: AssetImage(widget.coinIcon),
         fit: BoxFit.cover,
@@ -31,7 +33,8 @@ class _CoinListTileState extends State<CoinListTile> {
             width: 100,
             child: Text(
               widget.coinValue.name,
-              style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+              style:
+                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
             ),
           ),
           SizedBox(
@@ -78,9 +81,10 @@ class _CoinListTileState extends State<CoinListTile> {
             )
         ],
       ),
-
       trailing: IconButton(
-        icon: isStarred ? const Icon(Icons.star, color: Colors.yellow) : const Icon(Icons.star_border),
+        icon: isStarred
+            ? const Icon(Icons.star, color: Colors.yellow)
+            : const Icon(Icons.star_border),
         onPressed: () {
           setState(() {
             isStarred = !isStarred;
@@ -88,7 +92,13 @@ class _CoinListTileState extends State<CoinListTile> {
         },
       ),
       onTap: () {
-        // TODO: Handle tapping on a coin value
+        setState(() {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      SingleEtfGraphComponent(coin: widget.coinValue)));
+        });
       },
     );
   }

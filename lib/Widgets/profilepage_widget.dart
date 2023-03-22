@@ -64,7 +64,7 @@ class _ProfilePageState extends State<ProfilePageState> {
             icon: const Icon(Icons.person_pin),
           ),
         ],
-        backgroundColor: Color.fromRGBO(46, 21, 157, 0.6),
+        backgroundColor: const Color.fromRGBO(46, 21, 157, 0.6),
       ),
       body: Center(
         child: SingleChildScrollView(

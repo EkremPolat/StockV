@@ -32,7 +32,7 @@ class _RootPageState extends State<RootPageState> {
     final pages = [
       HomePageState(saveCoin: _saveCoin),
       CoinsPageState(savedEtfCodes: _savedCoins),
-      PremiumPageState(),
+      const PremiumPageState(),
       WalletPageState(),
     ];
 
@@ -152,7 +152,6 @@ class CustomSearch extends SearchDelegate {
             query = '';
           })
     ];
-    throw UnimplementedError();
   }
 
   @override
