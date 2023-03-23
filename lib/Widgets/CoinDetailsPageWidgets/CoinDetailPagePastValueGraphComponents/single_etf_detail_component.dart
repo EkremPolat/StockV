@@ -3,19 +3,17 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:stockv/Models/coin.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:stockv/Utilities/coin_buy_sell_request_funtions.dart';
+import 'package:stockv/Utilities/coin_graph_data.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/CoinDetailLiveChartComponent/coin_live_chart_component.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_past_value_graph_component.dart';
 import 'package:http/http.dart' as http;
 
 String coinVolume = '';
 String coinLowestPrice = '';
 String coinHighestPrice = '';
 
-class Data {
-  final DateTime time;
-  final double etfPrice;
-
-  Data(this.time, this.etfPrice);
-}
+List<String> buySellPrices = ['', ''];
 
 class SingleEtfGraphComponent extends StatefulWidget {
   final Coin coin;
@@ -31,17 +29,19 @@ class SingleEtfGraphComponent extends StatefulWidget {
 class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
   late Timer _timer;
 
-  final List<Data> _data = [];
+  final List<EtfPriceData> _etfPriceData = [];
 
   @override
   void initState() {
     super.initState();
     setState(() {
+      buySellPrices = ['', ''];
       coinVolume = '';
       coinLowestPrice = '';
       coinHighestPrice = '';
     });
     readCoinInfo();
+    fetchEtfBuySellPrices();
     _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
       fetchEtfPrice();
     });
@@ -65,6 +65,13 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     });
   }
 
+  Future<void> fetchEtfBuySellPrices() async {
+    List<String> data = await fetchBuySellPrices(widget.coin.symbol);
+    setState(() {
+      buySellPrices = data;
+    });
+  }
+
   Future<void> fetchEtfPrice() async {
     final response = await http.get(Uri.parse(
         'https://api.binance.com/api/v3/ticker/price?symbol=${widget.coin.symbol}USDT'));
@@ -76,9 +83,9 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     if (!mounted) return;
     final now = DateTime.now();
     setState(() {
-      _data.add(Data(now, etfUpdatedPrice));
-      if (_data.length > 100) {
-        _data.removeAt(0);
+      _etfPriceData.add(EtfPriceData(now, etfUpdatedPrice));
+      if (_etfPriceData.length > 100) {
+        _etfPriceData.removeAt(0);
       }
     });
   }
@@ -87,7 +94,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(46, 21, 157, 0.6),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: Center(
         child: Column(
@@ -147,17 +154,86 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
             ),
             SizedBox(
               height: 400,
-              child: SfCartesianChart(
-                primaryXAxis: DateTimeAxis(),
-                primaryYAxis: NumericAxis(),
-                series: <ChartSeries>[
-                  LineSeries<Data, DateTime>(
-                    dataSource: _data,
-                    xValueMapper: (Data data, _) => data.time,
-                    yValueMapper: (Data data, _) => data.etfPrice,
-                  ),
-                ],
-              ),
+              child:
+                  SingleEtfPastValueGraphComponent(etfCode: widget.coin.symbol),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.deepPurpleAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SingleEtfLiveChartComponent(
+                                    coin: widget.coin,
+                                  )));
+                    },
+                    child: const Text(
+                      'SEE LIVE CHART',
+                    ))
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  buySellPrices[0],
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.deepPurpleAccent),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  buySellPrices[1],
+                  style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                      color: Colors.deepPurpleAccent),
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      'BUY',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    )),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                    ),
+                    onPressed: () {},
+                    child: const Text(
+                      'SELL',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                    ))
+              ],
             )
           ],
         ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/Widgets/CoinDetailsPageWidgets/EtfGraphConnector/single_etf_graph_component.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_detail_component.dart';
 import '../../Models/user.dart';
 import '../../Utilities/http_request_functions.dart';
 import '../../Models/coin.dart';

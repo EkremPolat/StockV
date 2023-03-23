@@ -51,10 +51,11 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
             elevation: 4.0,
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
             child: CoinListTile(
-                coinValue: coinValue,
-                coinIcon: coinIcon,
-                user: widget.user,
-                fromHomePage: true));
+              coinValue: coinValue,
+              coinIcon: coinIcon,
+              user: widget.user,
+              fromHomePage: true,
+            ));
       },
     );
   }

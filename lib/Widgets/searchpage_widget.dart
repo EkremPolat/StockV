@@ -12,8 +12,7 @@ class _SearchPageState extends State<SearchPageState> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        actions: [],
-        backgroundColor: Color(0xFF3213A4),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: Center(child: Text('Search', style: TextStyle(fontSize: 60))));
 }

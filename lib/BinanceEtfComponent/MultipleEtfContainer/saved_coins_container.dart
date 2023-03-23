@@ -9,8 +9,9 @@ import '../../Utilities/saved_coin_list.dart';
 import '../SingleEftListTile/single_eft_list_tile.dart';
 
 class SavedCoinsContainerState extends StatefulWidget {
-  User user;
-  SavedCoinsContainerState({super.key, required this.user});
+  final User user;
+
+  const SavedCoinsContainerState({super.key, required this.user});
 
   @override
   State<SavedCoinsContainerState> createState() => _SavedCoinsContainerState();

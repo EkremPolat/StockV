@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:stockv/Models/coin.dart';
+import 'package:stockv/Utilities/Http_request_functions.dart';
 import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
@@ -6,8 +8,6 @@ import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/walletpage_widget.dart';
 
 import '../Models/user.dart';
-
-List<String> _savedCoins = ['BTC', 'ETH'];
 
 class RootPageState extends StatefulWidget {
   final User user;
@@ -22,10 +22,15 @@ class _RootPageState extends State<RootPageState> {
   int index = 0;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final pages = [
       HomePageState(user: widget.user),
-      CoinsPageState(savedEtfCodes: _savedCoins, user: widget.user),
+      CoinsPageState(user: widget.user),
       const PremiumPageState(),
       const WalletPageState(),
     ];
@@ -54,7 +59,8 @@ class _RootPageState extends State<RootPageState> {
                   onCoinSelected: (selectedCoin) {
                     setState(() {
                       index = 1;
-                      _savedCoins.add(selectedCoin);
+                      //TODO: Custom search will be connected to save coins.
+                      //_savedCoins.add(selectedCoin);
                     });
                     Navigator.pop(context);
                   },

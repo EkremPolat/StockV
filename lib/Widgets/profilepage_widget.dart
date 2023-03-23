@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePageState> {
   @override
   Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(46, 21, 157, 0.6),
+        backgroundColor: Colors.deepPurpleAccent,
       ),
       body: Center(
         child: SingleChildScrollView(
