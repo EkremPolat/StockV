@@ -317,7 +317,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginScreen()),
+                          builder: (context) =>  LoginScreen()),
                     );
                   },
                 ),

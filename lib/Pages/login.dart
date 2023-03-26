@@ -189,10 +189,10 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               showMyDialog(context);
                               var response = await login(
                                   //TODO: This is for development purposes and will be deleted later on.
-                                  'ekrempolat416@gmail.oom',
-                                  //_emailController.text,
-                                  '1234');
-                              //_passwordController.text);
+                                  //'ekrempolat416@gmail.oom',
+                                  _emailController.text,
+                                 // '1234');
+                              _passwordController.text);
                               if (response != null) {
                                 setState(() {
                                   Navigator.pop(dialogContext);
@@ -283,7 +283,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const SignUpScreen()));
+                                           SignUpScreen()));
                             });
                           },
                           child: const Text(

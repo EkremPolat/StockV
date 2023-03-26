@@ -23,7 +23,6 @@ class LoginView(APIView):
         password = request.data['password']
 
         user = User.objects.filter(email=email).first()
-
         if user is None:
             raise AuthenticationFailed("User is not found!")
             
@@ -31,25 +30,24 @@ class LoginView(APIView):
             raise AuthenticationFailed("Password is incorrect!")
 
         response = Response()
-        
         response.data = {
             'email' : user.email,
             'full_name' : user.full_name,
             'id' : user.id
         }
-
         return response
 
 
 class Password_change_view(APIView):
     def patch(self, request):
         email = request.data['email']
+        print(request.data["password"])
         user = User.objects.filter(email=email).first()
 
         if user is None:
             raise AuthenticationFailed("User is not found!")
 
-        user_serializer = UserSerializer(user, data=request.data)
+        user_serializer = UserUpdate(user, data=request.data)
         user_serializer.is_valid(raise_exception=True)
         user_serializer.save()
         return Response(request.data)
@@ -82,6 +80,7 @@ class CoinListView(generics.ListCreateAPIView): # This function provides receivi
 class GetSavedCoinListView(APIView):
     def get(self, request, pk):
         user = StockVUser.objects.filter(id=pk).first()
+        print(user)
         if user is None:
             raise AuthenticationFailed("User is not found!")
         
@@ -95,7 +94,6 @@ class AddSavedCoinView(APIView):
         userId = request.data['userId']
         coinId = request.data['coinId']
         user = StockVUser.objects.filter(id=userId).first()
-
         if user is None:
             raise AuthenticationFailed("User is not found!")
         
