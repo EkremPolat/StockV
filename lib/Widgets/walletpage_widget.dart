@@ -1,24 +1,47 @@
 // ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:stockv/Models/user.dart';
+import 'package:stockv/Models/wallet_coin.dart';
+import 'package:stockv/Utilities/user_wallet_information_requests.dart';
+
+List<WalletCoin> wallet = [];
 
 class WalletPageState extends StatefulWidget {
-  const WalletPageState({super.key});
+  final User user;
+
+  const WalletPageState({super.key, required this.user});
 
   @override
   State<WalletPageState> createState() => _WalletPageState();
 }
 
 class _WalletPageState extends State<WalletPageState> {
-  // sample data for coins and their values
-  final List<CoinData> coins = [
-    CoinData('Bitcoin', 'BTC', 1.5, 100000),
-    CoinData('Ethereum', 'ETH', 10.0, 50000),
-    CoinData('Binance Coin', 'BNB', 20.0, 75000),
-  ];
+  late Timer _timer;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted) {
+        fetchUserWallet();
+      }
+    });
+  }
+
+  Future<void> fetchUserWallet() async {
+    List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
+    if (mounted) {
+      setState(() {
+        wallet = userWallet;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    double totalValue = coins.fold(0, (sum, coin) => sum + coin.usdValue);
+    double totalValue = wallet.fold(0, (sum, coin) => sum + coin.usdValue);
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -70,7 +93,7 @@ class _WalletPageState extends State<WalletPageState> {
                 ),
               ),
               child: ListView.builder(
-                itemCount: coins.length,
+                itemCount: wallet.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -86,7 +109,7 @@ class _WalletPageState extends State<WalletPageState> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  coins[index].name,
+                                  wallet[index].coinName,
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -94,7 +117,7 @@ class _WalletPageState extends State<WalletPageState> {
                                   ),
                                 ),
                                 Text(
-                                  coins[index].symbol,
+                                  wallet[index].coinSymbol,
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
@@ -105,7 +128,7 @@ class _WalletPageState extends State<WalletPageState> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  coins[index].amount.toStringAsFixed(4),
+                                  wallet[index].amount.toStringAsFixed(4),
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -113,7 +136,7 @@ class _WalletPageState extends State<WalletPageState> {
                                   ),
                                 ),
                                 Text(
-                                  '\$${coins[index].usdValue.toStringAsFixed(2)}',
+                                  '\$${wallet[index].usdValue.toStringAsFixed(2)}',
                                   style: TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),

@@ -32,7 +32,7 @@ class _RootPageState extends State<RootPageState> {
       HomePageState(user: widget.user),
       CoinsPageState(user: widget.user),
       const PremiumPageState(),
-      const WalletPageState(),
+      WalletPageState(user: widget.user),
     ];
 
     return Scaffold(

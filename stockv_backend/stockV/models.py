@@ -26,8 +26,11 @@ class Coin(models.Model):
     dailyChange = models.FloatField(max_length=8, blank=False, default=0)
     symbol = models.CharField(max_length=10, blank=False)
 
+class Transaction(models.Model):
+    coin_name = models.CharField(max_length=30)
+    amount = models.IntegerField(default=0)
+
+
 class StockVUser(User):
-    savedCoins = models.ManyToManyField(Coin,blank=True) # check these relationships!
-    wallet = models.FloatField(max_length=8, blank=False, default=1000)
-
-
+    savedCoins = models.ManyToManyField(Coin, blank=True) # check these relationships!
+    wallet = models.ManyToManyField(Transaction, blank=True)

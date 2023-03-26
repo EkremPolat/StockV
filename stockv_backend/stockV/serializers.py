@@ -56,3 +56,7 @@ class CoinSerializer(serializers.ModelSerializer):
         model = Coin
         fields = ('id', 'name', 'price', 'dailyChange', 'symbol')
         
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields = ('id','coin_name', 'amount')
