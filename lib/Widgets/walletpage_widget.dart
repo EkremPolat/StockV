@@ -1,4 +1,3 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -19,9 +18,9 @@ class WalletPageState extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPageState> {
   late Timer _timer;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       if (mounted) {
@@ -41,17 +40,18 @@ class _WalletPageState extends State<WalletPageState> {
 
   @override
   Widget build(BuildContext context) {
-    double totalValue = wallet.fold(0, (sum, coin) => sum + coin.usdValue);
+    double totalValue =
+        wallet.fold(0, (sum, coin) => sum + (coin.usdValue * coin.amount));
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(46, 21, 157, 1),
+      backgroundColor: const Color.fromRGBO(46, 21, 157, 1),
       body: Column(
         children: [
           SizedBox(
             height: 140,
             child: Container(
-              color: Color.fromRGBO(46, 21, 157, 0.6),
+              color: const Color.fromRGBO(46, 21, 157, 0.6),
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.21),
               child: Center(
                 child: Column(
@@ -82,7 +82,7 @@ class _WalletPageState extends State<WalletPageState> {
           ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(30),
                 ),
@@ -110,7 +110,7 @@ class _WalletPageState extends State<WalletPageState> {
                               children: [
                                 Text(
                                   wallet[index].coinName,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Color.fromARGB(255, 255, 255, 255),
@@ -118,7 +118,7 @@ class _WalletPageState extends State<WalletPageState> {
                                 ),
                                 Text(
                                   wallet[index].coinSymbol,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
@@ -129,7 +129,7 @@ class _WalletPageState extends State<WalletPageState> {
                               children: [
                                 Text(
                                   wallet[index].amount.toStringAsFixed(4),
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Color.fromARGB(255, 255, 255, 255),
@@ -137,7 +137,7 @@ class _WalletPageState extends State<WalletPageState> {
                                 ),
                                 Text(
                                   '\$${wallet[index].usdValue.toStringAsFixed(2)}',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
@@ -146,7 +146,7 @@ class _WalletPageState extends State<WalletPageState> {
                           ],
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         height: 1,
                         color: Color.fromARGB(255, 255, 255, 255),
                       ),
@@ -160,15 +160,4 @@ class _WalletPageState extends State<WalletPageState> {
       ),
     );
   }
-}
-
-class CoinData {
-  final String name;
-  final String symbol;
-  final double amount;
-  final double price;
-
-  CoinData(this.name, this.symbol, this.amount, this.price);
-
-  double get usdValue => amount * price;
 }
