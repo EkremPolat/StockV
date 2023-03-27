@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/Utilities/coin_graph_data.dart';
+import 'package:stockv/Models/coin_graph_data.dart';
 import 'package:stockv/Utilities/past_coin_history_functions.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 

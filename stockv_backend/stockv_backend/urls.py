@@ -29,5 +29,6 @@ urlpatterns = [
     path('remove-saved-coin/', RemoveSavedCoinView.as_view(), name='remove-saved-coin'),
     path('get-wallet/<str:pk>/', GetWalletListView.as_view(), name='get-wallet'),
     path('buy-crypto/', BuyCryptoView.as_view(), name='buy-crypto'),
-    # path('sell-crypto', )
+    path('has-crypto/', HasCryptoView.as_view(), name='has-crypto'),
+    path('sell-crypto', SellCryptoView.as_view(), name='sell-crypto'),
 ]

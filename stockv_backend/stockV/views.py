@@ -162,3 +162,29 @@ class BuyCryptoView(APIView):
             user.wallet.add(transaction)
 
         return HttpResponse('Crypto purchased successfully')
+    
+class HasCryptoView(APIView):
+    def post(self, request):
+        user_id = request.data['userId']
+        coin_name = request.data['coinName']
+        user = StockVUser.objects.filter(id=user_id).first()
+        transaction = user.wallet.all().filter(coin_name=coin_name).first()
+
+        if transaction:
+            return JsonResponse({'hasCrypto': True, 'amount': transaction.amount})
+        else:
+            return JsonResponse({'hasCrypto': False, 'amount': transaction.amount})
+
+class SellCryptoView(APIView):
+    def post(self, request):
+        user_id = request.data['userId']
+        coin_name = request.data['coinName']
+        amount = request.data['amount']
+        user = StockVUser.objects.filter(id=user_id).first()
+
+        transaction = user.wallet.all().filter(coin_name=coin_name).first()
+        if (amount > transaction.amount):
+            return HttpResponse('The desired amount is higher than than the owned amount. Transaction failed.')
+        else:
+            transaction.amount -= amount
+            return HttpResponse('Transaction Successful.')

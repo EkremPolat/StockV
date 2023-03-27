@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:stockv/Models/coin.dart';
-import 'package:stockv/Utilities/coin_graph_data.dart';
+import 'package:stockv/Models/coin_graph_data.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 

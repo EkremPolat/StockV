@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:stockv/Models/coin.dart';
 import 'package:http/http.dart' as http;
+import 'package:stockv/Models/has_crypto_data.dart';
 import 'package:stockv/Models/wallet_coin.dart';
 
 Future<List<WalletCoin>> getUserWallet(String userID) async {
@@ -38,6 +39,24 @@ Future<List<WalletCoin>> buyCrypto(
     return Future.value(walletCoinList);
   } else {
     return Future.value([]);
+  }
+}
+
+Future<HasCryptoData> hasCrypto(String userId, String coinName) async {
+  const url = 'http://10.0.2.2:8000/has-crypto/';
+  var response = await http.post(Uri.parse(url),
+      body: json.encode({
+        'userId': userId,
+        'coinName': coinName,
+      }),
+      headers: {"Content-Type": "application/json"});
+  if (response.statusCode == 200) {
+    final transactionData = json.decode(response.body);
+    return HasCryptoData(
+        hasCrypto: transactionData['hasCrypto'],
+        amount: transactionData['amount']);
+  } else {
+    return Future.value(HasCryptoData(hasCrypto: false, amount: 0));
   }
 }
 

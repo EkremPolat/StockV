@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:stockv/Models/coin.dart';
+import 'package:stockv/Models/has_crypto_data.dart';
+import 'package:stockv/Models/user.dart';
 import 'package:stockv/Utilities/coin_buy_sell_request_funtions.dart';
-import 'package:stockv/Utilities/coin_graph_data.dart';
+import 'package:stockv/Models/coin_graph_data.dart';
+import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/CoinDetailLiveChartComponent/coin_live_chart_component.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_past_value_graph_component.dart';
 import 'package:http/http.dart' as http;
@@ -15,10 +17,15 @@ String coinHighestPrice = '';
 
 List<String> buySellPrices = ['', ''];
 
+bool sellButtonDisabled = true;
+int maxSellableAmount = 0;
+
 class SingleEtfGraphComponent extends StatefulWidget {
+  final User user;
   final Coin coin;
 
-  const SingleEtfGraphComponent({Key? key, required this.coin})
+  const SingleEtfGraphComponent(
+      {Key? key, required this.user, required this.coin})
       : super(key: key);
 
   @override
@@ -39,9 +46,12 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
       coinVolume = '';
       coinLowestPrice = '';
       coinHighestPrice = '';
+      sellButtonDisabled = true;
+      maxSellableAmount = 0;
     });
     readCoinInfo();
     fetchEtfBuySellPrices();
+    fetchDoesUserHasCrypto();
     _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
       fetchEtfPrice();
     });
@@ -69,6 +79,20 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     List<String> data = await fetchBuySellPrices(widget.coin.symbol);
     setState(() {
       buySellPrices = data;
+    });
+  }
+
+  Future<void> fetchDoesUserHasCrypto() async {
+    HasCryptoData response =
+        await hasCrypto(widget.user.id, widget.coin.symbol);
+    setState(() {
+      if (response.getHasCrypto() == true) {
+        sellButtonDisabled = false;
+        maxSellableAmount = response.getAmount();
+      } else {
+        sellButtonDisabled = true;
+        maxSellableAmount = 0;
+      }
     });
   }
 
@@ -214,7 +238,10 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      showBuyCryptoDialog(context);
+                      //TODO: Actual buying process will be implemented
+                    },
                     child: const Text(
                       'BUY',
                       style:
@@ -227,7 +254,12 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         borderRadius: BorderRadius.circular(15),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: sellButtonDisabled
+                        ? null
+                        : () {
+                            showSellCryptoDialog(context);
+                            //TODO: Actual selling process will be implemented
+                          },
                     child: const Text(
                       'SELL',
                       style:
@@ -239,5 +271,59 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
         ),
       ),
     );
+  }
+
+  late BuildContext buyDialogContext;
+  late BuildContext sellDialogContext;
+
+  showBuyCryptoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        buyDialogContext = context;
+        return SimpleDialog(
+          children: <Widget>[
+            const Text(
+              'How much would you like to buy?',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                  color: Colors.deepPurpleAccent),
+            ),
+            TextFormField(
+              autofocus: true,
+              keyboardType: TextInputType.number,
+              style: const TextStyle(fontSize: 18, color: Colors.black),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  showSellCryptoDialog(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          sellDialogContext = context;
+          return SimpleDialog(
+            children: <Widget>[
+              const Text(
+                'How much would you like to sell?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.deepPurpleAccent),
+              ),
+              TextFormField(
+                autofocus: true,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(fontSize: 18, color: Colors.black),
+              ),
+            ],
+          );
+        });
   }
 }

@@ -120,8 +120,8 @@ class _CoinListTileState extends State<CoinListTile> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      SingleEtfGraphComponent(coin: widget.coinValue)));
+                  builder: (context) => SingleEtfGraphComponent(
+                      user: widget.user, coin: widget.coinValue)));
         });
       },
     );
