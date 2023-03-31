@@ -60,10 +60,12 @@ Future<HasCryptoData> hasCrypto(String userId, String coinName) async {
   }
 }
 
-Future<List<Coin>> sellCrypto(String userId, int coinId, int amount) async {
+Future<List<Coin>> sellCrypto(
+    String userId, String coinName, int amount) async {
   var url = 'http://10.0.2.2:8000/sell-crypto/';
   var response = await http.post(Uri.parse(url),
-      body: json.encode({'userId': userId, 'coinId': coinId, 'amount': amount}),
+      body:
+          json.encode({'userId': userId, 'coinId': coinName, 'amount': amount}),
       headers: {"Content-Type": "application/json"});
   if (response.statusCode == 200) {
     final walletCoinList = (jsonDecode(response.body) as List)

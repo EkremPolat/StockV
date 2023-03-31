@@ -173,7 +173,7 @@ class HasCryptoView(APIView):
         if transaction:
             return JsonResponse({'hasCrypto': True, 'amount': transaction.amount})
         else:
-            return JsonResponse({'hasCrypto': False, 'amount': transaction.amount})
+            return JsonResponse({'hasCrypto': False, 'amount': 0})
 
 class SellCryptoView(APIView):
     def post(self, request):
