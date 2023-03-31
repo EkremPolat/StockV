@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../Models/Coin.dart';
-import '../../Models/User.dart';
-import '../../Utilities/HttpRequestFunctions.dart';
-import '../../Utilities/SavedCoinList.dart';
-import '../SingleEftListTile/singleEftListTile.dart';
+import '../../Models/coin.dart';
+import '../../Models/user.dart';
+import '../../Utilities/http_request_functions.dart';
+import '../../Utilities/saved_coin_list.dart';
+import '../SingleEftListTile/single_eft_list_tile.dart';
 
 class SavedCoinsContainerState extends StatefulWidget {
-  User user;
-  SavedCoinsContainerState({super.key, required this.user});
+  final User user;
+
+  const SavedCoinsContainerState({super.key, required this.user});
 
   @override
-  State<SavedCoinsContainerState> createState() =>
-      _SavedCoinsContainerState();
+  State<SavedCoinsContainerState> createState() => _SavedCoinsContainerState();
 }
 
 class _SavedCoinsContainerState extends State<SavedCoinsContainerState> {
@@ -40,7 +40,6 @@ class _SavedCoinsContainerState extends State<SavedCoinsContainerState> {
 
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       itemCount: savedCoinList.length,
       itemBuilder: (context, index) {
@@ -51,19 +50,21 @@ class _SavedCoinsContainerState extends State<SavedCoinsContainerState> {
         return Card(
             elevation: 4.0,
             margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-            child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon, user: widget.user, fromHomePage: false)
-        );
+            child: CoinListTile(
+                coinValue: coinValue,
+                coinIcon: coinIcon,
+                user: widget.user,
+                fromHomePage: false));
       },
     );
   }
 
   Future<void> fetchSavedCoins() async {
     List<Coin> savedCoins = await fetchSavedCoinsFromDB(widget.user.id);
-    if(mounted) {
+    if (mounted) {
       setState(() {
         savedCoinList = savedCoins;
       });
     }
   }
-
 }

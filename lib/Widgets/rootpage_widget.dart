@@ -1,36 +1,38 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
 import 'package:flutter/material.dart';
+import 'package:stockv/Models/coin.dart';
+import 'package:stockv/Utilities/Http_request_functions.dart';
 import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/walletpage_widget.dart';
 
-import '../Models/User.dart';
-
-List<String> _savedCoins = ['BTC', 'ETH'];
+import '../Models/user.dart';
 
 class RootPageState extends StatefulWidget {
-  User user;
+  final User user;
 
-  RootPageState({super.key, required this.user});
+  const RootPageState({super.key, required this.user});
   @override
   State<RootPageState> createState() => _RootPageState();
 }
 
 class _RootPageState extends State<RootPageState> {
-
-
   // Bottom pages
   int index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final pages = [
       HomePageState(user: widget.user),
-      CoinsPageState(savedEtfCodes: _savedCoins),
-      PremiumPageState(),
-      WalletPageState(),
+      CoinsPageState(user: widget.user),
+      const PremiumPageState(),
+      WalletPageState(user: widget.user),
     ];
 
     return Scaffold(
@@ -57,7 +59,8 @@ class _RootPageState extends State<RootPageState> {
                   onCoinSelected: (selectedCoin) {
                     setState(() {
                       index = 1;
-                      _savedCoins.add(selectedCoin);
+                      //TODO: Custom search will be connected to save coins.
+                      //_savedCoins.add(selectedCoin);
                     });
                     Navigator.pop(context);
                   },
@@ -89,7 +92,7 @@ class _RootPageState extends State<RootPageState> {
         data: NavigationBarThemeData(
           indicatorColor: Colors.deepPurpleAccent,
           labelTextStyle: MaterialStateProperty.all(
-            TextStyle(
+            const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
                 color: Color.fromARGB(255, 255, 255, 255)),
@@ -101,7 +104,7 @@ class _RootPageState extends State<RootPageState> {
           //Color.fromARGB(255, 33, 0, 104),
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),
-          destinations: [
+          destinations: const [
             NavigationDestination(
                 icon: Icon(
                   Icons.home,
@@ -149,7 +152,6 @@ class CustomSearch extends SearchDelegate {
             query = '';
           })
     ];
-    throw UnimplementedError();
   }
 
   @override

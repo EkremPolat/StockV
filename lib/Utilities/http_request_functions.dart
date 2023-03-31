@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:http/http.dart' as http;
-
-import '../Models/User.dart';
-import '../Models/Coin.dart';
+import '../Models/user.dart';
+import '../Models/coin.dart';
 
 Future<bool> register(String fullName, String email, String password) async {
   var url = 'http://10.0.2.2:8000/signup/';
@@ -66,7 +64,6 @@ Future<String?> passwordChange(String? fullName, String? email,
           "Content-Type": "application/json",
         },
       );
-
     } else {
       response = await http.patch(
         Uri.parse(url),

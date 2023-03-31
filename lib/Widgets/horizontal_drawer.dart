@@ -1,17 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HorizontalDrawerMenu extends StatefulWidget {
+class HorizontalDrawerMenuState extends StatefulWidget {
   final List<String> menuItems = ['Home', 'Saved Coins'];
   final Function(int) callback;
 
-  HorizontalDrawerMenu({super.key, required this.callback});
+  HorizontalDrawerMenuState({super.key, required this.callback});
 
   @override
-  _HorizontalDrawerMenuState createState() => _HorizontalDrawerMenuState();
+  State<HorizontalDrawerMenuState> createState() =>
+      _HorizontalDrawerMenuState();
 }
 
-class _HorizontalDrawerMenuState extends State<HorizontalDrawerMenu> {
+class _HorizontalDrawerMenuState extends State<HorizontalDrawerMenuState> {
   int pageIndex = 0;
 
   @override

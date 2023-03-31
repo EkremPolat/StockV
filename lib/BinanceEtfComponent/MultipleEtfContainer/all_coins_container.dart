@@ -2,19 +2,19 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
-import '../../Models/Coin.dart';
-import '../../Models/User.dart';
-import '../../Utilities/HttpRequestFunctions.dart';
-import '../../Utilities/SavedCoinList.dart';
-import '../SingleEftListTile/singleEftListTile.dart';
+import '../../Models/coin.dart';
+import '../../Models/user.dart';
+import '../../Utilities/http_request_functions.dart';
+import '../../Utilities/saved_coin_list.dart';
+import '../SingleEftListTile/single_eft_list_tile.dart';
 
 class AllCoinsContainerState extends StatefulWidget {
-  User user;
-  AllCoinsContainerState({super.key, required this.user});
+  final User user;
+
+  const AllCoinsContainerState({super.key, required this.user});
 
   @override
-  State<AllCoinsContainerState> createState() =>
-      _MultipleEtfContainerState();
+  State<AllCoinsContainerState> createState() => _MultipleEtfContainerState();
 }
 
 class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
@@ -38,10 +38,8 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
     _timer.cancel();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return ListView.builder(
       itemCount: coinList.length,
       itemBuilder: (context, index) {
@@ -50,21 +48,24 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
         final coinIcon = 'images/coin_icons/$coinSymbol.png';
 
         return Card(
-          elevation: 4.0,
-          margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-          child: CoinListTile(coinValue: coinValue, coinIcon: coinIcon, user: widget.user, fromHomePage: true)
-        );
+            elevation: 4.0,
+            margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+            child: CoinListTile(
+              coinValue: coinValue,
+              coinIcon: coinIcon,
+              user: widget.user,
+              fromHomePage: true,
+            ));
       },
     );
   }
 
   Future<void> fetchCoins() async {
     List<Coin> coins = await fetchCoinsFromDB();
-    if(mounted) {
+    if (mounted) {
       setState(() {
         coinList = coins;
       });
     }
   }
-
 }

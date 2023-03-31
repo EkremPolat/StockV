@@ -1,32 +1,57 @@
-// ignore_for_file: prefer_const_constructors, prefer_interpolation_to_compose_strings, avoid_print, prefer_const_literals_to_create_immutables
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:stockv/Models/user.dart';
+import 'package:stockv/Models/wallet_coin.dart';
+import 'package:stockv/Utilities/user_wallet_information_requests.dart';
+
+List<WalletCoin> wallet = [];
 
 class WalletPageState extends StatefulWidget {
+  final User user;
+
+  const WalletPageState({super.key, required this.user});
+
   @override
-  _WalletPageState createState() => _WalletPageState();
+  State<WalletPageState> createState() => _WalletPageState();
 }
 
 class _WalletPageState extends State<WalletPageState> {
-  // sample data for coins and their values
-  final List<CoinData> coins = [
-    CoinData('Bitcoin', 'BTC', 1.5, 100000),
-    CoinData('Ethereum', 'ETH', 10.0, 50000),
-    CoinData('Binance Coin', 'BNB', 20.0, 75000),
-  ];
+  late Timer _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      if (mounted) {
+        fetchUserWallet();
+      }
+    });
+  }
+
+  Future<void> fetchUserWallet() async {
+    List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
+    if (mounted) {
+      setState(() {
+        wallet = userWallet;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    double totalValue = coins.fold(0, (sum, coin) => sum + coin.usdValue);
+    double totalValue =
+        wallet.fold(0, (sum, coin) => sum + (coin.usdValue * coin.amount));
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: Color.fromRGBO(46, 21, 157, 1),
+      backgroundColor: const Color.fromRGBO(46, 21, 157, 1),
       body: Column(
         children: [
           SizedBox(
             height: 140,
             child: Container(
-              color: Color.fromRGBO(46, 21, 157, 0.6),
+              color: const Color.fromRGBO(46, 21, 157, 0.6),
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.21),
               child: Center(
                 child: Column(
@@ -57,7 +82,7 @@ class _WalletPageState extends State<WalletPageState> {
           ),
           Expanded(
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(30),
                 ),
@@ -68,7 +93,7 @@ class _WalletPageState extends State<WalletPageState> {
                 ),
               ),
               child: ListView.builder(
-                itemCount: coins.length,
+                itemCount: wallet.length,
                 itemBuilder: (context, index) {
                   return Column(
                     children: [
@@ -84,16 +109,16 @@ class _WalletPageState extends State<WalletPageState> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  coins[index].name,
-                                  style: TextStyle(
+                                  wallet[index].coinName,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
                                 Text(
-                                  coins[index].symbol,
-                                  style: TextStyle(
+                                  wallet[index].coinSymbol,
+                                  style: const TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
@@ -103,16 +128,16 @@ class _WalletPageState extends State<WalletPageState> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 Text(
-                                  coins[index].amount.toStringAsFixed(4),
-                                  style: TextStyle(
+                                  wallet[index].amount.toStringAsFixed(4),
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
                                 Text(
-                                  '\$${coins[index].usdValue.toStringAsFixed(2)}',
-                                  style: TextStyle(
+                                  '\$${wallet[index].usdValue.toStringAsFixed(2)}',
+                                  style: const TextStyle(
                                     color: Color.fromARGB(255, 255, 255, 255),
                                   ),
                                 ),
@@ -121,7 +146,7 @@ class _WalletPageState extends State<WalletPageState> {
                           ],
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         height: 1,
                         color: Color.fromARGB(255, 255, 255, 255),
                       ),
@@ -135,15 +160,4 @@ class _WalletPageState extends State<WalletPageState> {
       ),
     );
   }
-}
-
-class CoinData {
-  final String name;
-  final String symbol;
-  final double amount;
-  final double price;
-
-  CoinData(this.name, this.symbol, this.amount, this.price);
-
-  double get usdValue => amount * price;
 }

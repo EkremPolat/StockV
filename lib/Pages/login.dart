@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
 import 'package:stockv/pages/signup.dart';
 
-import '../Utilities/HttpRequestFunctions.dart';
-import 'forgot-password.dart';
+import '../Utilities/http_request_functions.dart';
+import 'forgot_password.dart';
 
 void main() {
-  runApp(LoginScreen());
+  runApp(const LoginScreen());
 }
 
 class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -21,7 +23,7 @@ class LoginScreenHome extends StatefulWidget {
   const LoginScreenHome({super.key});
 
   @override
-  _LoginScreenHomeState createState() => _LoginScreenHomeState();
+  State<LoginScreenHome> createState() => _LoginScreenHomeState();
 }
 
 class _LoginScreenHomeState extends State<LoginScreenHome> {
@@ -178,7 +180,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff2E159D),
+                              backgroundColor: const Color(0xff2E159D),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -186,6 +188,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             onPressed: () async {
                               showMyDialog(context);
                               var response = await login(
+                                  //TODO: This is for development purposes and will be deleted later on.
                                   'ekrempolat416@gmail.oom',
                                   //_emailController.text,
                                   '1234');
@@ -202,11 +205,11 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   );
                                 });
                               } else {
+                                // ignore: use_build_context_synchronously
                                 showMyDialog(context);
                                 var response = await login(
                                     _emailController.text,
                                     _passwordController.text);
-                                // if (response){
                                 if (response != null) {
                                   setState(() {
                                     Navigator.pop(dialogContext);
@@ -246,7 +249,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          ForgotPasswordScreen()));
+                                          const ForgotPasswordScreen()));
                             });
                           },
                           child: const Text(
@@ -279,7 +282,8 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => SignUpScreen()));
+                                      builder: (context) =>
+                                          const SignUpScreen()));
                             });
                           },
                           child: const Text(

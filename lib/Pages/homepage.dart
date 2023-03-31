@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Widgets/rootpage_widget.dart';
-
-import '../Models/Coin.dart';
-import '../Models/User.dart';
-import '../Utilities/HttpRequestFunctions.dart';
-import '../Utilities/SavedCoinList.dart';
+import '../Models/coin.dart';
+import '../../Models/user.dart';
+import '../../Utilities/http_request_functions.dart';
+import '../Utilities/saved_coin_list.dart';
 import '../Widgets/CoinDetailsPageWidgets/loading_page.dart';
 
 void main() {
-  User user = User(id: 'cc3ec591-e9bc-4450-b969-018957a4ab12', email: 'ekrempolat416@gmail.oom');
+  User user = User(
+      id: 'cc3ec591-e9bc-4450-b969-018957a4ab12',
+      email: 'ekrempolat416@gmail.oom');
   runApp(HomePage(user: user));
 }
 
@@ -32,7 +33,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: isLoading ? LoadingScreen() : RootPageState(user: widget.user),
+      home:
+          isLoading ? const LoadingScreen() : RootPageState(user: widget.user),
       //TopNavBar(),
     );
   }
@@ -40,7 +42,7 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchCoins() async {
     List<Coin> coins = await fetchCoinsFromDB();
     List<Coin> savedCoins = await fetchSavedCoinsFromDB(widget.user.id);
-    if(mounted) {
+    if (mounted) {
       setState(() {
         coinList = coins;
         savedCoinList = savedCoins;

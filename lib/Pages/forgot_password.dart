@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../Utilities/HttpRequestFunctions.dart';
-
 void main() {
-  runApp(ForgotPasswordScreen());
+  runApp(const ForgotPasswordScreen());
 }
 
 class ForgotPasswordScreen extends StatelessWidget {
+  const ForgotPasswordScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
@@ -18,13 +18,13 @@ class ForgetPasswordScreenHome extends StatefulWidget {
   const ForgetPasswordScreenHome({super.key});
 
   @override
-  _ForgetPasswordScreenHomeState createState() => _ForgetPasswordScreenHomeState();
+  State<ForgetPasswordScreenHome> createState() =>
+      _ForgetPasswordScreenHomeState();
 }
 
 class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
   dynamic warningMessage;
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -80,7 +80,7 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                         ),
                         TextFormField(
                           validator: (val) =>
-                          val!.isEmpty ? "E-mail is empty!" : null,
+                              val!.isEmpty ? "E-mail is empty!" : null,
                           controller: _emailController,
                           autofocus: true,
                           keyboardType: TextInputType.emailAddress,
@@ -110,21 +110,20 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff2E159D),
+                              backgroundColor: const Color(0xff2E159D),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
                             onPressed: () {
-                                setState(() {
-                                  warningMessage =
-                                  "Mail sent successfully!";
-                                  /*Navigator.push(
+                              setState(() {
+                                warningMessage = "Mail sent successfully!";
+                                /*Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               ForgetPasswordScreen()));*/
-                                });
+                              });
                             },
                             child: const Text(
                               'SEND MAIL',
