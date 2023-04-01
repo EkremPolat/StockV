@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../Models/coin.dart';
 import '../../Models/user.dart';
 import '../../Utilities/http_request_functions.dart';
-import '../../Utilities/saved_coin_list.dart';
+import '../../Utilities/global_variables.dart';
 import '../SingleEftListTile/single_eft_list_tile.dart';
 
 class AllCoinsContainerState extends StatefulWidget {
@@ -55,7 +55,8 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
               coinIcon: coinIcon,
               user: widget.user,
               fromHomePage: true,
-            ));
+            ),
+        );
       },
     );
   }

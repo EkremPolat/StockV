@@ -5,7 +5,7 @@ import 'package:stockv/Models/user.dart';
 import 'package:stockv/Models/wallet_coin.dart';
 import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 
-List<WalletCoin> wallet = [];
+import '../Utilities/global_variables.dart';
 
 class WalletPageState extends StatefulWidget {
   final User user;
@@ -45,25 +45,24 @@ class _WalletPageState extends State<WalletPageState> {
     double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(46, 21, 157, 1),
       body: Column(
         children: [
-          SizedBox(
-            height: 140,
-            child: Container(
-              color: const Color.fromRGBO(46, 21, 157, 0.6),
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.21),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+          const SizedBox(
+            height: 20,
+          ),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Column(
                   children: [
                     Text(
-                      'Total Balance',
+                      'Total Assets',
                       style: TextStyle(
                         fontSize: screenWidth * 0.05,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                     SizedBox(height: screenWidth * 0.02),
@@ -72,88 +71,102 @@ class _WalletPageState extends State<WalletPageState> {
                       style: TextStyle(
                         fontSize: screenWidth * 0.08,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
-              ),
+                SizedBox(width: screenWidth * 0.05,),
+                Column(
+                  children: [
+                    Text(
+                      'Current Balance',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.05,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: screenWidth * 0.02),
+                    Text(
+                      '\$${widget.user.balance.toStringAsFixed(2)}',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.08,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+
+              ],
             ),
           ),
+          const SizedBox(
+            height: 10,
+          ),
           Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(30),
-                ),
-                gradient: LinearGradient(
-                  colors: [Color.fromARGB(255, 255, 102, 0), Colors.orange],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: ListView.builder(
-                itemCount: wallet.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16.0,
+            child: ListView.builder(
+              itemCount: wallet.length,
+              itemBuilder: (BuildContext context, int index) {
+                final coinSymbol = wallet[index].coinSymbol;
+                final coinIcon = 'images/coin_icons/$coinSymbol.png';
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.0),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  wallet[index].coinName,
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                  ),
-                                ),
-                                Text(
-                                  wallet[index].coinSymbol,
-                                  style: const TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  wallet[index].amount.toStringAsFixed(4),
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                  ),
-                                ),
-                                Text(
-                                  '\$${wallet[index].usdValue.toStringAsFixed(2)}',
-                                  style: const TextStyle(
-                                    color: Color.fromARGB(255, 255, 255, 255),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                      ],
+                    ),
+                    child: ListTile(
+                      leading: Image(
+                        image: AssetImage(coinIcon),
+                        fit: BoxFit.cover,
+                        width: 35,
+                      ),
+                      title: Text(
+                        transactions[index].coinName,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      subtitle: Text(
+                        wallet[index].coinSymbol,
+                        style: const TextStyle(
+                          fontSize: 17.0,
                         ),
                       ),
-                      const Divider(
-                        height: 1,
-                        color: Color.fromARGB(255, 255, 255, 255),
+                      trailing: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            '\$${wallet[index].usdValue.toStringAsFixed(2)}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20.0,
+                            ),
+                          ),
+                          Text(
+                            wallet[index].amount.toStringAsFixed(2),
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  );
-                },
-              ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

@@ -3,7 +3,7 @@ import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGra
 import '../../Models/user.dart';
 import '../../Utilities/http_request_functions.dart';
 import '../../Models/coin.dart';
-import '../../Utilities/saved_coin_list.dart';
+import '../../Utilities/global_variables.dart';
 
 class CoinListTile extends StatefulWidget {
   final Coin coinValue;
@@ -25,105 +25,108 @@ class CoinListTile extends StatefulWidget {
 class _CoinListTileState extends State<CoinListTile> {
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-      leading: Image(
-        image: AssetImage(widget.coinIcon),
-        fit: BoxFit.cover,
-        width: 25,
-      ),
-      title: Row(
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              widget.coinValue.name,
-              style:
-                  const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            child: Text(
-              '\$${widget.coinValue.price.toStringAsFixed(2)}',
-              style: const TextStyle(fontSize: 18.0),
-            ),
-          ),
-        ],
-      ),
-      subtitle: Row(
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              widget.coinValue.symbol,
-              style: const TextStyle(fontSize: 18.0),
-            ),
-          ),
-          if (widget.coinValue.dailyChange > 0)
+    return FractionallySizedBox(
+      widthFactor: 0.98,
+      child: ListTile(
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        leading: Image(
+          image: AssetImage(widget.coinIcon),
+          fit: BoxFit.cover,
+          width: 35,
+        ),
+        title: Row(
+          children: [
             SizedBox(
               width: 100,
               child: Text(
-                widget.coinValue.dailyChange.toStringAsFixed(2),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.green,
-                ),
+                widget.coinValue.name,
+                style:
+                    const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
               ),
             ),
-          if (widget.coinValue.dailyChange < 0)
             SizedBox(
               width: 100,
               child: Text(
-                widget.coinValue.dailyChange.toStringAsFixed(2),
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                  color: Colors.red,
+                '\$${widget.coinValue.price.toStringAsFixed(2)}',
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ),
+          ],
+        ),
+        subtitle: Row(
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text(
+                widget.coinValue.symbol,
+                style: const TextStyle(fontSize: 18.0),
+              ),
+            ),
+            if (widget.coinValue.dailyChange > 0)
+              SizedBox(
+                width: 100,
+                child: Text(
+                  widget.coinValue.dailyChange.toStringAsFixed(2),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.green,
+                  ),
                 ),
               ),
-            )
-        ],
+            if (widget.coinValue.dailyChange < 0)
+              SizedBox(
+                width: 100,
+                child: Text(
+                  widget.coinValue.dailyChange.toStringAsFixed(2),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.red,
+                  ),
+                ),
+              )
+          ],
+        ),
+        trailing: widget.fromHomePage
+            ? savedCoinList.map((e) => e.id).contains(widget.coinValue.id)
+                ? IconButton(
+                    icon: const Icon(Icons.star, color: Colors.yellow),
+                    onPressed: () async {
+                      setState(() {
+                        savedCoinList.removeWhere(
+                            (coin) => coin.id == widget.coinValue.id);
+                      });
+                      await removeSavedCoins(widget.coinValue.id);
+                    },
+                  )
+                : IconButton(
+                    icon: const Icon(Icons.star_border),
+                    onPressed: () async {
+                      setState(() {
+                        savedCoinList.add(Coin(
+                            id: widget.coinValue.id,
+                            name: widget.coinValue.name,
+                            price: widget.coinValue.price,
+                            dailyChange: widget.coinValue.dailyChange,
+                            symbol: widget.coinValue.symbol));
+                        savedCoinList.sort((a, b) => b.price.compareTo(a.price));
+                      });
+                      await addSavedCoins(widget.coinValue.id);
+                    },
+                  )
+            : const SizedBox(),
+        onTap: () {
+          setState(() {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => SingleEtfGraphComponent(
+                        user: widget.user, coin: widget.coinValue)));
+          });
+        },
       ),
-      trailing: widget.fromHomePage
-          ? savedCoinList.map((e) => e.id).contains(widget.coinValue.id)
-              ? IconButton(
-                  icon: const Icon(Icons.star, color: Colors.yellow),
-                  onPressed: () async {
-                    setState(() {
-                      savedCoinList.removeWhere(
-                          (coin) => coin.id == widget.coinValue.id);
-                    });
-                    await removeSavedCoins(widget.coinValue.id);
-                  },
-                )
-              : IconButton(
-                  icon: const Icon(Icons.star_border),
-                  onPressed: () async {
-                    setState(() {
-                      savedCoinList.add(Coin(
-                          id: widget.coinValue.id,
-                          name: widget.coinValue.name,
-                          price: widget.coinValue.price,
-                          dailyChange: widget.coinValue.dailyChange,
-                          symbol: widget.coinValue.symbol));
-                      savedCoinList.sort((a, b) => b.price.compareTo(a.price));
-                    });
-                    await addSavedCoins(widget.coinValue.id);
-                  },
-                )
-          : const SizedBox(),
-      onTap: () {
-        setState(() {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => SingleEtfGraphComponent(
-                      user: widget.user, coin: widget.coinValue)));
-        });
-      },
     );
   }
 

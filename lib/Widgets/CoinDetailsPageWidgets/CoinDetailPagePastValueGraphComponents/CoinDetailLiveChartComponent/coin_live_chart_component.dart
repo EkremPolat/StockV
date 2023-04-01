@@ -27,6 +27,7 @@ class SingleEtfLiveChartComponentState
   @override
   void initState() {
     super.initState();
+    fetchEtfPrice();
     _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
       fetchEtfPrice();
     });

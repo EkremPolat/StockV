@@ -30,5 +30,7 @@ urlpatterns = [
     path('get-wallet/<str:pk>/', GetWalletListView.as_view(), name='get-wallet'),
     path('buy-crypto/', BuyCryptoView.as_view(), name='buy-crypto'),
     path('has-crypto/', HasCryptoView.as_view(), name='has-crypto'),
-    path('sell-crypto', SellCryptoView.as_view(), name='sell-crypto'),
+    path('sell-crypto/', SellCryptoView.as_view(), name='sell-crypto'),
+    path('get-transaction-history/<str:pk>/', GetTransactionHistoryView.as_view(), name='get-transaction-history'),
+    path('get-user-balance/<str:pk>/', GetUserBalanceView.as_view(), name='get-user-balance'),
 ]

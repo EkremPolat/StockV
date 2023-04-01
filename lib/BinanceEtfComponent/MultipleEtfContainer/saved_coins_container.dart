@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import '../../Models/coin.dart';
 import '../../Models/user.dart';
 import '../../Utilities/http_request_functions.dart';
-import '../../Utilities/saved_coin_list.dart';
+import '../../Utilities/global_variables.dart';
 import '../SingleEftListTile/single_eft_list_tile.dart';
 
 class SavedCoinsContainerState extends StatefulWidget {

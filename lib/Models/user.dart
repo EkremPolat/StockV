@@ -1,7 +1,7 @@
 class User {
   String email = "";
   String fullName = "";
-  double currency = 1000.0;
+  double balance = 1000.0;
   String id = "";
 
   User({required this.id, required this.email});
@@ -19,6 +19,6 @@ class User {
   }
 
   double getCurrency() {
-    return currency;
+    return balance;
   }
 }

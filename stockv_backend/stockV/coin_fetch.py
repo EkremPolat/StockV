@@ -28,9 +28,6 @@ def updateAllCoinViews():
                 coin.price = price
                         
         coin.save()
-        
-    print(coinList[0].price)
-    print(coinList[0].name)
 
 class Command(BaseCommand):
     help = 'Starts a thread that fetches coin info every second'

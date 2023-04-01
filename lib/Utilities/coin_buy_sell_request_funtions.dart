@@ -5,14 +5,22 @@ Future<List<String>> fetchBuySellPrices(String etfCode) async {
   final response = await http.get(
       Uri.parse('https://api.coinbase.com/v2/prices/$etfCode-USD/buy'),
       headers: {'Content-Type': 'application/json'});
-  final buyPrice = jsonDecode(response.body)['data']['amount'];
+  final data = jsonDecode(response.body)['data'];
+  var buyPrice = '0';
+  if(data != null) {
+    buyPrice = data['amount'];
+  }
 
   final response2 = await http.get(
-      Uri.parse('https://api.coinbase.com/v2/prices/BTC-USD/sell'),
+      Uri.parse('https://api.coinbase.com/v2/prices/$etfCode-USD/sell'),
       headers: {'Content-Type': 'application/json'});
-  final sellPrice = jsonDecode(response2.body)['data']['amount'];
+  final coinData = jsonDecode(response2.body)['data'];
+  String amount = '0';
+  if(coinData != null) {
+    amount = coinData['amount'];
+  }
   return [
-    '$etfCode Buy Price: \$$buyPrice',
-    '$etfCode Sell Price: \$$sellPrice'
+    buyPrice.toString(),
+    amount.toString()
   ];
 }

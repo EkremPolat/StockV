@@ -128,12 +128,14 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.black),
+                              borderSide: const BorderSide(color: Colors.black,
+                                  width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
                                 color: Colors.red,
+                                  width: 2
                               ),
                             ),
                           ),
@@ -164,12 +166,14 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
                                 color: Colors.black,
+                                  width: 2
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: const BorderSide(
                                   color: Colors.red,
+                                    width: 2
                                 )),
                           ),
                           style: const TextStyle(
@@ -189,7 +193,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               showMyDialog(context);
                               var response = await login(
                                   //TODO: This is for development purposes and will be deleted later on.
-                                  'ekrempolat416@gmail.oom',
+                                  'ekrempolat416@gmail.com',
                                   //_emailController.text,
                                   '1234');
                               //_passwordController.text);
@@ -283,7 +287,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const SignUpScreen()));
+                                          SignUpScreen()));
                             });
                           },
                           child: const Text(
