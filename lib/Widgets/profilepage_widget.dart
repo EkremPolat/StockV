@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
+import 'package:stockv/Widgets/transactions_widget.dart';
 
 import 'package:stockv/pages/login.dart';
 import '../Models/user.dart';
@@ -15,13 +16,11 @@ class ProfilePageState extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePageState> {
-  User? user;
-
   TextEditingController? _emailController;
-  TextEditingController? _namecontroller;
-  final TextEditingController _oldpasswordController = TextEditingController();
-  final TextEditingController _newpasswordController = TextEditingController();
-  final TextEditingController _newpassword2Controller = TextEditingController();
+  TextEditingController? _nameController;
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
+  final TextEditingController _newPassword2Controller = TextEditingController();
 
   SnackBar failSnackBar(String text) {
     return SnackBar(
@@ -41,15 +40,76 @@ class _ProfilePageState extends State<ProfilePageState> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    user = widget.user;
-    _emailController = TextEditingController(text: user?.getEmail());
-    _namecontroller = TextEditingController(text: user?.getFullName());
+    _emailController = TextEditingController(text: widget.user.getEmail());
+    _nameController = TextEditingController(text: widget.user.getFullName());
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+  bool isEditing = false;
 
   @override
   Widget build(BuildContext context) => Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
+        leadingWidth: 400,
+        leading: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                ),
+                Image.asset('images/black.png'),
+              ],
+            ),
+            IconButton(
+              onPressed: () {
+                // Open the drawer.
+                _scaffoldKey.currentState?.openEndDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            ),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+        child: Column(
+          children: [
+            Container(
+              height: 130,
+              decoration: const BoxDecoration(
+                color: Colors.deepPurpleAccent,
+                image: DecorationImage(
+                  image: AssetImage('images/black.png'),
+                ),
+              ),
+              child: null,
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Transactions'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TransactionListPage(user: widget.user,)));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Do something when the user taps on the Settings button.
+              },
+            ),
+          ],
+        ),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -72,7 +132,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                       height: 30,
                       margin: const EdgeInsets.only(top: 30),
                       child: const Text(
-                        "Current Amount",
+                        "Current Balance",
                         style: TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.bold,
@@ -83,7 +143,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                     SizedBox(
                       height: 40,
                       child: Text(
-                        "\$${user?.getCurrency()}",
+                        "\$${widget.user.getCurrency().toStringAsFixed(2)}",
                         style:
                             const TextStyle(fontSize: 20, color: Colors.green),
                       ),
@@ -154,7 +214,8 @@ class _ProfilePageState extends State<ProfilePageState> {
                     TextFormField(
                       validator: (val) =>
                           val!.isEmpty ? "Name is empty!" : null,
-                      controller: _namecontroller,
+                      controller: _nameController,
+                      enabled: isEditing,
                       //    ...,other fields
                       decoration: const InputDecoration(
                         prefixIcon: Icon(
@@ -175,8 +236,9 @@ class _ProfilePageState extends State<ProfilePageState> {
                     TextFormField(
                       validator: (val) =>
                           val!.isEmpty ? "Old password is empty!" : null,
-                      controller: _oldpasswordController,
+                      controller: _oldPasswordController,
                       obscureText: true,
+                      enabled: isEditing,
                       enableSuggestions: false,
                       autocorrect: false,
                       keyboardType: TextInputType.name,
@@ -200,8 +262,9 @@ class _ProfilePageState extends State<ProfilePageState> {
                     TextFormField(
                       validator: (val) =>
                           val!.isEmpty ? "New password is empty!" : null,
-                      controller: _newpasswordController,
+                      controller: _newPasswordController,
                       obscureText: true,
+                      enabled: isEditing,
                       enableSuggestions: false,
                       autocorrect: false,
                       keyboardType: TextInputType.name,
@@ -225,8 +288,9 @@ class _ProfilePageState extends State<ProfilePageState> {
                     TextFormField(
                       validator: (val) =>
                           val!.isEmpty ? "New password is empty!" : null,
-                      controller: _newpassword2Controller,
+                      controller: _newPassword2Controller,
                       obscureText: true,
+                      enabled: isEditing,
                       enableSuggestions: false,
                       autocorrect: false,
                       keyboardType: TextInputType.name,
@@ -257,41 +321,48 @@ class _ProfilePageState extends State<ProfilePageState> {
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(
+                        child: Text(
+                          isEditing ? "Save" : "Edit",
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 17,
                           ),
                         ),
                         onPressed: () async {
-                          if (_oldpasswordController.text.isNotEmpty) {
-                            if (_newpasswordController.text ==
-                                _newpassword2Controller.text) {
-                              var response = await passwordChange(
-                                  _namecontroller?.text,
-                                  _emailController?.text,
-                                  _oldpasswordController.text,
-                                  _newpasswordController.text);
-                              if (response != null) {
-                                setState(() {
-                                  user?.setFullName(response);
-                                  ScaffoldMessenger.of(context)
-                                      .showSnackBar(successSnackBar);
-                                });
+                          if(isEditing) {
+                            if (_oldPasswordController.text.isNotEmpty) {
+                              if (_newPasswordController.text ==
+                                  _newPassword2Controller.text) {
+                                var response = await passwordChange(
+                                    _nameController?.text,
+                                    _emailController?.text,
+                                    _oldPasswordController.text,
+                                    _newPasswordController.text);
+                                if (response != null) {
+                                  setState(() {
+                                    widget.user.setFullName(response);
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(successSnackBar);
+                                  });
+                                } else {
+                                  setState(() {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        failSnackBar("Something went wrong!"));
+                                  });
+                                }
                               } else {
-                                setState(() {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      failSnackBar("Something went wrong!"));
-                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    failSnackBar("Passwords do not match"));
                               }
                             } else {
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  failSnackBar("Passwords do not match"));
+                                  failSnackBar("Old password cannot be empty!"));
                             }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                failSnackBar("Old password cannot be empty!"));
+                          }
+                          else {
+                            setState(() {
+                              isEditing = true;
+                            });
                           }
                         },
                       ),
@@ -316,8 +387,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(
-                          builder: (context) => const LoginScreen()),
+                      MaterialPageRoute(builder: (context) => LoginScreen()),
                     );
                   },
                 ),

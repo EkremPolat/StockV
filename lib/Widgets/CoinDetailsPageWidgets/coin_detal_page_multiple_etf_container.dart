@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:stockv/BinanceEtfComponent/SingleEftListTile/single_eft_list_tile.dart';
 import 'package:stockv/Models/coin.dart';
 import 'package:stockv/Models/user.dart';
-import 'package:stockv/Utilities/saved_coin_list.dart';
+import 'package:stockv/Utilities/global_variables.dart';
 import 'package:stockv/Utilities/http_request_functions.dart';
 
 class CoinDetailPageMultipleEtfContainerState extends StatefulWidget {

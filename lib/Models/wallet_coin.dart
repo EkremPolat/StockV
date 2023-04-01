@@ -1,7 +1,7 @@
 class WalletCoin {
   final String coinName;
   final String coinSymbol;
-  final int amount;
+  final double amount;
   final double usdValue;
 
   WalletCoin(
@@ -14,7 +14,7 @@ class WalletCoin {
     return coinName;
   }
 
-  int getAmount() {
+  double getAmount() {
     return amount;
   }
 
@@ -22,7 +22,7 @@ class WalletCoin {
     return WalletCoin(
         coinName: json['coinName'] as String,
         coinSymbol: json['coinSymbol'] as String,
-        amount: json['amount'] as int,
+        amount: json['amount'],
         usdValue: json['usdValue'] as double);
   }
 }

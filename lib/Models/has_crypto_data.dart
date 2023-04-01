@@ -1,6 +1,6 @@
 class HasCryptoData {
   final bool hasCrypto;
-  final int amount;
+  final double amount;
 
   HasCryptoData({required this.hasCrypto, required this.amount});
 
@@ -8,12 +8,12 @@ class HasCryptoData {
     return hasCrypto;
   }
 
-  int getAmount() {
+  double getAmount() {
     return amount;
   }
 
   factory HasCryptoData.fromJson(Map<String, dynamic> json) {
     return HasCryptoData(
-        hasCrypto: json['hasCrypto'] as bool, amount: json['amount'] as int);
+        hasCrypto: json['hasCrypto'] as bool, amount: json['amount'] as double);
   }
 }

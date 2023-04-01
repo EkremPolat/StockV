@@ -8,8 +8,12 @@ import 'package:stockv/Utilities/coin_buy_sell_request_funtions.dart';
 import 'package:stockv/Models/coin_graph_data.dart';
 import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/CoinDetailLiveChartComponent/coin_live_chart_component.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_eft_sell_page.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_buy_page.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_past_value_graph_component.dart';
 import 'package:http/http.dart' as http;
+
+import '../loading_page.dart';
 
 String coinVolume = '';
 String coinLowestPrice = '';
@@ -18,7 +22,7 @@ String coinHighestPrice = '';
 List<String> buySellPrices = ['', ''];
 
 bool sellButtonDisabled = true;
-int maxSellableAmount = 0;
+double maxSellableAmount = 0;
 
 class SingleEtfGraphComponent extends StatefulWidget {
   final User user;
@@ -35,7 +39,7 @@ class SingleEtfGraphComponent extends StatefulWidget {
 
 class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
   late Timer _timer;
-
+  bool isLoading = true;
   final List<EtfPriceData> _etfPriceData = [];
 
   @override
@@ -49,11 +53,16 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
       sellButtonDisabled = true;
       maxSellableAmount = 0;
     });
+    
     readCoinInfo();
+    fetchEtfPrice();
     fetchEtfBuySellPrices();
     fetchDoesUserHasCrypto();
+
     _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
       fetchEtfPrice();
+      fetchEtfBuySellPrices();
+      fetchDoesUserHasCrypto();
     });
   }
 
@@ -69,31 +78,36 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
         'https://api.binance.com/api/v3/ticker/24hr?symbol=${widget.coin.symbol}USDT'));
     final data = jsonDecode(response.body);
     setState(() {
-      coinVolume = double.parse(data['volume']).toString();
-      coinLowestPrice = double.parse(data['lowPrice']).toString();
-      coinHighestPrice = double.parse(data['highPrice']).toString();
+      coinVolume = double.parse(data['volume']).toStringAsFixed(2);
+      coinLowestPrice = double.parse(data['lowPrice']).toStringAsFixed(2);
+      coinHighestPrice = double.parse(data['highPrice']).toStringAsFixed(2);
     });
   }
 
   Future<void> fetchEtfBuySellPrices() async {
     List<String> data = await fetchBuySellPrices(widget.coin.symbol);
-    setState(() {
-      buySellPrices = data;
-    });
+    if (mounted) {
+      setState(() {
+        buySellPrices = data;
+      });
+    }
   }
 
   Future<void> fetchDoesUserHasCrypto() async {
     HasCryptoData response =
-        await hasCrypto(widget.user.id, widget.coin.symbol);
-    setState(() {
-      if (response.getHasCrypto() == true) {
-        sellButtonDisabled = false;
-        maxSellableAmount = response.getAmount();
-      } else {
-        sellButtonDisabled = true;
-        maxSellableAmount = 0;
-      }
-    });
+        await hasCrypto(widget.user.id, widget.coin.name);
+    if (mounted) {
+      setState(() {
+        if (response.getHasCrypto() == true) {
+          sellButtonDisabled = false;
+          maxSellableAmount = response.getAmount();
+        } else {
+          sellButtonDisabled = true;
+          maxSellableAmount = 0;
+        }
+        isLoading = false;
+      });
+    }
   }
 
   Future<void> fetchEtfPrice() async {
@@ -116,214 +130,193 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    if(isLoading) {
+      return const LoadingScreen();
+    } else {
+      return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
+        leadingWidth: 400,
+        leading: Row(children: [
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+          Image.asset('images/black.png'),
+        ]),
       ),
       body: Center(
-        child: Column(
-          children: [
-            Text(
-              '${widget.coin.symbol}/USDT',
-              style: const TextStyle(
-                fontSize: 40.0,
-                fontWeight: FontWeight.bold,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(
+                '${widget.coin.symbol}/USDT',
+                style: const TextStyle(
+                  fontSize: 40.0,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  '24 Hour Volume:',
-                  style: TextStyle(fontSize: 25.0),
-                ),
-                Text(
-                  coinVolume,
-                  style: const TextStyle(fontSize: 25.0),
-                  textAlign: TextAlign.right,
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Highest Price:',
-                  style: TextStyle(fontSize: 25.0),
-                ),
-                Text(
-                  '$coinHighestPrice\$',
-                  style: const TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Lowest Price:',
-                  style: TextStyle(fontSize: 25.0),
-                ),
-                Text(
-                  '$coinLowestPrice\$',
-                  style: const TextStyle(
-                      fontSize: 25.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.red),
-                )
-              ],
-            ),
-            SizedBox(
-              height: 400,
-              child:
-                  SingleEtfPastValueGraphComponent(etfCode: widget.coin.symbol),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.deepPurpleAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    '24 Hour Volume:',
+                    style: TextStyle(fontSize: 25.0),
+                  ),
+                  Text(
+                    coinVolume,
+                    style: const TextStyle(fontSize: 25.0),
+                    textAlign: TextAlign.right,
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Highest Price:',
+                    style: TextStyle(fontSize: 25.0),
+                  ),
+                  Text(
+                    '\$$coinHighestPrice',
+                    style: const TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Lowest Price:',
+                    style: TextStyle(fontSize: 25.0),
+                  ),
+                  Text(
+                    '\$$coinLowestPrice',
+                    style: const TextStyle(
+                        fontSize: 25.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.red),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 400,
+                child:
+                    SingleEtfPastValueGraphComponent(etfCode: widget.coin.symbol),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurpleAccent,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SingleEtfLiveChartComponent(
-                                    coin: widget.coin,
-                                  )));
-                    },
-                    child: const Text(
-                      'SEE LIVE CHART',
-                    ))
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  buySellPrices[0],
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.deepPurpleAccent),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  buySellPrices[1],
-                  style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
-                      color: Colors.deepPurpleAccent),
-                )
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SingleEtfLiveChartComponent(
+                                      coin: widget.coin,
+                                    )));
+                      },
+                      child: const Text(
+                        'SEE LIVE CHART',
+                      ))
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '${widget.coin.symbol} Buy Price: \$${buySellPrices[0]}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Colors.deepPurpleAccent),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '${widget.coin.symbol} Sell Price: \$${buySellPrices[1]}',
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Colors.deepPurpleAccent),
+                  )
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      showBuyCryptoDialog(context);
-                      //TODO: Actual buying process will be implemented
-                    },
-                    child: const Text(
-                      'BUY',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                    )),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                      onPressed: () {
+                        setState(() {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CoinBuyComponent(
+                                        user: widget.user,
+                                        coin: widget.coin,
+                                        coinBuyValue: buySellPrices[0],
+                                      )));
+                        });
+                      },
+                      child: const Text(
+                        'BUY',
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      )),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
                       ),
-                    ),
-                    onPressed: sellButtonDisabled
-                        ? null
-                        : () {
-                            showSellCryptoDialog(context);
-                            //TODO: Actual selling process will be implemented
-                          },
-                    child: const Text(
-                      'SELL',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
-                    ))
-              ],
-            )
-          ],
+                      onPressed: sellButtonDisabled
+                          ? null
+                          : () {
+                              setState(() {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => CoinSellComponent(
+                                              user: widget.user,
+                                              coin: widget.coin,
+                                              maxSellableAmount: maxSellableAmount,
+                                              coinSellValue: buySellPrices[1],
+                                            )));
+                              });
+                            },
+                      child: const Text(
+                        'SELL',
+                        style:
+                            TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                      ))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
-  }
-
-  late BuildContext buyDialogContext;
-  late BuildContext sellDialogContext;
-
-  showBuyCryptoDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        buyDialogContext = context;
-        return SimpleDialog(
-          children: <Widget>[
-            const Text(
-              'How much would you like to buy?',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: Colors.deepPurpleAccent),
-            ),
-            TextFormField(
-              autofocus: true,
-              keyboardType: TextInputType.number,
-              style: const TextStyle(fontSize: 18, color: Colors.black),
-            )
-          ],
-        );
-      },
-    );
-  }
-
-  showSellCryptoDialog(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          sellDialogContext = context;
-          return SimpleDialog(
-            children: <Widget>[
-              const Text(
-                'How much would you like to sell?',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.deepPurpleAccent),
-              ),
-              TextFormField(
-                autofocus: true,
-                keyboardType: TextInputType.number,
-                style: const TextStyle(fontSize: 18, color: Colors.black),
-              ),
-            ],
-          );
-        });
+    }
   }
 }

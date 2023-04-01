@@ -99,12 +99,14 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.black),
+                              borderSide: const BorderSide(color: Colors.black,
+                                  width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
                                 color: Colors.red,
+                                  width: 2
                               ),
                             ),
                           ),
@@ -129,12 +131,13 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.black),
+                              borderSide: const BorderSide(color: Colors.black, width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
                                 color: Colors.red,
+                                  width: 2
                               ),
                             ),
                           ),
@@ -161,12 +164,14 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
                                 color: Colors.black,
+                                  width: 2
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: const BorderSide(
                                   color: Colors.red,
+                                    width: 2
                                 )),
                           ),
                           style: const TextStyle(
@@ -199,12 +204,14 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
                                 color: Colors.black,
+                                  width: 2
                               ),
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: const BorderSide(
                                   color: Colors.red,
+                                  width: 2
                                 )),
                           ),
                           style: const TextStyle(

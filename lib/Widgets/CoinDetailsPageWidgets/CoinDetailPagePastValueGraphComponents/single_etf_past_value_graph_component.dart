@@ -130,8 +130,10 @@ class _SingleEtfPastValueGraphComponentState
     });
     final newEtfPriceList = await fetchCoinValueHistory(
         widget.etfCode, intervalCode, intervalValue, duration);
-    setState(() {
-      _etfPriceData = newEtfPriceList;
-    });
+    if(mounted) {
+      setState(() {
+        _etfPriceData = newEtfPriceList;
+      });
+    }
   }
 }

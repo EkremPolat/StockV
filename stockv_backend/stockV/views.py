@@ -137,54 +137,110 @@ class GetWalletListView(APIView):
         user = StockVUser.objects.filter(id=pk).first()
         if user is None:
             raise AuthenticationFailed("User is not found!")
-        transactions = user.wallet.all()
-        wallet_list = [{'coinName': Coin.objects.filter(symbol=transaction.coin_name).first().name, 'coinSymbol': transaction.coin_name , 'amount': transaction.amount, 'usdValue': Coin.objects.filter(symbol=transaction.coin_name).first().price} for transaction in transactions]
+        ownedCoins = user.wallet.all()
+        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol , 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(name=ownedCoin.coin_name).first().price} for ownedCoin in ownedCoins]
         return JsonResponse(wallet_list, safe=False)
+
+class GetTransactionHistoryView(APIView):
+    def get(self, request, pk):
+        user = StockVUser.objects.filter(id=pk).first()
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+        userTransactions = Transaction.objects.filter(user=user)
+        transaction_list = [{'date': transaction.date.strftime("%Y-%m-%d %H:%M"), 'coinName': transaction.coinName, 'coinPrice': transaction.coinPrice, 'coinAmount': transaction.coinAmount, 'isSelling' : transaction.isSelling} for transaction in userTransactions]
+        return JsonResponse(transaction_list, safe=False)
+
+class GetUserBalanceView(APIView):
+    def get(self, request, pk):
+        user = StockVUser.objects.filter(id=pk).first()
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+        userBalance = user.balance
+        
+        response = Response()
+        response.data = {
+            'balance': userBalance
+        }
+        return response
 
 class BuyCryptoView(APIView):
     def post(self, request):
         user_id = request.data['userId']
         coin_name = request.data['coinName']
         amount = request.data['amount']
+        cost = request.data['cost']
+
+        coin_price = cost / amount
 
         user = StockVUser.objects.filter(id=user_id).first()
 
-        # Check if the user already has some of that crypto
-        transaction = user.wallet.all().filter(coin_name=coin_name).first()
+        if user is None:
+            raise AuthenticationFailed("User is not found!")
+        
+        # Decrease the balance of the user 
+        user.balance -= cost
+        user.save()
 
-        if transaction:
+        response = Response()  
+        response.data = {
+            'balance': user.balance
+        }
+
+        # Check if the user already has some of that crypto
+        ownedCoin = user.wallet.all().filter(coin_name=coin_name).first()
+
+        if ownedCoin:
             # If the user already has some of that crypto, add the amount from the request to the actual amount on the database row
-            transaction.amount += amount
-            transaction.save()
+            ownedCoin.amount += amount
+            ownedCoin.save()
         else:
             # If the user have not previously purchased that crypto, add the coin to user and set the amount to the amount from the request
-            transaction = Transaction.objects.create(coin_name=coin_name, amount=amount)
-            user.wallet.add(transaction)
+            ownedCoin = OwnedCoins.objects.create(coin_name=coin_name, amount=amount)
+            user.wallet.add(ownedCoin)
 
-        return HttpResponse('Crypto purchased successfully')
+        transaction = Transaction.objects.create(coinName=ownedCoin.coin_name, coinPrice=coin_price, coinAmount=amount, isSelling=False, user=user)
+        transaction.save()
+        return response
     
 class HasCryptoView(APIView):
     def post(self, request):
         user_id = request.data['userId']
         coin_name = request.data['coinName']
         user = StockVUser.objects.filter(id=user_id).first()
-        transaction = user.wallet.all().filter(coin_name=coin_name).first()
+        ownedCoin = user.wallet.all().filter(coin_name=coin_name).first()
 
-        if transaction:
-            return JsonResponse({'hasCrypto': True, 'amount': transaction.amount})
+        if ownedCoin:
+            return JsonResponse({'hasCrypto': True, 'amount': ownedCoin.amount})
         else:
-            return JsonResponse({'hasCrypto': False, 'amount': 0})
+            return JsonResponse({'hasCrypto': False, 'amount': 0.0})
 
 class SellCryptoView(APIView):
     def post(self, request):
         user_id = request.data['userId']
         coin_name = request.data['coinName']
         amount = request.data['amount']
+        totalEarnings = request.data['totalEarnings']
+
+        coin_price = totalEarnings / amount
+
         user = StockVUser.objects.filter(id=user_id).first()
 
-        transaction = user.wallet.all().filter(coin_name=coin_name).first()
-        if (amount > transaction.amount):
-            return HttpResponse('The desired amount is higher than than the owned amount. Transaction failed.')
+        user.balance += totalEarnings
+        user.save()
+
+        response = Response()  
+        response.data = {
+            'balance': user.balance
+        }
+
+        ownedCoin = user.wallet.all().filter(coin_name=coin_name).first()
+        if (amount > ownedCoin.amount):
+            return HttpResponse('The desired amount is higher than than the owned amount. Selling process failed.')
         else:
-            transaction.amount -= amount
-            return HttpResponse('Transaction Successful.')
+            transaction = Transaction.objects.create(coinName=ownedCoin.coin_name, coinPrice=coin_price, coinAmount=amount, isSelling=True, user=user)
+            transaction.save()
+            ownedCoin.amount -= amount
+            if(ownedCoin.amount == 0):
+                ownedCoin.delete()
+            ownedCoin.save()
+            return response

@@ -3,13 +3,16 @@ import 'package:stockv/Widgets/rootpage_widget.dart';
 import '../Models/coin.dart';
 import '../../Models/user.dart';
 import '../../Utilities/http_request_functions.dart';
-import '../Utilities/saved_coin_list.dart';
+import '../Models/transaction.dart';
+import '../Models/wallet_coin.dart';
+import '../Utilities/global_variables.dart';
+import '../Utilities/user_wallet_information_requests.dart';
 import '../Widgets/CoinDetailsPageWidgets/loading_page.dart';
 
 void main() {
   User user = User(
-      id: 'cc3ec591-e9bc-4450-b969-018957a4ab12',
-      email: 'ekrempolat416@gmail.oom');
+      id: '49dede57-a704-47cd-b1ca-b16672f7aca6',
+      email: 'ekrempolat416@gmail.com');
   runApp(HomePage(user: user));
 }
 
@@ -42,10 +45,16 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchCoins() async {
     List<Coin> coins = await fetchCoinsFromDB();
     List<Coin> savedCoins = await fetchSavedCoinsFromDB(widget.user.id);
+    List<Transaction> transactionList = await getUserTransactionHistory(widget.user.id);
+    List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
+    double userBalance = await getUserBalance(widget.user.id);
     if (mounted) {
       setState(() {
         coinList = coins;
         savedCoinList = savedCoins;
+        transactions = transactionList;
+        wallet = userWallet;
+        widget.user.balance = userBalance;
         isLoading = false;
       });
     }
