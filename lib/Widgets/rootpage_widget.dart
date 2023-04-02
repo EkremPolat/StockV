@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Models/coin.dart';
 import 'package:stockv/Utilities/Http_request_functions.dart';
+import 'package:stockv/Utilities/global_variables.dart';
 import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/walletpage_widget.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_detail_component.dart';
 
 import '../Models/user.dart';
 
@@ -58,11 +60,16 @@ class _RootPageState extends State<RootPageState> {
                 delegate: CustomSearch(
                   onCoinSelected: (selectedCoin) {
                     setState(() {
-                      index = 1;
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SingleEtfGraphComponent(
+                                  user: widget.user, coin: selectedCoin)));
+                      //index = 1;
                       //TODO: Custom search will be connected to save coins.
                       //_savedCoins.add(selectedCoin);
                     });
-                    Navigator.pop(context);
+                    //Navigator.pop(context);
                   },
                 ),
               );
@@ -137,9 +144,10 @@ class _RootPageState extends State<RootPageState> {
 }
 
 class CustomSearch extends SearchDelegate {
-  List<String> allData = ['BTC', 'ETH', 'ADA', 'SAND', 'AVAX', 'MATIC'];
+  //List<String> allData = ['BTC', 'ETH', 'ADA', 'SAND', 'AVAX', 'MATIC'];
+  List<Coin> allData = coinList;
 
-  final Function(String) onCoinSelected;
+  final Function(Coin) onCoinSelected;
 
   CustomSearch({required this.onCoinSelected});
 
@@ -165,12 +173,13 @@ class CustomSearch extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<String> matchQuery = [];
+    List<Coin> matchQuery = [];
     for (var item in allData) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
+      if (item.getSymbol().toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(item);
       }
     }
+
     return ListView.builder(
         itemCount: matchQuery.length,
         itemBuilder: (context, index) {
@@ -180,7 +189,7 @@ class CustomSearch extends SearchDelegate {
               onCoinSelected(result);
             },
             child: ListTile(
-              title: Text(result),
+              title: Text(result.getSymbol()),
             ),
           );
         });
@@ -188,9 +197,9 @@ class CustomSearch extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<String> matchQuery = [];
+    List<Coin> matchQuery = [];
     for (var item in allData) {
-      if (item.toLowerCase().contains(query.toLowerCase())) {
+      if (item.getSymbol().toLowerCase().contains(query.toLowerCase())) {
         matchQuery.add(item);
       }
     }
@@ -203,7 +212,7 @@ class CustomSearch extends SearchDelegate {
               onCoinSelected(result);
             },
             child: ListTile(
-              title: Text(result),
+              title: Text(result.getSymbol()),
             ),
           );
         });
