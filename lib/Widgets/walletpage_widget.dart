@@ -134,7 +134,7 @@ class _WalletPageState extends State<WalletPageState> {
                         width: 35,
                       ),
                       title: Text(
-                        transactions[index].coinName,
+                        wallet[index].coinName,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
