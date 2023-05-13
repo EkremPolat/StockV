@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:stockv/Models/coin.dart';
 import 'package:stockv/Models/coin_graph_data.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:http/http.dart' as http;
 
 class SingleEtfLiveChartComponent extends StatefulWidget {
@@ -22,7 +21,7 @@ class SingleEtfLiveChartComponentState
     extends State<SingleEtfLiveChartComponent> {
   late Timer _timer;
 
-  final List<EtfPriceData> _data = [];
+  final List<CoinGraphData> _data = [];
 
   @override
   void initState() {
@@ -49,9 +48,9 @@ class SingleEtfLiveChartComponentState
       etfUpdatedPrice = double.tryParse(data['price'] ?? '') ?? 0.0;
     }
     if (!mounted) return;
-    final now = DateTime.now();
+    final now = DateTime.now().millisecondsSinceEpoch;
     setState(() {
-      _data.add(EtfPriceData(now, etfUpdatedPrice));
+      _data.add(CoinGraphData.withPrice(time: now, close: etfUpdatedPrice));
       if (_data.length > 100) {
         _data.removeAt(0);
       }
@@ -74,7 +73,7 @@ class SingleEtfLiveChartComponentState
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            /*SizedBox(
               height: 400,
               child: SfCartesianChart(
                 primaryXAxis: DateTimeAxis(),
@@ -83,11 +82,11 @@ class SingleEtfLiveChartComponentState
                   LineSeries<EtfPriceData, DateTime>(
                     dataSource: _data,
                     xValueMapper: (EtfPriceData data, _) => data.time,
-                    yValueMapper: (EtfPriceData data, _) => data.etfPrice,
+                    yValueMapper: (EtfPriceData data, _) => data.close,
                   ),
                 ],
               ),
-            )
+            )*/
           ],
         ),
       ),

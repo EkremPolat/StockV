@@ -5,12 +5,11 @@ import 'package:stockv/Models/coin.dart';
 import 'package:stockv/Models/has_crypto_data.dart';
 import 'package:stockv/Models/user.dart';
 import 'package:stockv/Utilities/coin_buy_sell_request_funtions.dart';
-import 'package:stockv/Models/coin_graph_data.dart';
 import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/CoinDetailLiveChartComponent/coin_live_chart_component.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_eft_sell_page.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_buy_page.dart';
-import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_past_value_graph_component.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_graph.dart';
 import 'package:http/http.dart' as http;
 
 import '../loading_page.dart';
@@ -40,7 +39,6 @@ class SingleEtfGraphComponent extends StatefulWidget {
 class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
   late Timer _timer;
   bool isLoading = true;
-  final List<EtfPriceData> _etfPriceData = [];
 
   @override
   void initState() {
@@ -121,10 +119,10 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     if (!mounted) return;
     final now = DateTime.now();
     setState(() {
-      _etfPriceData.add(EtfPriceData(now, etfUpdatedPrice));
+      /*_etfPriceData.add(EtfPriceData.withPrice(now, etfUpdatedPrice));
       if (_etfPriceData.length > 100) {
         _etfPriceData.removeAt(0);
-      }
+      }*/
     });
   }
 
@@ -205,7 +203,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                 ],
               ),
               SizedBox(
-                height: 400,
+                height: 800,
                 child:
                     SingleEtfPastValueGraphComponent(etfCode: widget.coin.symbol),
               ),
