@@ -207,7 +207,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                 child:
                     SingleEtfPastValueGraphComponent(etfCode: widget.coin.symbol),
               ),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton(
@@ -227,7 +227,8 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                       },
                       child: const Text(
                         'SEE LIVE CHART',
-                      ))
+                      ),
+                  )
                 ],
               ),
               Row(

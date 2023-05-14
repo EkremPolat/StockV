@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:k_chart/flutter_k_chart.dart';
 import 'package:stockv/Utilities/past_coin_history_functions.dart';
+import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/rectangle_chart.dart';
 
 String etfCode = "";
 String intervalCode = 'm';
@@ -31,6 +32,8 @@ class _SingleEtfPastValueGraphComponentState
     extends State<SingleEtfPastValueGraphComponent> {
 
   List<KLineEntity> _etfPriceData = [];
+  String _startTime = "";
+  String _endTime = "";
   @override
   void initState() {
     super.initState();
@@ -41,11 +44,13 @@ class _SingleEtfPastValueGraphComponentState
     setState(() {
       _etfPriceData = [];
     });
-    final newEtfPriceList = await fetchCoinValueHistory(
+    final response = await fetchCoinValueHistory(
         etfCode, intervalCode, intervalValue, duration);
     if(mounted) {
       setState(() {
-        _etfPriceData = newEtfPriceList.cast<KLineEntity>();
+        _etfPriceData = response[0].cast<KLineEntity>();
+        _startTime = response[1];
+        _endTime = response[2];
       });
     }
   }
@@ -124,6 +129,23 @@ class _SingleEtfPastValueGraphComponentState
                   ),
                 ),
                 CandleChartComponentPage(etfPriceData: _etfPriceData),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.deepPurpleAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PlotDisplayScreen(symbol: widget.etfCode, intervalCode: intervalCode, intervalValue: intervalValue.toString(), startTime: _startTime, endTime: _endTime,)));
+                  },
+                  child: const Text(
+                    'SEE RECTANGLE PATTERN',
+                  ),
+                ),
               ],
             )));
   }

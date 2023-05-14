@@ -44,6 +44,7 @@ dependencies:
   syncfusion_flutter_charts: ^20.4.53
   flutter_charts: ^0.5.1
   k_chart: ^0.7.0
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:
