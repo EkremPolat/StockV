@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from django.http import JsonResponse
 from django.http import HttpResponse
-import datetime
-import jwt
-
+import pandas as pd
+from stockV.machine_learning.rectangle import send_plots
+import json
+import requests
 
 class AddUser(APIView):
     def post(self, request):
@@ -244,3 +245,34 @@ class SellCryptoView(APIView):
                 ownedCoin.delete()
             ownedCoin.save()
             return response
+
+
+class GenerateRectanglePatterns(APIView):
+    def post(self, request):
+        symbol = request.data['symbol']
+        intervalValue = request.data['intervalValue']
+        intervalCode = request.data['intervalCode']
+        startTime = request.data['startTime']
+        endTime = request.data['endTime']
+        
+        url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + 'USDT&interval=' + intervalValue + intervalCode + '&startTime=' + startTime + '&endTime=' + endTime
+        response = requests.get(url)
+        if response.status_code == 200:
+            """
+            data = response.json()
+
+            # Extract open, high, low, and close values as separate lists
+            opens = [float(candle[1]) for candle in data]
+            highs = [float(candle[2]) for candle in data]
+            lows = [float(candle[3]) for candle in data]
+            closes = [float(candle[4]) for candle in data]
+
+            df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+            """
+            df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+            plots = send_plots(df)
+            print(plots)
+
+            # Return the plots array as a JSON response
+            return JsonResponse(plots, safe=False)
