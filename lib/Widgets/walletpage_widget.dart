@@ -18,6 +18,7 @@ class WalletPageState extends StatefulWidget {
 
 class _WalletPageState extends State<WalletPageState> {
   late Timer _timer;
+  double changePercentage = 0;
 
   @override
   void initState() {
@@ -31,9 +32,20 @@ class _WalletPageState extends State<WalletPageState> {
 
   Future<void> fetchUserWallet() async {
     List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
+
     if (mounted) {
       setState(() {
         wallet = userWallet;
+        WalletCoin temp = WalletCoin(
+          coinName: "US Dollar",
+          coinSymbol: "USD",
+          amount: widget.user.getCurrency(),
+          usdValue: 1,
+          dailyChange: 0
+        );
+        wallet.add(temp);
+        wallet.sort((a, b) => (b.amount*b.usdValue).compareTo(a.amount * a.usdValue));
+        changePercentage = calculateTotalChange(wallet);
       });
     }
   }
@@ -48,60 +60,53 @@ class _WalletPageState extends State<WalletPageState> {
       body: Column(
         children: [
           const SizedBox(
-            height: 20,
+            height: 20
           ),
-          Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      'Total Assets',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.05,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+            Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Column(
+                    children: [
+                      Text(
+                        'Total Assets',
+                        style: TextStyle(
+                          fontSize: screenWidth * 0.05,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: screenWidth * 0.02),
-                    Text(
-                      '\$${totalValue.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.08,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
+                      SizedBox(height: screenWidth * 0.02),
+                      Row(
+                        children: [
+                          Text(
+                            '\$${(totalValue + widget.user.balance).toStringAsFixed(2)}',
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.08,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            ' (${changePercentage.toStringAsFixed(2)}%)',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color:
+                                  changePercentage >= 0 ? Colors.green : Colors.red,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(width: screenWidth * 0.05,),
-                Column(
-                  children: [
-                    Text(
-                      'Current Balance',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.05,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                    SizedBox(height: screenWidth * 0.02),
-                    Text(
-                      '\$${widget.user.balance.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.08,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                ),
-
-              ],
+                    ],
+                  ),
+                  SizedBox(
+                    width: screenWidth * 0.05,
+                  ),
+                ],
+              ),
             ),
-          ),
+
           const SizedBox(
             height: 10,
           ),
@@ -134,7 +139,7 @@ class _WalletPageState extends State<WalletPageState> {
                         width: 35,
                       ),
                       title: Text(
-                        transactions[index].coinName,
+                        wallet[index].coinName,
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 20),
                       ),
@@ -145,24 +150,40 @@ class _WalletPageState extends State<WalletPageState> {
                         ),
                       ),
                       trailing: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '\$${wallet[index].usdValue.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              wallet[index].amount.toStringAsFixed(2),
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                              ),
                             ),
-                          ),
-                          Text(
-                            wallet[index].amount.toStringAsFixed(2),
-                            style: const TextStyle(
-                              fontSize: 18.0,
+                          Expanded(
+                              child: Row(
+                                mainAxisSize: MainAxisSize
+                                    .min, // This makes the Row take up only as much space as needed
+                                children: [
+                                  Text(
+                                    '\$${(wallet[index].usdValue * wallet[index].amount).toStringAsFixed(2)}',
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16.0,
+                                    ),
+                                  ),
+                                  Text(
+                                    ' (${wallet[index].dailyChange.toStringAsFixed(2)}%)',
+                                    style: TextStyle(
+                                      fontSize: 14.0,
+                                      color: wallet[index].dailyChange >= 0
+                                          ? Colors.green
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          ]),
                     ),
                   ),
                 );

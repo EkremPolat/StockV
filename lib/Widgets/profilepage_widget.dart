@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
-import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 import 'package:stockv/Widgets/transactions_widget.dart';
 
 import 'package:stockv/pages/login.dart';
@@ -125,7 +124,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                     width: 3,
                   ),
                 ),
-                height: 400,
+                height: 175,
                 width: 400,
                 child: Column(
                   children: <Widget>[
@@ -149,32 +148,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                             const TextStyle(fontSize: 20, color: Colors.green),
                       ),
                     ),
-                    SizedBox(
-                      height: 40,
-                      child: FutureBuilder<List<dynamic>>(
-                        future: getOwnedCrypto(widget.user.id), // Call your function that returns a Future<List<dynamic>>
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
-                            // While waiting for the response, show a loading indicator
-                            return CircularProgressIndicator();
-                          } else if (snapshot.hasError) {
-                            // If an error occurred while fetching the data, display an error message
-                            return Text('Error: ${snapshot.error}');
-                          } else {
-                            // If the data is available, display it in the Text widget
-                            final ownedCrypto = snapshot.data;
-                            final length = ownedCrypto?.length ?? 0; // Add a null check and provide a default value of 0
-
-                            return Text(
-                              "\$$length", // Modify this part based on your desired logic
-                              style: const TextStyle(fontSize: 20, color: Colors.green),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-
-
+                    
                     SizedBox(
                       height: 50,
                       width: 150,
