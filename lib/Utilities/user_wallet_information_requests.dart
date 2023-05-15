@@ -6,7 +6,7 @@ import 'package:stockv/Models/transaction.dart';
 import 'package:stockv/Models/wallet_coin.dart';
 
 Future<List<WalletCoin>> getUserWallet(String userID) async {
-  var url = 'http://192.168.43.136:8000/get-wallet/$userID/';
+  var url = 'http://10.0.2.2:8000/get-wallet/$userID/';
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     final wallet = (jsonDecode(response.body) as List)
@@ -21,11 +21,15 @@ Future<List<WalletCoin>> getUserWallet(String userID) async {
 
 Future<double> buyCrypto(
     String userId, String coinName, double amount, double totalCost) async {
-  var url = 'http://192.168.43.136:8000/buy-crypto/';
+  var url = 'http://10.0.2.2:8000/buy-crypto/';
   var response = await http.post(
     Uri.parse(url),
-    body:
-        json.encode({'userId': userId, 'coinName': coinName, 'amount': amount, 'cost' : totalCost}),
+    body: json.encode({
+      'userId': userId,
+      'coinName': coinName,
+      'amount': amount,
+      'cost': totalCost
+    }),
     headers: {
       "Content-Type": "application/json",
     },
@@ -39,7 +43,7 @@ Future<double> buyCrypto(
 }
 
 Future<HasCryptoData> hasCrypto(String userId, String coinName) async {
-  const url = 'http://192.168.43.136:8000/has-crypto/';
+  const url = 'http://10.0.2.2:8000/has-crypto/';
   var response = await http.post(Uri.parse(url),
       body: json.encode({
         'userId': userId,
@@ -58,10 +62,14 @@ Future<HasCryptoData> hasCrypto(String userId, String coinName) async {
 
 Future<double> sellCrypto(
     String userId, String coinName, double amount, double totalEarning) async {
-  var url = 'http://192.168.43.136:8000/sell-crypto/';
+  var url = 'http://10.0.2.2:8000/sell-crypto/';
   var response = await http.post(Uri.parse(url),
-      body:
-          json.encode({'userId': userId, 'coinName': coinName, 'amount': amount, 'totalEarnings' : totalEarning}),
+      body: json.encode({
+        'userId': userId,
+        'coinName': coinName,
+        'amount': amount,
+        'totalEarnings': totalEarning
+      }),
       headers: {"Content-Type": "application/json"});
   if (response.statusCode == 200) {
     double balance = json.decode(response.body)['balance'];
@@ -71,8 +79,8 @@ Future<double> sellCrypto(
   }
 }
 
-Future<List<Transaction>> getUserTransactionHistory (String userId) async {
-  var url = 'http://192.168.43.136:8000/get-transaction-history/$userId/';
+Future<List<Transaction>> getUserTransactionHistory(String userId) async {
+  var url = 'http://10.0.2.2:8000/get-transaction-history/$userId/';
   var response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     final transactionHistory = (jsonDecode(response.body) as List)
@@ -86,7 +94,7 @@ Future<List<Transaction>> getUserTransactionHistory (String userId) async {
 }
 
 Future<double> getUserBalance(String userId) async {
-  var url = 'http://192.168.43.136:8000/get-user-balance/$userId/';
+  var url = 'http://10.0.2.2:8000/get-user-balance/$userId/';
   var response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
     final balance = jsonDecode(response.body)['balance'];

@@ -13,7 +13,12 @@ class ChartPatternButtons extends StatefulWidget {
   final int intervalValue;
   final Duration duration;
 
-  const ChartPatternButtons({super.key, required this.etfCode, required this.intervalCode, required this.intervalValue, required this.duration});
+  const ChartPatternButtons(
+      {super.key,
+      required this.etfCode,
+      required this.intervalCode,
+      required this.intervalValue,
+      required this.duration});
 
   @override
   State<ChartPatternButtons> createState() => _ChartPatternButtonsState();
@@ -43,7 +48,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     List<String> triples = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Triples');
     //List<String> wedge = await fetchChartPatterns(
-       // symbol, intervalValue, intervalCode, startTime, endTime, 'Wedge');
+    // symbol, intervalValue, intervalCode, startTime, endTime, 'Wedge');
     List<String> triangles = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Triangle');
     /*List<String> supportAndResistance = await fetchChartPatterns(
@@ -75,14 +80,14 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
   }
 
   Future<List<String>> fetchChartPatterns(
-      String symbol,
-      int intervalValue,
-      String intervalCode,
-      int startTime,
-      int endTime,
-      String patternType,
-      ) async {
-    const url = 'http://192.168.43.136:8000/get-chart-patterns/';
+    String symbol,
+    int intervalValue,
+    String intervalCode,
+    int startTime,
+    int endTime,
+    String patternType,
+  ) async {
+    const url = 'http://10.0.2.2:8000/get-chart-patterns/';
 
     final client = http.Client();
     final request = http.Request('POST', Uri.parse(url));
@@ -97,7 +102,8 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     });
 
     // Set a longer timeout duration (e.g., 30 seconds)
-    final response = await http.Response.fromStream(await http.Client().send(request).timeout(const Duration(seconds: 30)));
+    final response = await http.Response.fromStream(
+        await http.Client().send(request).timeout(const Duration(seconds: 30)));
 
     if (response.statusCode == 200) {
       final parsedResponse = json.decode(await response.body);
@@ -114,7 +120,8 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
   @override
   void initState() {
     super.initState();
-    fetchPlots(widget.etfCode, widget.intervalValue, widget.intervalCode, widget.duration);
+    fetchPlots(widget.etfCode, widget.intervalValue, widget.intervalCode,
+        widget.duration);
   }
 
   @override
@@ -143,9 +150,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (rectanglePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (rectanglePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -156,11 +164,15 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { rectanglePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: rectanglePlots,)));
+                  onPressed: () {
+                    rectanglePlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(
+                                      plots: rectanglePlots,
+                                    )));
                   },
                   child: const Text(
                     'SEE RECTANGLE PATTERN',
@@ -169,9 +181,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (headAndShouldersPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (headAndShouldersPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -182,12 +195,16 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { headAndShouldersPlots.isEmpty ? null :
-                      print(headAndShouldersPlots.length);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: headAndShouldersPlots,)));
+                  onPressed: () {
+                    headAndShouldersPlots.isEmpty
+                        ? null
+                        : print(headAndShouldersPlots.length);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PlotDisplayScreen(
+                                  plots: headAndShouldersPlots,
+                                )));
                   },
                   child: const Text(
                     'SEE HEAD & SHOULDERS PATTERN',
@@ -196,9 +213,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (triplesPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (triplesPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -209,11 +227,15 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { triplesPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: triplesPlots,)));
+                  onPressed: () {
+                    triplesPlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(
+                                      plots: triplesPlots,
+                                    )));
                   },
                   child: const Text(
                     'SEE TRIPLES PATTERN',
@@ -222,9 +244,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (wedgePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (wedgePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -235,11 +258,14 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { wedgePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: wedgePlots)));
+                  onPressed: () {
+                    wedgePlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PlotDisplayScreen(plots: wedgePlots)));
                   },
                   child: const Text(
                     'SEE WEDGE PATTERN',
@@ -248,9 +274,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (trianglePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (trianglePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -261,11 +288,14 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { trianglePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: trianglePlots)));
+                  onPressed: () {
+                    trianglePlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PlotDisplayScreen(plots: trianglePlots)));
                   },
                   child: const Text(
                     'SEE TRIANGLE PATTERN',
@@ -274,9 +304,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (supportAndResistancePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (supportAndResistancePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -287,11 +318,14 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { supportAndResistancePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: supportAndResistancePlots)));
+                  onPressed: () {
+                    supportAndResistancePlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(
+                                    plots: supportAndResistancePlots)));
                   },
                   child: const Text(
                     'SEE SUPPORT & RESISTANCE PATTERN',
@@ -300,9 +334,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (roundingBottomPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (roundingBottomPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -313,11 +348,14 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { roundingBottomPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: roundingBottomPlots)));
+                  onPressed: () {
+                    roundingBottomPlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(
+                                    plots: roundingBottomPlots)));
                   },
                   child: const Text(
                     'SEE ROUNDING BOTTOM PATTERN',
@@ -326,9 +364,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (flagPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (flagPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -339,11 +378,14 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { flagPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: flagPlots)));
+                  onPressed: () {
+                    flagPlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    PlotDisplayScreen(plots: flagPlots)));
                   },
                   child: const Text(
                     'SEE FLAG PATTERN',
@@ -352,9 +394,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (doublePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (doublePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -365,11 +408,15 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () { doublePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: doublePlots,)));
+                  onPressed: () {
+                    doublePlots.isEmpty
+                        ? null
+                        : Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(
+                                      plots: doublePlots,
+                                    )));
                   },
                   child: const Text(
                     'SEE DOUBLE PATTERN',

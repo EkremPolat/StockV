@@ -4,7 +4,7 @@ import '../Models/user.dart';
 import '../Models/coin.dart';
 
 Future<bool> register(String fullName, String email, String password) async {
-  var url = 'http://192.168.43.136:8000/signup/';
+  var url = 'http://10.0.2.2:8000/signup/';
   var response = await http.post(
     Uri.parse(url),
     body: json
@@ -22,7 +22,7 @@ Future<bool> register(String fullName, String email, String password) async {
 }
 
 Future<User?> login(String email, String password) async {
-  var url = 'http://192.168.43.136:8000/login/';
+  var url = 'http://10.0.2.2:8000/login/';
   var response = await http.post(
     Uri.parse(url),
     body: json.encode({'email': email, 'password': password}),
@@ -44,7 +44,7 @@ Future<User?> login(String email, String password) async {
 
 Future<String?> passwordChange(String? fullName, String? email,
     String oldPassword, String? newPassword) async {
-  var passwordVerificationURL = 'http://192.168.43.136:8000/verify-password/';
+  var passwordVerificationURL = 'http://10.0.2.2:8000/verify-password/';
   var passwordVerificationResponse = await http.post(
     Uri.parse(passwordVerificationURL),
     body: json.encode({'email': email, 'password': oldPassword}),
@@ -53,7 +53,7 @@ Future<String?> passwordChange(String? fullName, String? email,
     },
   );
   if (passwordVerificationResponse.statusCode == 200) {
-    var url = 'http://192.168.43.136:8000/password-change/';
+    var url = 'http://10.0.2.2:8000/password-change/';
     dynamic response;
     if (newPassword != null && newPassword.isNotEmpty) {
       response = await http.patch(
@@ -88,7 +88,7 @@ Future<String?> passwordChange(String? fullName, String? email,
 }
 
 Future<List<Coin>> fetchCoinsFromDB() async {
-  var url = 'http://192.168.43.136:8000/coins/';
+  var url = 'http://10.0.2.2:8000/coins/';
   var response = await http.get(
     Uri.parse(url),
   );
@@ -105,7 +105,7 @@ Future<List<Coin>> fetchCoinsFromDB() async {
 }
 
 Future<List<Coin>> fetchSavedCoinsFromDB(String userID) async {
-  var url = 'http://192.168.43.136:8000/saved-coins/$userID/';
+  var url = 'http://10.0.2.2:8000/saved-coins/$userID/';
   var response = await http.get(
     Uri.parse(url),
   );
@@ -122,7 +122,7 @@ Future<List<Coin>> fetchSavedCoinsFromDB(String userID) async {
 }
 
 Future<List<Coin>> addSavedCoinsToUser(String userId, int coinId) async {
-  var url = 'http://192.168.43.136:8000/add-saved-coin/';
+  var url = 'http://10.0.2.2:8000/add-saved-coin/';
   var response = await http.post(
     Uri.parse(url),
     body: json.encode({'userId': userId, 'coinId': coinId}),
@@ -143,7 +143,7 @@ Future<List<Coin>> addSavedCoinsToUser(String userId, int coinId) async {
 }
 
 Future<List<Coin>> removeSavedCoinsFromUser(String userId, int coinId) async {
-  var url = 'http://192.168.43.136:8000/remove-saved-coin/';
+  var url = 'http://10.0.2.2:8000/remove-saved-coin/';
   var response = await http.post(
     Uri.parse(url),
     body: json.encode({'userId': userId, 'coinId': coinId}),
