@@ -47,13 +47,17 @@ class _TransactionListPageState extends State<TransactionListPage> {
       ),
       body: Column(
         children: [
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           const Text('Transaction List',
               style: TextStyle(
                 fontSize: 30.0,
                 fontWeight: FontWeight.bold,
               )),
-          const SizedBox(height: 10,),
+          const SizedBox(
+            height: 10,
+          ),
           Expanded(
             child: ListView.builder(
               itemCount: transactions.length,
@@ -87,9 +91,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                   : Colors.red,
                             ),
                             Text(
-                                transactions[index].sellingTransaction ? "Sell" : "Purchase",
-                                style: const TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 14),
+                              transactions[index].sellingTransaction
+                                  ? "Sell"
+                                  : "Purchase",
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 14),
                             )
                           ],
                         ),
@@ -145,3 +151,4 @@ class _TransactionListPageState extends State<TransactionListPage> {
     }
   }
 }
+

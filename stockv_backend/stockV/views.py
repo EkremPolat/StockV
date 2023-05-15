@@ -49,7 +49,7 @@ class Password_change_view(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
 
-        user_serializer = UserSerializer(user, data=request.data)
+        user_serializer = UserUpdate(user, data=request.data)
         user_serializer.is_valid(raise_exception=True)
         user_serializer.save()
         return Response(request.data)

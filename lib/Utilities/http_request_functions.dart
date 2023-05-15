@@ -34,8 +34,8 @@ Future<User?> login(String email, String password) async {
     final userData = jsonDecode(response.body);
     String id = userData["id"];
     String email = userData["email"];
-    User user = User(id: id, email: email);
-    //Or put here your next screen using Navigator.push() method
+    String fullName = userData["full_name"];
+    User user = User(id: id, email: email, fullName: fullName);    //Or put here your next screen using Navigator.push() method
     return Future.value(user);
   } else {
     return Future.value(null);
