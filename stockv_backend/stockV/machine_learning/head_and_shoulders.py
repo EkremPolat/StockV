@@ -1,22 +1,15 @@
-"""
-Date: 20230102
-This program implements the Head and Shoulders pattern
-Source: https://www.youtube.com/watch?v=Mxk8PP3vbuA
-"""
-
 import mplfinance as mpf 
-import glob
 import matplotlib.dates as mpdates
 import matplotlib.pyplot as plt 
 import numpy as np
-import os
+import matplotlib
+matplotlib.use('Agg') 
 import pandas as pd
 from scipy.stats import linregress
 from progress.bar import Bar
 from typing import List, Union
 import io
 import base64
-
 
 plt.style.use('seaborn-darkgrid')
 
@@ -141,43 +134,6 @@ def find_inverse_head_and_shoulders(df, back_candles=14):
 
     return all_points
 
-
-
-def find_head_and_shoulders(df: pd.DataFrame, back_candles: int = 14) -> List[int]:
-    """
-    Find all head and shoulder chart patterns
-    :params df -> an ohlc dataframe that has "ShortPivot" and "Pivot" as columns
-    :type :pd.DataFrame
-    :params back_candles -> Look-back and look-forward period
-    :type :int
-    
-    :returns all_points
-    """
-    all_points = []
-    for candle_id in range(back_candles+20, len(df)-back_candles):
-        
-        if df.loc[candle_id, "Pivot"] != 2 or df.loc[candle_id,"ShortPivot"] != 2:
-            continue
-        
-        
-        maxim, minim, xxmax, xxmin, maxacount, minacount, maxbcount, minbcount = _find_points(df, candle_id, back_candles)
-        if minbcount<1 or minacount<1 or maxbcount<1 or maxacount<1:
-            continue
-
-        slmin, intercmin, rmin, pmin, semin = linregress(xxmin, minim)
-        headidx = np.argmax(maxim, axis=0)
-
-        
-       
-        if maxim[headidx]-maxim[headidx-1]>1.5e-3 and maxim[headidx]-maxim[headidx+1]>1.5e-3 and abs(slmin)<=1e-4: 
-            all_points.append(candle_id)
-            
-            
-
-    return all_points
-
-
-
 def save_plot(ohlc, all_points, back_candles, fname="head_and_shoulders", hs=True):
     """
     Save all the graphs
@@ -191,6 +147,7 @@ def save_plot(ohlc, all_points, back_candles, fname="head_and_shoulders", hs=Tru
 
     total = len(all_points)
     bar = Bar(f'Processing {fname} images', max=total)
+    plt.style.use('seaborn-darkgrid')
 
     plots = []
     for j, point in enumerate(all_points):

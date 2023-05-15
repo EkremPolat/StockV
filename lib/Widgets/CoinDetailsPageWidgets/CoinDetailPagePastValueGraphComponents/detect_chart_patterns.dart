@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/io_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_chart_pattern.dart';
 
@@ -42,11 +41,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
         intervalValue, intervalCode, startTime, endTime, 'Head and Shoulders');
     List<String> triples = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Triples');
-    //List<String> wedge = await fetchChartPatterns(
-       // symbol, intervalValue, intervalCode, startTime, endTime, 'Wedge');
+    List<String> wedge = await fetchChartPatterns(
+        symbol, intervalValue, intervalCode, startTime, endTime, 'Wedge');
     List<String> triangles = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Triangle');
-    /*List<String> supportAndResistance = await fetchChartPatterns(
+    List<String> supportAndResistance = await fetchChartPatterns(
         symbol,
         intervalValue,
         intervalCode,
@@ -58,18 +57,18 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     List<String> flags = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Flag');
     List<String> double = await fetchChartPatterns(
-        symbol, intervalValue, intervalCode, startTime, endTime, 'Double');*/
+        symbol, intervalValue, intervalCode, startTime, endTime, 'Double');
 
     setState(() {
       rectanglePlots = rectangles;
       headAndShouldersPlots = headAndShoulders;
       triplesPlots = triples;
-      wedgePlots = [];
+      wedgePlots = wedge;
       trianglePlots = triangles;
-      supportAndResistancePlots = [];
-      roundingBottomPlots = [];
-      flagPlots = [];
-      doublePlots = [];
+      supportAndResistancePlots = supportAndResistance;
+      roundingBottomPlots = roundingBottom;
+      flagPlots = flags;
+      doublePlots = double;
       isLoading = false;
     });
   }
@@ -82,9 +81,8 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
       int endTime,
       String patternType,
       ) async {
-    const url = 'http://192.168.43.136:8000/get-chart-patterns/';
+    const url = 'http://10.0.2.2:8000/get-chart-patterns/';
 
-    final client = http.Client();
     final request = http.Request('POST', Uri.parse(url));
     request.headers["Content-Type"] = "application/json";
     request.body = json.encode({
@@ -100,7 +98,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     final response = await http.Response.fromStream(await http.Client().send(request).timeout(const Duration(seconds: 30)));
 
     if (response.statusCode == 200) {
-      final parsedResponse = json.decode(await response.body);
+      final parsedResponse = json.decode(response.body);
 
       // Convert the dynamic list to a List<String> of plots
       List<String> fetchedPlots = List<String>.from(parsedResponse);
@@ -160,7 +158,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: rectanglePlots,)));
+                          builder: (context) => PlotDisplayScreen(plots: rectanglePlots, chartPatternType: 'Rectangle', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE RECTANGLE PATTERN',
@@ -187,7 +185,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: headAndShouldersPlots,)));
+                          builder: (context) => PlotDisplayScreen(plots: headAndShouldersPlots, chartPatternType: 'Head & Shoulders', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE HEAD & SHOULDERS PATTERN',
@@ -213,7 +211,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: triplesPlots,)));
+                          builder: (context) => PlotDisplayScreen(plots: triplesPlots, chartPatternType: 'Triples', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE TRIPLES PATTERN',
@@ -239,7 +237,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: wedgePlots)));
+                          builder: (context) => PlotDisplayScreen(plots: wedgePlots, chartPatternType: 'Wedge', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE WEDGE PATTERN',
@@ -265,7 +263,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: trianglePlots)));
+                          builder: (context) => PlotDisplayScreen(plots: trianglePlots, chartPatternType: 'Triangle', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE TRIANGLE PATTERN',
@@ -291,7 +289,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: supportAndResistancePlots)));
+                          builder: (context) => PlotDisplayScreen(plots: supportAndResistancePlots, chartPatternType: 'Support & Resistance', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE SUPPORT & RESISTANCE PATTERN',
@@ -317,7 +315,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: roundingBottomPlots)));
+                          builder: (context) => PlotDisplayScreen(plots: roundingBottomPlots, chartPatternType: 'Rounding Bottom', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE ROUNDING BOTTOM PATTERN',
@@ -343,7 +341,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: flagPlots)));
+                          builder: (context) => PlotDisplayScreen(plots: flagPlots, chartPatternType: 'Flag', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE FLAG PATTERN',
@@ -369,7 +367,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: doublePlots,)));
+                          builder: (context) => PlotDisplayScreen(plots: doublePlots, chartPatternType: 'Double', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE DOUBLE PATTERN',

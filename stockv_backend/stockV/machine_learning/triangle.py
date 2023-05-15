@@ -1,27 +1,15 @@
-"""
-Date 20230102
-This progam implements an algo to find Triangle Chart Patterns.
-It can be used to find ascending, descending, and symmetrical patterns. 
-Source: https://www.youtube.com/watch?v=WVNB_6JRbl0
-"""
-
 from mplfinance.original_flavor import candlestick_ohlc
 
-import glob
-import matplotlib.dates as mpdates
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  
 import numpy as np
-import os
 import pandas as pd
 from progress.bar import Bar 
 from scipy.stats import linregress
 from typing import List, Union
 import io
 import base64
-
-
-plt.style.use('seaborn-darkgrid')
-
 
 
 def pivot_id(ohlc, l, n1, n2):
@@ -127,81 +115,6 @@ def find_triangle_points(ohlc: pd.DataFrame, backcandles: int, triangle_type: st
     bar.finish()
     return all_triangle_points
 
-
-def plot_pattern(ohlc: pd.DataFrame, all_triangle_points: List[int], backcandles: int, point: int = 0) -> None:
-    """
-    Plot a single instance of the triangle pattern
-    :params ohlc - Dataframe that has all the Open, High, Low, Close
-    :type :pd.DataFrame
-    :params all_triangle_points - list that has all index points that have triangle points
-    :type :List[int]
-    :params backcandles - number of periods to lookback
-    :type :int
-    :params point - The triangle point to plot. It has to be less than the length of all_triangle_points. Default 0; Plot the first triangle point
-    :type :int
-    """
-
-    total = len(all_triangle_points) 
-    if point > total:
-        print(f"Error. The `point` has to be less than {total}")    
-        return 
-
-    triangle_point = all_triangle_points[point]
-    candleid = triangle_point
-    
-    maxim = np.array([])
-    minim = np.array([])
-    xxmin = np.array([])
-    xxmax = np.array([])
-
-    for i in range(candleid-backcandles, candleid+1):
-        if ohlc.loc[i,"Pivot"] == 1:
-            minim = np.append(minim, ohlc.loc[i, "Low"])
-            xxmin = np.append(xxmin, int(i)) 
-        if ohlc.loc[i,"Pivot"] == 2:
-            maxim = np.append(maxim, ohlc.loc[i,"High"])
-            xxmax = np.append(xxmax, int(i))
-            
-
-    slmin, intercmin, rmin, pmin, semin = linregress(xxmin, minim)
-    slmax, intercmax, rmax, pmax, semax = linregress(xxmax, maxim)
-
-    ohlc_subset                     = ohlc[candleid-backcandles-10:candleid+backcandles+10]
-    ohlc_subset_copy                = ohlc_subset.copy()
-    ohlc_subset_copy.loc[:,"Index"] = ohlc_subset_copy.index
-
-    xxmin = np.append(xxmin, xxmin[-1]+15)
-    xxmax = np.append(xxmax, xxmax[-1]+15)
-
-
-    # Move the y-axis to the right hand side. 
-    plt.rcParams['ytick.right'] = plt.rcParams['ytick.labelright'] = True
-    plt.rcParams['ytick.left'] = plt.rcParams['ytick.labelleft'] = False
-
-    fig, ax = plt.subplots(figsize=(15,7), facecolor='#000000')
-
-    candlestick_ohlc(ax, ohlc_subset_copy.loc[:, ["Index","Open", "High", "Low", "Close"] ].values,
-     width=0.6, colorup='green', colordown='red', alpha=0.8)
-
-
-    # Draw the triangle lines.
-    ax.plot(xxmin, xxmin*slmin + intercmin, linewidth=12, color="purple", alpha=0.85)
-    ax.plot(xxmax, xxmax*slmax + intercmax, linewidth=12, color="purple", alpha=0.85)
-
-
-    # Color the ticks white
-    ax.tick_params(axis='x', colors='white')
-    ax.tick_params(axis='y', colors='white')
-    
-
-    ax.set_facecolor('#000000')
-    ax.grid(False)
-    ax.set_xlabel('Index')
-    # ax.set_ylabel('Price')
-
-    return None 
-
-
 def save_plot(ohlc: pd.DataFrame, all_triangle_points: List[int], backcandles: int) -> None:
     """
     Save all the triangle patterns graphs
@@ -216,7 +129,7 @@ def save_plot(ohlc: pd.DataFrame, all_triangle_points: List[int], backcandles: i
     :return None  
     """
     total = len(all_triangle_points)
-
+    plt.style.use('seaborn-darkgrid')
     bar  = Bar("Plotting the pattern", max=total)
     plots = []
     for j, triangle_point in enumerate(all_triangle_points):
