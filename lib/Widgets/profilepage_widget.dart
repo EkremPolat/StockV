@@ -148,6 +148,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                             const TextStyle(fontSize: 20, color: Colors.green),
                       ),
                     ),
+                    
                     SizedBox(
                       height: 50,
                       width: 150,

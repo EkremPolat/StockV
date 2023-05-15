@@ -58,7 +58,7 @@ class Password_change_view(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
 
-        user_serializer = UserSerializer(user, data=request.data)
+        user_serializer = UserUpdate(user, data=request.data)
         user_serializer.is_valid(raise_exception=True)
         user_serializer.save()
         return Response(request.data)
@@ -147,7 +147,7 @@ class GetWalletListView(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
         ownedCoins = user.wallet.all()
-        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol , 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(name=ownedCoin.coin_name).first().price} for ownedCoin in ownedCoins]
+        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol , 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(name=ownedCoin.coin_name).first().price, 'dailyChange': Coin.objects.filter(name=ownedCoin.coin_name).first().dailyChange} for ownedCoin in ownedCoins]
         return JsonResponse(wallet_list, safe=False)
 
 class GetTransactionHistoryView(APIView):
