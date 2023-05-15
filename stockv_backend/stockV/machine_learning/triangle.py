@@ -1,3 +1,10 @@
+"""
+Date 20230102
+This progam implements an algo to find Triangle Chart Patterns.
+It can be used to find ascending, descending, and symmetrical patterns. 
+Source: https://www.youtube.com/watch?v=WVNB_6JRbl0
+"""
+
 from mplfinance.original_flavor import candlestick_ohlc
 
 import glob
@@ -6,14 +13,15 @@ import matplotlib.pyplot as plt
 import numpy as np
 import os
 import pandas as pd
-from progress.bar import Bar
+from progress.bar import Bar 
 from scipy.stats import linregress
-from scipy.signal import argrelextrema
 from typing import List, Union
 import io
 import base64
 
+
 plt.style.use('seaborn-darkgrid')
+
 
 
 def pivot_id(ohlc, l, n1, n2):
@@ -66,18 +74,20 @@ def pivot_point_position(row):
     else:
         return np.nan
 
-
-def find_rectangle_points(ohlc: pd.DataFrame, backcandles: int) -> List[int]:
+def find_triangle_points(ohlc: pd.DataFrame, backcandles: int, triangle_type: str = "symmetrical") -> List[int]:
     """
     Find the trianle points based on the pivot points
     :params ohlc -> dataframe that has OHLC data
     :type :pd.DataFrame
     :params backcandles -> number of periods to lookback
     :type :int
+    :params triangle_type -> Find a symmetrical, ascending or descending triangle? Options: ['symmetrical', 'ascending', 'descending']
+    :type :str 
     :returns triangle points
     """
-    all_rectangle_points = []
+    all_triangle_points = []
 
+    bar = Bar(f'Finding triangle points ', max=len(ohlc))
     for candleid in range(backcandles+10, len(ohlc)):
         
         maxim = np.array([])
@@ -100,78 +110,44 @@ def find_rectangle_points(ohlc: pd.DataFrame, backcandles: int) -> List[int]:
         slmin, intercmin, rmin, pmin, semin = linregress(xxmin, minim)
         slmax, intercmax, rmax, pmax, semax = linregress(xxmax, maxim)
 
-        if abs(rmax)>=0.8 and abs(rmin)>=0.8 and (abs(slmin/slmax)>=0.85 and abs(slmin/slmax)<=1.05) \
-            and (slmin>=-0.001 and slmin <= 0.001) and (slmax>=-0.001 and slmax <= 0.001): #  
-            all_rectangle_points.append(candleid)
+        if triangle_type == "symmetrical":
+            if abs(rmax)>=0.9 and abs(rmin)>=0.9 and slmin>=0.0001 and slmax<=-0.0001:
+                all_triangle_points.append(candleid)
 
-    return all_rectangle_points
-
-def plot_pivots(ohlc: pd.DataFrame) -> None:
-    """
-    Plot the pivot highs and lows
+        elif triangle_type == "ascending":
+            if abs(rmax)>=0.9 and abs(rmin)>=0.9 and slmin>=0.0001 and (slmax>=-0.00001 and slmax <= 0.00001):
+                all_triangle_points.append(candleid)
     
-    :params ohlc -> OHLC data that has a columns `Pivot` and `PointPos`
-    :type :pd.DataFrame
-    returns None
+        elif triangle_type == "descending":
+            if abs(rmax)>=0.9 and abs(rmin)>=0.9 and slmax<=-0.0001 and (slmin>=-0.00001 and slmin <= 0.00001):
+                all_triangle_points.append(candleid)
+
+        bar.next()
+
+    bar.finish()
+    return all_triangle_points
+
+
+def plot_pattern(ohlc: pd.DataFrame, all_triangle_points: List[int], backcandles: int, point: int = 0) -> None:
     """
-
-
-    ohlc_subset_copy                = ohlc.loc[0:1000,:]
-    ohlc_subset_copy.loc[:,"Index"] = ohlc_subset_copy.index
-
-
-    # Move the y-axis to the right hand side. 
-    plt.rcParams['ytick.right'] = plt.rcParams['ytick.labelright'] = True
-    plt.rcParams['ytick.left'] = plt.rcParams['ytick.labelleft'] = False
-
-    fig, ax = plt.subplots(figsize=(15,7), facecolor='#000000')
-
-    candlestick_ohlc(ax, ohlc_subset_copy.loc[:, ["Index","Open", "High", "Low", "Close"] ].values,
-     width=0.6, colorup='green', colordown='red', alpha=0.8)
-
-    # Get the pivot high and low points
-    pivot_lows     = ohlc_subset_copy.loc[ohlc_subset_copy["Pivot"]==1, "PointPos"]
-    pivot_lows_idx = pivot_lows.index
-
-    pivot_highs     = ohlc_subset_copy.loc[ohlc_subset_copy["Pivot"]==2, "PointPos"]
-    pivot_highs_idx = pivot_highs.index
-
-    # Plot the pivot points
-    ax.scatter(pivot_lows_idx, pivot_lows)
-    ax.scatter(pivot_highs_idx, pivot_highs)
-
-    # Color the ticks white
-    ax.tick_params(axis='x', colors='white')
-    ax.tick_params(axis='y', colors='white')
-    
-    # Style options 
-    ax.set_facecolor('#000000')
-    ax.grid(False)
-
-    plt.show()
-
-    return None
-
-
-def plot_pattern(ohlc: pd.DataFrame, all_rectangle_points: List[int], backcandles: int, point: int = 0) -> None:
-    """
-    Plot a single instance of the rectangle pattern
+    Plot a single instance of the triangle pattern
     :params ohlc - Dataframe that has all the Open, High, Low, Close
     :type :pd.DataFrame
-    :params all_rectangle_points - list that has all index points that have rectangle points
+    :params all_triangle_points - list that has all index points that have triangle points
     :type :List[int]
     :params backcandles - number of periods to lookback
     :type :int
-    :params point - The rectangle point to plot. It has to be less than the length of all_rectangle_points. Default 0; Plot the first rectangle point
+    :params point - The triangle point to plot. It has to be less than the length of all_triangle_points. Default 0; Plot the first triangle point
     :type :int
     """
 
-    total = len(all_rectangle_points) 
+    total = len(all_triangle_points) 
     if point > total:
         print(f"Error. The `point` has to be less than {total}")    
         return 
 
-    candleid = all_rectangle_points[point]
+    triangle_point = all_triangle_points[point]
+    candleid = triangle_point
     
     maxim = np.array([])
     minim = np.array([])
@@ -226,12 +202,12 @@ def plot_pattern(ohlc: pd.DataFrame, all_rectangle_points: List[int], backcandle
     return None 
 
 
-def save_plot(ohlc: pd.DataFrame, all_rectangle_points: List[int], backcandles: int) -> None:
+def save_plot(ohlc: pd.DataFrame, all_triangle_points: List[int], backcandles: int) -> None:
     """
     Save all the triangle patterns graphs
     :params ohlc -> dataframe that has OHLC data
     :type :pd.DataFrame 
-    :params all_rectangle_points -> list that has all index points that have rectangle points
+    :params all_triangle_points -> list that has all index points that have triangle points
     :type :List[int]
     
     :params backcandles -> number of periods to lookback
@@ -239,12 +215,12 @@ def save_plot(ohlc: pd.DataFrame, all_rectangle_points: List[int], backcandles: 
     
     :return None  
     """
-    total = len(all_rectangle_points)
+    total = len(all_triangle_points)
 
     bar  = Bar("Plotting the pattern", max=total)
     plots = []
-    for j, rectangle_point in enumerate(all_rectangle_points):
-        candleid = rectangle_point
+    for j, triangle_point in enumerate(all_triangle_points):
+        candleid = triangle_point
         
         maxim = np.array([])
         minim = np.array([])
@@ -285,9 +261,11 @@ def save_plot(ohlc: pd.DataFrame, all_rectangle_points: List[int], backcandles: 
         # Color the ticks white
         ax.tick_params(axis='x', colors='white')
         ax.tick_params(axis='y', colors='white')
-
+        
         ax.set_facecolor('#000000')
         ax.grid(False)
+
+        bar.next()
 
         buffer = io.BytesIO()
         plt.savefig(buffer, format='png', bbox_inches='tight')
@@ -298,40 +276,32 @@ def save_plot(ohlc: pd.DataFrame, all_rectangle_points: List[int], backcandles: 
 
         # Append the base64-encoded image to the list of plots
         plots.append(image_base64)
-        plt.close()
-        bar.next()
 
     bar.finish()
 
     return plots
 
-
-def send_rectangle_plots(df):
+def send_triangle_plots(df):
     ohlc         = df.loc[:, ["Date", "Open", "High", "Low", "Close"] ]
 
-    ohlc["Pivot"]    = ohlc.apply(lambda x: pivot_id(ohlc, x.name, 3, 3), axis=1)
+    ohlc["Pivot"] = ohlc.apply(lambda x: pivot_id(ohlc, x.name, 3, 3), axis=1)
     ohlc['PointPos'] = ohlc.apply(lambda row: pivot_point_position(row), axis=1)
-
+ 
     # Identify the triangle patterns
     backcandles         = 20
-    all_rectangle_points = find_rectangle_points(ohlc, backcandles)
+    all_triangle_points = find_triangle_points(ohlc, backcandles, triangle_type="descending") # symmetrical, ascending, descending
 
-    return save_plot(ohlc, all_rectangle_points, backcandles)
+    return save_plot(ohlc, all_triangle_points, backcandles)
 
 if __name__ == "__main__":
     df = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
 
-    # Remove all non-trading periods
-    df   = df[df['Volume']!=0]
-    df.reset_index(drop=True, inplace=True)
-
     ohlc         = df.loc[:, ["Date", "Open", "High", "Low", "Close"] ]
 
-    ohlc["Pivot"]    = ohlc.apply(lambda x: pivot_id(ohlc, x.name, 3, 3), axis=1)
+    ohlc["Pivot"] = ohlc.apply(lambda x: pivot_id(ohlc, x.name, 3, 3), axis=1)
     ohlc['PointPos'] = ohlc.apply(lambda row: pivot_point_position(row), axis=1)
-
+ 
     # Identify the triangle patterns
     backcandles         = 20
-    all_rectangle_points = find_rectangle_points(ohlc, backcandles)
-
-    save_plot(ohlc, all_rectangle_points, backcandles)
+    all_triangle_points = find_triangle_points(ohlc, backcandles, triangle_type="descending") # symmetrical, ascending, descending
+    save_plot(ohlc, all_triangle_points, backcandles)

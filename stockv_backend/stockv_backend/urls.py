@@ -33,5 +33,5 @@ urlpatterns = [
     path('sell-crypto/', SellCryptoView.as_view(), name='sell-crypto'),
     path('get-transaction-history/<str:pk>/', GetTransactionHistoryView.as_view(), name='get-transaction-history'),
     path('get-user-balance/<str:pk>/', GetUserBalanceView.as_view(), name='get-user-balance'),
-    path('get-chart-patterns/rectangle/', GenerateRectanglePatterns.as_view(), name='get-rectangle-pattern'),
+    path('get-chart-patterns/', GenerateChartPatterns.as_view(), name='get-chart-patterns'),
 ]
