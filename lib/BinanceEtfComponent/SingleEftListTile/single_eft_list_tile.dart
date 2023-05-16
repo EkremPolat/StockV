@@ -29,62 +29,49 @@ class _CoinListTileState extends State<CoinListTile> {
       widthFactor: 0.98,
       child: ListTile(
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
         leading: Image(
           image: AssetImage(widget.coinIcon),
           fit: BoxFit.cover,
           width: 35,
         ),
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 100,
-              child: Text(
-                widget.coinValue.name,
-                style:
-                    const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-              ),
+            Text(
+              widget.coinValue.name,
+              style:
+                  const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              width: 100,
-              child: Text(
-                '\$${widget.coinValue.price.toStringAsFixed(2)}',
-                style: const TextStyle(fontSize: 18.0),
-              ),
+            Text(
+              '\$${widget.coinValue.price.toStringAsFixed(2)}',
+              style: const TextStyle(fontSize: 16.0),
             ),
           ],
         ),
         subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox(
-              width: 100,
-              child: Text(
-                widget.coinValue.symbol,
-                style: const TextStyle(fontSize: 18.0),
-              ),
+            Text(
+              widget.coinValue.symbol,
+              style: const TextStyle(fontSize: 16.0),
             ),
             if (widget.coinValue.dailyChange > 0)
-              SizedBox(
-                width: 100,
-                child: Text(
-                  widget.coinValue.dailyChange.toStringAsFixed(2),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.green,
-                  ),
+              Text(
+                widget.coinValue.dailyChange.toStringAsFixed(2),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.green,
                 ),
               ),
             if (widget.coinValue.dailyChange < 0)
-              SizedBox(
-                width: 100,
-                child: Text(
-                  widget.coinValue.dailyChange.toStringAsFixed(2),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.red,
-                  ),
+              Text(
+                widget.coinValue.dailyChange.toStringAsFixed(2),
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                  color: Colors.red,
                 ),
               )
           ],

@@ -5,9 +5,18 @@ from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from django.http import JsonResponse
 from django.http import HttpResponse
-import datetime
-import jwt
-
+import pandas as pd
+from stockV.machine_learning.rectangle import send_rectangle_plots
+from stockV.machine_learning.head_and_shoulders import send_head_and_shoulder_plots
+from stockV.machine_learning.triples import send_triple_plots
+from stockV.machine_learning.wedge import send_wedge_plots
+from stockV.machine_learning.triangle import send_triangle_plots
+from stockV.machine_learning.support_and_resistance import send_support_and_resistance_plots
+from stockV.machine_learning.rounding_bottom import send_rounding_bottom_plots
+from stockV.machine_learning.flag import send_flag_plots
+from stockV.machine_learning.doubles import send_double_plots
+import json
+import requests
 
 class AddUser(APIView):
     def post(self, request):
@@ -49,7 +58,7 @@ class Password_change_view(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
 
-        user_serializer = UserSerializer(user, data=request.data)
+        user_serializer = UserUpdate(user, data=request.data)
         user_serializer.is_valid(raise_exception=True)
         user_serializer.save()
         return Response(request.data)
@@ -138,7 +147,7 @@ class GetWalletListView(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
         ownedCoins = user.wallet.all()
-        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol , 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(name=ownedCoin.coin_name).first().price} for ownedCoin in ownedCoins]
+        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol , 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(name=ownedCoin.coin_name).first().price, 'dailyChange': Coin.objects.filter(name=ownedCoin.coin_name).first().dailyChange} for ownedCoin in ownedCoins]
         return JsonResponse(wallet_list, safe=False)
 
 class GetTransactionHistoryView(APIView):
@@ -244,3 +253,211 @@ class SellCryptoView(APIView):
                 ownedCoin.delete()
             ownedCoin.save()
             return response
+
+
+class GenerateChartPatterns(APIView):
+    def post(self, request):
+        symbol = request.data['symbol']
+        intervalValue = request.data['intervalValue']
+        intervalCode = request.data['intervalCode']
+        startTime = request.data['startTime']
+        endTime = request.data['endTime']
+        chartType = request.data['chartType']
+
+        
+        url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + 'USDT&interval=' + str(intervalValue) + str(intervalCode) + '&startTime=' + str(startTime) + '&endTime=' + str(endTime)
+        response = requests.get(url)
+        if response.status_code == 200:
+
+            if chartType == "Rectangle":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_rectangle_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            elif chartType == "Head and Shoulders":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_head_and_shoulder_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            elif chartType == "Triples":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_triple_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            elif chartType == "Wedge":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_wedge_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            elif chartType == "Triangle":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_triangle_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+            
+            elif chartType == "Support and Resistance":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_support_and_resistance_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            elif chartType == "Rounding Bottom":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_rounding_bottom_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            elif chartType == "Flag":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_flag_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+            
+            elif chartType == "Double":
+                """
+                data = response.json()
+
+                # Extract open, high, low, and close values as separate lists
+                opens = [float(candle[1]) for candle in data]
+                highs = [float(candle[2]) for candle in data]
+                lows = [float(candle[3]) for candle in data]
+                closes = [float(candle[4]) for candle in data]
+
+                df = pd.DataFrame({'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
+                """
+                df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+
+                plots = send_double_plots(df)
+                
+
+                # Return the plots array as a JSON response
+                return JsonResponse(plots, safe=False)
+
+            else:
+                print("Name: " + chartType)
+                plots = []
+
+                return JsonResponse(plots, safe=False)
+        
+        else:
+            print(response)
+            plots = []
+
+            return JsonResponse(plots, safe=False)
+        
