@@ -132,9 +132,6 @@ def find_local_maximas_minimas(ohlc, window_range, smooth=False, smoothing_perio
 def send_double_plots(df):
     ohlc = df.loc[:, ["Date", "Open", "High", "Low", "Close"] ]
     
-    ohlc["Date"] = pd.to_datetime(ohlc["Date"], format="%d.%m.%Y %H:%M:%S.%f")
-    ohlc["Date"] = ohlc["Date"].map(mpdates.date2num)
-    
     # Find all the local minimas and maximas
     window_range = 10 # Defining the local range where min and max will be found
     max_min = find_local_maximas_minimas(ohlc, window_range, smooth=True)
@@ -150,9 +147,6 @@ if __name__ == "__main__":
     df = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
 
     ohlc = df.loc[:, ["Date", "Open", "High", "Low", "Close"] ]
-    
-    ohlc["Date"] = pd.to_datetime(ohlc["Date"], format="%d.%m.%Y %H:%M:%S.%f")
-    ohlc["Date"] = ohlc["Date"].map(mpdates.date2num)
     
     # Find all the local minimas and maximas
     window_range = 10 # Defining the local range where min and max will be found

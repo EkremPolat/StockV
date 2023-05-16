@@ -1,24 +1,14 @@
-"""
-Date 20230119
-This scripts get the Triple Top and Bottom Chart Patterns
-Source: https://www.youtube.com/watch?v=Mxk8PP3vbuA
-"""
-
 import mplfinance as mpf 
-import glob
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  
 import numpy as np
-import os
 import pandas as pd
 import io
 import base64
 
 from progress.bar import Bar
 from scipy.stats import linregress
-
-
-plt.style.use('seaborn-darkgrid')
-
 
 
 def pivot_id(ohlc, l, n1, n2):
@@ -55,20 +45,6 @@ def pivot_id(ohlc, l, n1, n2):
         return 2
     else:
         return 0
-
-def pivot_point_position(row):
-    """
-    Get the Pivot Point position
-    :params row of the ohlc dataframe
-    """
-   
-    if row['Pivot']==1:
-        return row['Low']-1e-3
-    elif row['Pivot']==2:
-        return row['Low']+1e-3
-    else:
-        return np.nan
-
 
 def _find_points(df, candle_id, back_candles):
     """
@@ -108,43 +84,6 @@ def _find_points(df, candle_id, back_candles):
 
     return maxim, minim, xxmax, xxmin, maxacount, minacount, maxbcount, minbcount
 
-def find_triple_bottoms(df, back_candles=14):
-    """
-    Find all triple bottom chart patterns
-    
-    :params df -> an ohlc dataframe that has "ShortPivot" and "Pivot" as columns
-    :params back_candles -> Look-back and look-forward period
-    :returns all_points    
-    """
-    all_points = []
-    bar = Bar(f'Finding Triple Bottoms', max=len(range(back_candles+20, len(df)-back_candles)))
-    for candle_id in range(back_candles+20, len(df)-back_candles):
-
-
-
-        maxim, minim, xxmax, xxmin, maxacount, minacount, maxbcount, minbcount = _find_points(df,candle_id, back_candles)
-
-        if minbcount<1 or minacount<1 or maxbcount<1 or maxacount<1:
-                continue
-
-        slmin, intercmin, rmin, pmin, semin = linregress(xxmin, minim)
-        slmax, intercmax, rmax, pmax, semax = linregress(xxmax, maxim)
-        headidx     = np.argmin(minim, axis=0)  
-       
-        try:
-            if xxmax[0]>xxmin[headidx-1] and xxmax[1]>xxmin[headidx] and xxmax[1]<xxmin[headidx+1] \
-                and xxmax[2] > xxmin[headidx+1]  and abs(minim[headidx-1] - minim[headidx]) <1e-3 \
-                and abs(minim[headidx+1]-minim[headidx])<1e-3 and abs(slmin)>0 and abs(slmin)<=1e-4  : 
-
-                        all_points.append(candle_id)       
-        except:
-            pass    
-        
-        bar.next()
-    bar.finish()
-    return all_points
-
-
 def find_triple_top(df, back_candles=14):
     """
     Find all Triple top chart patterns
@@ -183,8 +122,6 @@ def find_triple_top(df, back_candles=14):
     bar.finish()
     return all_points
 
-
-
 def save_plot(ohlc, all_points, back_candles, fname="triple_tops", tt=True):
     """
     Save all the graphs
@@ -198,7 +135,7 @@ def save_plot(ohlc, all_points, back_candles, fname="triple_tops", tt=True):
 
     total = len(all_points)
     bar = Bar(f'Processing {fname} images', max=total)
-
+    plt.style.use('seaborn-darkgrid')
     plots = []
     for j, point in enumerate(all_points):
 

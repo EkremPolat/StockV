@@ -11,7 +11,6 @@ import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGra
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_graph.dart';
 import 'package:http/http.dart' as http;
 import '../loading_page.dart';
-import 'CoinDetailLiveChartComponent/coin_live_chart_component.dart';
 import 'detect_chart_patterns.dart';
 
 String coinVolume = '';
@@ -288,7 +287,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                     ),
                   ),
                   SizedBox(
-                    height: 800,
+                    height: 650,
                     child: SingleEtfPastValueGraphComponent(
                         etfCode: widget.coin.symbol,
                         intervalValue: intervalValue,
@@ -300,28 +299,6 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurpleAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        SingleEtfLiveChartComponent(
-                                          coin: widget.coin,
-                                        )));
-                          },
-                          child: const Text(
-                            'SEE LIVE CHART',
-                          )),
-                      SizedBox(
-                        height: 30,
-                      ),
                       ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepPurpleAccent,
@@ -386,10 +363,10 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => CoinBuyComponent(
-                                          user: widget.user,
-                                          coin: widget.coin,
-                                          coinBuyValue: buySellPrices[0],
-                                        )));
+                                      user: widget.user,
+                                      coin: widget.coin,
+                                      coinBuyValue: buySellPrices[0],
+                                    )));
                           });
                         },
                         child: const Text(
@@ -407,20 +384,20 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         onPressed: sellButtonDisabled
                             ? null
                             : () {
-                                setState(() {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              CoinSellComponent(
-                                                user: widget.user,
-                                                coin: widget.coin,
-                                                maxSellableAmount:
-                                                    maxSellableAmount,
-                                                coinSellValue: buySellPrices[1],
-                                              )));
-                                });
-                              },
+                          setState(() {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        CoinSellComponent(
+                                          user: widget.user,
+                                          coin: widget.coin,
+                                          maxSellableAmount:
+                                          maxSellableAmount,
+                                          coinSellValue: buySellPrices[1],
+                                        )));
+                          });
+                        },
                         child: const Text(
                           'SELL',
                           style: TextStyle(

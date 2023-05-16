@@ -78,7 +78,7 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 700,
+      height: 620,
       child: Scaffold(
         backgroundColor: const Color(0xff17212F),
         body: SingleChildScrollView(

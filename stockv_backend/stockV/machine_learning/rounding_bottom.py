@@ -1,15 +1,13 @@
 from mplfinance.original_flavor import candlestick_ohlc
 from scipy.signal import argrelextrema
 
-import matplotlib.dates as mpdates
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  
 import numpy as np
-import os
 import pandas as pd
 import io
 import base64
-
-plt.style.use('seaborn-darkgrid')
 
 def find_rounding_bottom_points(ohlc, back_candles):
     """
@@ -60,6 +58,7 @@ def save_plot(ohlc, all_points, back_candles):
     """
     total = len(all_points)
     plots = []
+    plt.style.use('seaborn-darkgrid')
     for j, point in enumerate(all_points):
         candleid = point
 

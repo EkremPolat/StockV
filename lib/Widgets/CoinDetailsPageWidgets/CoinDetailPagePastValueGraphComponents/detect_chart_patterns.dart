@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/io_client.dart';
 import 'package:http/http.dart' as http;
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_chart_pattern.dart';
 
@@ -47,11 +46,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
         intervalValue, intervalCode, startTime, endTime, 'Head and Shoulders');
     List<String> triples = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Triples');
-    //List<String> wedge = await fetchChartPatterns(
-    // symbol, intervalValue, intervalCode, startTime, endTime, 'Wedge');
+    List<String> wedge = await fetchChartPatterns(
+        symbol, intervalValue, intervalCode, startTime, endTime, 'Wedge');
     List<String> triangles = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Triangle');
-    /*List<String> supportAndResistance = await fetchChartPatterns(
+    List<String> supportAndResistance = await fetchChartPatterns(
         symbol,
         intervalValue,
         intervalCode,
@@ -63,33 +62,32 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     List<String> flags = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Flag');
     List<String> double = await fetchChartPatterns(
-        symbol, intervalValue, intervalCode, startTime, endTime, 'Double');*/
+        symbol, intervalValue, intervalCode, startTime, endTime, 'Double');
 
     setState(() {
       rectanglePlots = rectangles;
       headAndShouldersPlots = headAndShoulders;
       triplesPlots = triples;
-      wedgePlots = [];
+      wedgePlots = wedge;
       trianglePlots = triangles;
-      supportAndResistancePlots = [];
-      roundingBottomPlots = [];
-      flagPlots = [];
-      doublePlots = [];
+      supportAndResistancePlots = supportAndResistance;
+      roundingBottomPlots = roundingBottom;
+      flagPlots = flags;
+      doublePlots = double;
       isLoading = false;
     });
   }
 
   Future<List<String>> fetchChartPatterns(
-    String symbol,
-    int intervalValue,
-    String intervalCode,
-    int startTime,
-    int endTime,
-    String patternType,
-  ) async {
+      String symbol,
+      int intervalValue,
+      String intervalCode,
+      int startTime,
+      int endTime,
+      String patternType,
+      ) async {
     const url = 'http://10.0.2.2:8000/get-chart-patterns/';
 
-    final client = http.Client();
     final request = http.Request('POST', Uri.parse(url));
     request.headers["Content-Type"] = "application/json";
     request.body = json.encode({
@@ -106,7 +104,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
         await http.Client().send(request).timeout(const Duration(seconds: 30)));
 
     if (response.statusCode == 200) {
-      final parsedResponse = json.decode(await response.body);
+      final parsedResponse = json.decode(response.body);
 
       // Convert the dynamic list to a List<String> of plots
       List<String> fetchedPlots = List<String>.from(parsedResponse);
@@ -164,15 +162,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    rectanglePlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlotDisplayScreen(
-                                      plots: rectanglePlots,
-                                    )));
+                  onPressed: () { rectanglePlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: rectanglePlots, chartPatternType: 'Rectangle', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE RECTANGLE PATTERN',
@@ -195,16 +189,12 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    headAndShouldersPlots.isEmpty
-                        ? null
-                        : print(headAndShouldersPlots.length);
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => PlotDisplayScreen(
-                                  plots: headAndShouldersPlots,
-                                )));
+                  onPressed: () { headAndShouldersPlots.isEmpty ? null :
+                      print(headAndShouldersPlots.length);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: headAndShouldersPlots, chartPatternType: 'Head & Shoulders', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE HEAD & SHOULDERS PATTERN',
@@ -227,15 +217,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    triplesPlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlotDisplayScreen(
-                                      plots: triplesPlots,
-                                    )));
+                  onPressed: () { triplesPlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: triplesPlots, chartPatternType: 'Triples', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE TRIPLES PATTERN',
@@ -258,14 +244,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    wedgePlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    PlotDisplayScreen(plots: wedgePlots)));
+                  onPressed: () { wedgePlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: wedgePlots, chartPatternType: 'Wedge', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE WEDGE PATTERN',
@@ -288,14 +271,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    trianglePlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    PlotDisplayScreen(plots: trianglePlots)));
+                  onPressed: () { trianglePlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: trianglePlots, chartPatternType: 'Triangle', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE TRIANGLE PATTERN',
@@ -318,14 +298,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    supportAndResistancePlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlotDisplayScreen(
-                                    plots: supportAndResistancePlots)));
+                  onPressed: () { supportAndResistancePlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: supportAndResistancePlots, chartPatternType: 'Support & Resistance', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE SUPPORT & RESISTANCE PATTERN',
@@ -348,14 +325,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    roundingBottomPlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlotDisplayScreen(
-                                    plots: roundingBottomPlots)));
+                  onPressed: () { roundingBottomPlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: roundingBottomPlots, chartPatternType: 'Rounding Bottom', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE ROUNDING BOTTOM PATTERN',
@@ -378,14 +352,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    flagPlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    PlotDisplayScreen(plots: flagPlots)));
+                  onPressed: () { flagPlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: flagPlots, chartPatternType: 'Flag', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE FLAG PATTERN',
@@ -408,15 +379,11 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                       ),
                     ),
                   ),
-                  onPressed: () {
-                    doublePlots.isEmpty
-                        ? null
-                        : Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PlotDisplayScreen(
-                                      plots: doublePlots,
-                                    )));
+                  onPressed: () { doublePlots.isEmpty ? null :
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => PlotDisplayScreen(plots: doublePlots, chartPatternType: 'Double', coinSymbol: widget.etfCode,)));
                   },
                   child: const Text(
                     'SEE DOUBLE PATTERN',

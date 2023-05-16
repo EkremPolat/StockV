@@ -79,7 +79,7 @@ Future<double> sellCrypto(
   }
 }
 
-Future<List<Transaction>> getUserTransactionHistory(String userId) async {
+Future<List<Transaction>> getUserTransactionHistory (String userId) async {
   var url = 'http://10.0.2.2:8000/get-transaction-history/$userId/';
   var response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
