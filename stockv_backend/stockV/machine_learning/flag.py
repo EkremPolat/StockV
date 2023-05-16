@@ -1,14 +1,13 @@
 from mplfinance.original_flavor import candlestick_ohlc
 import matplotlib.dates as mpdates
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg') 
 import numpy as np
-import os
 import pandas as pd
 from scipy.stats import linregress
 import io
 import base64
-
-plt.style.use('seaborn-darkgrid')
 
 def pivot_id(ohlc, l, n1, n2):
     """
@@ -111,7 +110,7 @@ def save_plot(ohlc, all_points, back_candles):
     :params back_candles -> number of periods to lookback
     :return 
     """
-
+    plt.style.use('seaborn-darkgrid')
     total = len(all_points)
     plots = []
     for j, point in enumerate(all_points):

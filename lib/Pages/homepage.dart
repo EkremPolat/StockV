@@ -9,12 +9,6 @@ import '../Utilities/global_variables.dart';
 import '../Utilities/user_wallet_information_requests.dart';
 import '../Widgets/CoinDetailsPageWidgets/loading_page.dart';
 
-void main() {
-  User user = User(
-      id: '49dede57-a704-47cd-b1ca-b16672f7aca6',
-      email: 'ekrempolat416@gmail.com');
-  runApp(HomePage(user: user));
-}
 
 class HomePage extends StatefulWidget {
   final User user;

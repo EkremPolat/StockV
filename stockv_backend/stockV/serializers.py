@@ -60,3 +60,15 @@ class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Transaction
         fields = ('id','coin_name', 'amount')
+
+class UserUpdate(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email', 'password')
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop('password', None)
+        if password is not None:
+            instance.set_password(password)
+        return super().update(instance, validated_data)

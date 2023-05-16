@@ -1,22 +1,13 @@
-"""
-Date: 2023-04-14
-Support and resistance
-This code is based on the following Youtube video: https://www.youtube.com/watch?v=Mxk8PP3vbuA
-"""
-
 from mplfinance.original_flavor import candlestick_ohlc
 
-import glob
 import pandas as pd
-import os
-import sys
-
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  
 import matplotlib.dates as mpdates
 import io
 import base64
 
-plt.style.use('seaborn-darkgrid')
 plots = []
 sup_idx = 0
 res_idx = 0
@@ -43,8 +34,6 @@ def support(ohlc, l, n1, n2):
         except:
             return 0
     return 1
-
-
 
 def resistance(ohlc, l, n1, n2):
     """
@@ -174,8 +163,8 @@ def save_plot(ohlc: pd.DataFrame, point: int) -> None:
     :type :int
     """
 
-    dir_ = os.path.realpath('').split("research")[0]
 
+    plt.style.use('seaborn-darkgrid')
     # Prepare the data
     ohlc = ohlc.copy()
     ohlc.loc[:,"Index"] = ohlc.index

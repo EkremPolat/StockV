@@ -1,19 +1,13 @@
-"""
-Date 20230102
-This progam implements the Wedge Chart Patterns
-Source: https://quantnet.ai/referee/template/14015755/html
-        https://www.youtube.com/watch?v=WVNB_6JRbl0
-"""
-
 from mplfinance.original_flavor import candlestick_ohlc
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')  
 
 import numpy as np
 from scipy.stats import linregress
 import io
 import base64
-
-plt.style.use('seaborn-darkgrid')
+import pandas as pd
 
 def pivot_id(ohlc, l, n1, n2):
     """
@@ -142,6 +136,7 @@ def save_plot(ohlc, all_points, back_candles):
 
     total = len(all_points)
     plots = []
+    plt.style.use('seaborn-darkgrid')
     for j, point in enumerate(all_points):
 
         maxim = np.array([])
@@ -212,7 +207,7 @@ def send_wedge_plots(df):
 
     return save_plot(ohlc, all_points, back_candles)
 
-"""
+
 if __name__ == "__main__":
     df = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
 
@@ -232,4 +227,3 @@ if __name__ == "__main__":
 
     # Plot the wedge pattern graphs
     save_plot(ohlc, all_points, back_candles)
-"""
