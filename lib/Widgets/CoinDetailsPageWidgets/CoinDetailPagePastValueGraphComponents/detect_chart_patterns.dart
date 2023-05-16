@@ -12,7 +12,12 @@ class ChartPatternButtons extends StatefulWidget {
   final int intervalValue;
   final Duration duration;
 
-  const ChartPatternButtons({super.key, required this.etfCode, required this.intervalCode, required this.intervalValue, required this.duration});
+  const ChartPatternButtons(
+      {super.key,
+      required this.etfCode,
+      required this.intervalCode,
+      required this.intervalValue,
+      required this.duration});
 
   @override
   State<ChartPatternButtons> createState() => _ChartPatternButtonsState();
@@ -95,7 +100,8 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     });
 
     // Set a longer timeout duration (e.g., 30 seconds)
-    final response = await http.Response.fromStream(await http.Client().send(request).timeout(const Duration(seconds: 30)));
+    final response = await http.Response.fromStream(
+        await http.Client().send(request).timeout(const Duration(seconds: 30)));
 
     if (response.statusCode == 200) {
       final parsedResponse = json.decode(response.body);
@@ -112,7 +118,8 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
   @override
   void initState() {
     super.initState();
-    fetchPlots(widget.etfCode, widget.intervalValue, widget.intervalCode, widget.duration);
+    fetchPlots(widget.etfCode, widget.intervalValue, widget.intervalCode,
+        widget.duration);
   }
 
   @override
@@ -141,9 +148,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (rectanglePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (rectanglePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -167,9 +175,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (headAndShouldersPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (headAndShouldersPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -194,9 +203,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (triplesPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (triplesPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -220,9 +230,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (wedgePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (wedgePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -246,9 +257,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (trianglePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (trianglePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -272,9 +284,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (supportAndResistancePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (supportAndResistancePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -298,9 +311,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (roundingBottomPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (roundingBottomPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -324,9 +338,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (flagPlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (flagPlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },
@@ -350,9 +365,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (doublePlots.isEmpty ) {
-                          return Colors.grey; // Change the color for disabled state
+                      (Set<MaterialState> states) {
+                        if (doublePlots.isEmpty) {
+                          return Colors
+                              .grey; // Change the color for disabled state
                         }
                         return Colors.deepPurpleAccent; // Default color
                       },

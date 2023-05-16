@@ -28,13 +28,14 @@ int intervalValue = 15;
 Duration duration = const Duration(hours: 24);
 
 const List<String> durationList = [
-  'Last Hour',
-  'Last Day',
-  'Last Week',
-  'Last Month',
-  'Last Year'
+  '15 minutes',
+  '1 hour',
+  '4 hours',
+  '1 day',
+  '1 week',
+  '1 month'
 ];
-String dropdownListValue = 'Last Day';
+String dropdownListValue = '4 hours';
 
 class SingleEtfGraphComponent extends StatefulWidget {
   final User user;
@@ -231,40 +232,47 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                       ),
                       onChanged: (String? value) {
                         setState(
-                              () {
-                            if (value == 'Last Hour') {
+                          () {
+                            if (value == '15 minutes') {
                               setState(() {
                                 dropdownListValue = value!;
-                                duration = const Duration(hours: 1);
-                                intervalCode = 'm';
-                                intervalValue = 1;
-                              });
-                            } else if (value == 'Last Day') {
-                              setState(() {
-                                dropdownListValue = value!;
-                                duration = const Duration(hours: 24);
+                                duration = const Duration(hours: 24 * 7);
                                 intervalCode = 'm';
                                 intervalValue = 15;
                               });
-                            } else if (value == 'Last Week') {
+                            } else if (value == '1 hour') {
                               setState(() {
                                 dropdownListValue = value!;
-                                duration = const Duration(days: 7);
+                                duration = const Duration(days: 7 * 5);
+                                intervalCode = 'h';
+                                intervalValue = 1;
+                              });
+                            } else if (value == '4 hours') {
+                              setState(() {
+                                dropdownListValue = value!;
+                                duration = const Duration(days: 7 * 12);
                                 intervalCode = 'h';
                                 intervalValue = 4;
                               });
-                            } else if (value == 'Last Month') {
+                            } else if (value == '1 day') {
                               setState(() {
                                 dropdownListValue = value!;
-                                duration = const Duration(days: 30);
-                                intervalCode = 'h';
-                                intervalValue = 12;
+                                duration = const Duration(days: 365 * 2);
+                                intervalCode = 'd';
+                                intervalValue = 1;
                               });
-                            } else if (value == 'Last Year') {
+                            } else if (value == '1 week') {
                               setState(() {
                                 dropdownListValue = value!;
-                                duration = const Duration(days: 365);
+                                duration = const Duration(days: 365 * 10);
                                 intervalCode = 'w';
+                                intervalValue = 1;
+                              });
+                            } else if (value == '1 month') {
+                              setState(() {
+                                dropdownListValue = value!;
+                                duration = const Duration(days: 365 * 10);
+                                intervalCode = 'M';
                                 intervalValue = 1;
                               });
                             }
@@ -281,7 +289,12 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                   SizedBox(
                     height: 650,
                     child: SingleEtfPastValueGraphComponent(
-                        etfCode: widget.coin.symbol, intervalValue: intervalValue, duration: duration, intervalCode: intervalCode),
+                        etfCode: widget.coin.symbol,
+                        intervalValue: intervalValue,
+                        duration: duration,
+                        intervalCode: intervalCode,
+                        key: ValueKey<String>(dropdownListValue), // Add a key to force component update
+),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -298,11 +311,11 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ChartPatternButtons(
-                                      intervalCode: intervalCode,
-                                      duration: duration,
-                                      etfCode: widget.coin.symbol,
-                                      intervalValue: intervalValue,
-                                    )));
+                                          intervalCode: intervalCode,
+                                          duration: duration,
+                                          etfCode: widget.coin.symbol,
+                                          intervalValue: intervalValue,
+                                        )));
                           },
                           child: const Text(
                             'SEE CHART PATTERNS',
