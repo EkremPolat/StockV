@@ -35,7 +35,7 @@ const List<String> durationList = [
   '1 week',
   '1 month'
 ];
-String dropdownListValue = '4 hours';
+String dropdownListValue = '15 minutes';
 
 class SingleEtfGraphComponent extends StatefulWidget {
   final User user;
@@ -289,12 +289,13 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                   SizedBox(
                     height: 650,
                     child: SingleEtfPastValueGraphComponent(
-                        etfCode: widget.coin.symbol,
-                        intervalValue: intervalValue,
-                        duration: duration,
-                        intervalCode: intervalCode,
-                        key: ValueKey<String>(dropdownListValue), // Add a key to force component update
-),
+                      etfCode: widget.coin.symbol,
+                      intervalValue: intervalValue,
+                      duration: duration,
+                      intervalCode: intervalCode,
+                      key: ValueKey<String>(
+                          dropdownListValue), // Add a key to force component update
+                    ),
                   ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
