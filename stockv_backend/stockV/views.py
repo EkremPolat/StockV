@@ -18,6 +18,7 @@ from stockV.machine_learning.doubles import send_double_plots
 import datetime
 import requests
 
+
 class AddUser(APIView):
     def post(self, request):
         serializer = StockVUserSerializer(data=request.data)
@@ -35,16 +36,16 @@ class LoginView(APIView):
 
         if user is None:
             raise AuthenticationFailed("User is not found!")
-            
+
         if not user.check_password(password):
             raise AuthenticationFailed("Password is incorrect!")
 
         response = Response()
-        
+
         response.data = {
-            'email' : user.email,
-            'full_name' : user.full_name,
-            'id' : user.id
+            'email': user.email,
+            'full_name': user.full_name,
+            'id': user.id
         }
 
         return response
@@ -63,6 +64,7 @@ class Password_change_view(APIView):
         user_serializer.save()
         return Response(request.data)
 
+
 class PasswordVerificationView(APIView):
     def post(self, request):
         email = request.data['email']
@@ -72,32 +74,37 @@ class PasswordVerificationView(APIView):
 
         if user is None:
             raise AuthenticationFailed("User is not found!")
-            
+
         if not user.check_password(password):
             raise AuthenticationFailed("Password is incorrect!")
 
         response = Response()
-        
+
         response.data = {
             'success': True
         }
 
         return response
-    
-class CoinListView(generics.ListCreateAPIView): # This function provides receiving the list of coins and create new coins
+
+
+# This function provides receiving the list of coins and create new coins
+class CoinListView(generics.ListCreateAPIView):
     queryset = Coin.objects.all()
     serializer_class = CoinSerializer
+
 
 class GetSavedCoinListView(APIView):
     def get(self, request, pk):
         user = StockVUser.objects.filter(id=pk).first()
         if user is None:
             raise AuthenticationFailed("User is not found!")
-        
+
         savedCoins = user.savedCoins.all()
         coins = Coin.objects.filter(id__in=[coin.id for coin in savedCoins])
-        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price, 'id': coin.id, 'dailyChange' : coin.dailyChange} for coin in coins]
+        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price,
+                      'id': coin.id, 'dailyChange': coin.dailyChange} for coin in coins]
         return JsonResponse(coin_list, safe=False)
+
 
 class AddSavedCoinView(APIView):
     def post(self, request):
@@ -107,18 +114,21 @@ class AddSavedCoinView(APIView):
 
         if user is None:
             raise AuthenticationFailed("User is not found!")
-        
+
         coin = Coin.objects.filter(id=coinId).first()
 
         if coin is None:
             raise AuthenticationFailed("Coin is not found!")
-        
+
         user.savedCoins.add(coin)
 
-        coins = Coin.objects.filter(id__in=[coin.id for coin in user.savedCoins.all()])
+        coins = Coin.objects.filter(
+            id__in=[coin.id for coin in user.savedCoins.all()])
 
-        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price, 'id': coin.id, 'dailyChange' : coin.dailyChange} for coin in coins]
+        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price,
+                      'id': coin.id, 'dailyChange': coin.dailyChange} for coin in coins]
         return JsonResponse(coin_list, safe=False)
+
 
 class RemoveSavedCoinView(APIView):
     def post(self, request):
@@ -128,27 +138,32 @@ class RemoveSavedCoinView(APIView):
 
         if user is None:
             raise AuthenticationFailed("User is not found!")
-        
+
         coin = Coin.objects.filter(id=coinId).first()
 
         if coin is None:
             raise AuthenticationFailed("Coin is not found!")
-        
-        user.savedCoins.remove(coin)
-        
-        coins = Coin.objects.filter(id__in=[coin.id for coin in user.savedCoins.all()])
 
-        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price, 'id': coin.id, 'dailyChange' : coin.dailyChange} for coin in coins]
+        user.savedCoins.remove(coin)
+
+        coins = Coin.objects.filter(
+            id__in=[coin.id for coin in user.savedCoins.all()])
+
+        coin_list = [{'name': coin.name, 'symbol': coin.symbol, 'price': coin.price,
+                      'id': coin.id, 'dailyChange': coin.dailyChange} for coin in coins]
         return JsonResponse(coin_list, safe=False)
-    
+
+
 class GetWalletListView(APIView):
     def get(self, request, pk):
         user = StockVUser.objects.filter(id=pk).first()
         if user is None:
             raise AuthenticationFailed("User is not found!")
         ownedCoins = user.wallet.all()
-        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol , 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(name=ownedCoin.coin_name).first().price, 'dailyChange': Coin.objects.filter(name=ownedCoin.coin_name).first().dailyChange} for ownedCoin in ownedCoins]
+        wallet_list = [{'coinName': ownedCoin.coin_name, 'coinSymbol': Coin.objects.filter(name=ownedCoin.coin_name).first().symbol, 'amount': ownedCoin.amount, 'usdValue': Coin.objects.filter(
+            name=ownedCoin.coin_name).first().price, 'dailyChange': Coin.objects.filter(name=ownedCoin.coin_name).first().dailyChange} for ownedCoin in ownedCoins]
         return JsonResponse(wallet_list, safe=False)
+
 
 class GetTransactionHistoryView(APIView):
     def get(self, request, pk):
@@ -156,8 +171,10 @@ class GetTransactionHistoryView(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
         userTransactions = Transaction.objects.filter(user=user)
-        transaction_list = [{'date': transaction.date.strftime("%Y-%m-%d %H:%M"), 'coinName': transaction.coinName, 'coinPrice': transaction.coinPrice, 'coinAmount': transaction.coinAmount, 'isSelling' : transaction.isSelling} for transaction in userTransactions]
+        transaction_list = [{'date': transaction.date.strftime("%Y-%m-%d %H:%M"), 'coinName': transaction.coinName, 'coinPrice': transaction.coinPrice,
+                             'coinAmount': transaction.coinAmount, 'isSelling': transaction.isSelling} for transaction in userTransactions]
         return JsonResponse(transaction_list, safe=False)
+
 
 class GetUserBalanceView(APIView):
     def get(self, request, pk):
@@ -165,12 +182,13 @@ class GetUserBalanceView(APIView):
         if user is None:
             raise AuthenticationFailed("User is not found!")
         userBalance = user.balance
-        
+
         response = Response()
         response.data = {
             'balance': userBalance
         }
         return response
+
 
 class BuyCryptoView(APIView):
     def post(self, request):
@@ -185,12 +203,12 @@ class BuyCryptoView(APIView):
 
         if user is None:
             raise AuthenticationFailed("User is not found!")
-        
-        # Decrease the balance of the user 
+
+        # Decrease the balance of the user
         user.balance -= cost
         user.save()
 
-        response = Response()  
+        response = Response()
         response.data = {
             'balance': user.balance
         }
@@ -204,13 +222,16 @@ class BuyCryptoView(APIView):
             ownedCoin.save()
         else:
             # If the user have not previously purchased that crypto, add the coin to user and set the amount to the amount from the request
-            ownedCoin = OwnedCoins.objects.create(coin_name=coin_name, amount=amount)
+            ownedCoin = OwnedCoins.objects.create(
+                coin_name=coin_name, amount=amount)
             user.wallet.add(ownedCoin)
 
-        transaction = Transaction.objects.create(coinName=ownedCoin.coin_name, coinPrice=coin_price, coinAmount=amount, isSelling=False, user=user)
+        transaction = Transaction.objects.create(
+            coinName=ownedCoin.coin_name, coinPrice=coin_price, coinAmount=amount, isSelling=False, user=user)
         transaction.save()
         return response
-    
+
+
 class HasCryptoView(APIView):
     def post(self, request):
         user_id = request.data['userId']
@@ -222,6 +243,7 @@ class HasCryptoView(APIView):
             return JsonResponse({'hasCrypto': True, 'amount': ownedCoin.amount})
         else:
             return JsonResponse({'hasCrypto': False, 'amount': 0.0})
+
 
 class SellCryptoView(APIView):
     def post(self, request):
@@ -237,7 +259,7 @@ class SellCryptoView(APIView):
         user.balance += totalEarnings
         user.save()
 
-        response = Response()  
+        response = Response()
         response.data = {
             'balance': user.balance
         }
@@ -246,10 +268,11 @@ class SellCryptoView(APIView):
         if (amount > ownedCoin.amount):
             return HttpResponse('The desired amount is higher than than the owned amount. Selling process failed.')
         else:
-            transaction = Transaction.objects.create(coinName=ownedCoin.coin_name, coinPrice=coin_price, coinAmount=amount, isSelling=True, user=user)
+            transaction = Transaction.objects.create(
+                coinName=ownedCoin.coin_name, coinPrice=coin_price, coinAmount=amount, isSelling=True, user=user)
             transaction.save()
             ownedCoin.amount -= amount
-            if(ownedCoin.amount == 0):
+            if (ownedCoin.amount == 0):
                 ownedCoin.delete()
             ownedCoin.save()
             return response
@@ -264,25 +287,28 @@ class GenerateChartPatterns(APIView):
         endTime = request.data['endTime']
         chartType = request.data['chartType']
 
-        
-        url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + 'USDT&interval=' + str(intervalValue) + str(intervalCode) + '&startTime=' + str(startTime) + '&endTime=' + str(endTime)
+        url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + 'USDT&interval=' + \
+            str(intervalValue) + str(intervalCode) + '&startTime=' + \
+            str(startTime) + '&endTime=' + str(endTime)
         response = requests.get(url)
         if response.status_code == 200:
 
             data = response.json()
             # Extract open, high, low, and close values as separate lists
-            dates = [datetime.datetime.fromtimestamp(entry[0] / 1000).strftime("%Y-%m-%d %H:%M:%S") for entry in data]
+            dates = [datetime.datetime.fromtimestamp(
+                entry[0] / 1000).strftime("%Y-%m-%d %H:%M:%S") for entry in data]
             opens = [float(candle[1]) for candle in data]
             highs = [float(candle[2]) for candle in data]
             lows = [float(candle[3]) for candle in data]
             closes = [float(candle[4]) for candle in data]
-            df = pd.DataFrame({'Date': dates, 'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
-            
-            #df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+            df = pd.DataFrame({'Date': dates, 'Open': opens,
+                              'High': highs, 'Low': lows, 'Close': closes})
+
+            # df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
 
             if chartType == "Rectangle":
                 plots = send_rectangle_plots(df)
-                
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
 
@@ -294,7 +320,7 @@ class GenerateChartPatterns(APIView):
 
             elif chartType == "Triples":
                 plots = send_triple_plots(df)
-                
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
 
@@ -306,31 +332,31 @@ class GenerateChartPatterns(APIView):
 
             elif chartType == "Triangle":
                 plots = send_triangle_plots(df)
-    
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
-            
+
             elif chartType == "Support and Resistance":
                 plots = send_support_and_resistance_plots(df)
-                
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
 
             elif chartType == "Rounding Bottom":
                 plots = send_rounding_bottom_plots(df)
-                
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
 
             elif chartType == "Flag":
                 plots = send_flag_plots(df)
-                
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
-            
+
             elif chartType == "Double":
                 plots = send_double_plots(df)
-                
+
                 # Return the plots array as a JSON response
                 return JsonResponse(plots, safe=False)
 
@@ -339,10 +365,35 @@ class GenerateChartPatterns(APIView):
                 plots = []
 
                 return JsonResponse(plots, safe=False)
-        
+
         else:
             print(response)
             plots = []
 
             return JsonResponse(plots, safe=False)
-        
+
+
+class GeneratePredictions(APIView):
+    def post(self, request):
+        symbol = request.data['symbol']
+        intervalValue = request.data['intervalValue']
+        intervalCode = request.data['intervalCode']
+        startTime = request.data['startTime']
+        endTime = request.data['endTime']
+
+        url = 'https://api.binance.com/api/v3/klines?symbol=' + symbol + 'USDT&interval=' + \
+            str(intervalValue) + str(intervalCode) + '&startTime=' + \
+            str(startTime) + '&endTime=' + str(endTime)
+        response = requests.get(url)
+        if response.status_code == 200:
+            print(response)
+            data = response.json()
+            # Extract open, high, low, and close values as separate lists
+            dates = [datetime.datetime.fromtimestamp(
+                entry[0] / 1000).strftime("%Y-%m-%d %H:%M:%S") for entry in data]
+            opens = [float(candle[1]) for candle in data]
+            highs = [float(candle[2]) for candle in data]
+            lows = [float(candle[3]) for candle in data]
+            closes = [float(candle[4]) for candle in data]
+            df = pd.DataFrame({'Date': dates, 'Open': opens,
+                              'High': highs, 'Low': lows, 'Close': closes})
