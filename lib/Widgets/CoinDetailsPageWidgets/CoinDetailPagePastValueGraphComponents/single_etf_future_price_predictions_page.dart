@@ -37,7 +37,18 @@ class FuturePriceGraph extends StatelessWidget {
                   ),
                 ],
               ),
-            )
+            ),
+            Expanded(
+              child: ListView.builder(
+                itemCount: etfPriceData.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final item = etfPriceData[index];
+                  return ListTile(
+                    title: Text('Date: ${item.time}, Price: ${item.etfPrice}'),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
