@@ -9,7 +9,6 @@ import '../Utilities/global_variables.dart';
 import '../Utilities/user_wallet_information_requests.dart';
 import '../Widgets/CoinDetailsPageWidgets/loading_page.dart';
 
-
 class HomePage extends StatefulWidget {
   final User user;
   const HomePage({super.key, required this.user});
@@ -39,7 +38,8 @@ class _HomePageState extends State<HomePage> {
   Future<void> fetchCoins() async {
     List<Coin> coins = await fetchCoinsFromDB();
     List<Coin> savedCoins = await fetchSavedCoinsFromDB(widget.user.id);
-    List<Transaction> transactionList = await getUserTransactionHistory(widget.user.id);
+    List<Transaction> transactionList =
+        await getUserTransactionHistory(widget.user.id);
     List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
     double userBalance = await getUserBalance(widget.user.id);
     if (mounted) {

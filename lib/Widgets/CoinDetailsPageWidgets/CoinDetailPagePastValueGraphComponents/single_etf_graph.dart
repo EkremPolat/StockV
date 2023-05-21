@@ -9,7 +9,12 @@ class SingleEtfPastValueGraphComponent extends StatefulWidget {
   final int intervalValue;
   final Duration duration;
 
-  const SingleEtfPastValueGraphComponent({super.key, required this.etfCode, required this.intervalCode, required this.intervalValue, required this.duration});
+  const SingleEtfPastValueGraphComponent(
+      {super.key,
+      required this.etfCode,
+      required this.intervalCode,
+      required this.intervalValue,
+      required this.duration});
 
   @override
   State<SingleEtfPastValueGraphComponent> createState() =>
@@ -18,13 +23,13 @@ class SingleEtfPastValueGraphComponent extends StatefulWidget {
 
 class _SingleEtfPastValueGraphComponentState
     extends State<SingleEtfPastValueGraphComponent> {
-
   List<KLineEntity> _etfPriceData = [];
 
   @override
   void initState() {
     super.initState();
-    fetchCoinHistory(widget.etfCode, widget.intervalCode, widget.intervalValue, widget.duration);
+    fetchCoinHistory(widget.etfCode, widget.intervalCode, widget.intervalValue,
+        widget.duration);
   }
 
   @override
@@ -32,13 +37,14 @@ class _SingleEtfPastValueGraphComponentState
     super.dispose();
   }
 
-  Future<void> fetchCoinHistory(etfCode, intervalCode, intervalValue, duration) async {
+  Future<void> fetchCoinHistory(
+      etfCode, intervalCode, intervalValue, duration) async {
     setState(() {
       _etfPriceData = [];
     });
     final response = await fetchCoinValueHistory(
         etfCode, intervalCode, intervalValue, duration);
-    if(mounted) {
+    if (mounted) {
       setState(() {
         _etfPriceData = response[0].cast<KLineEntity>();
       });
@@ -49,14 +55,15 @@ class _SingleEtfPastValueGraphComponentState
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-            child: Column(
-              children: [
-                CandleChartComponentPage(etfPriceData: _etfPriceData),
-
-              ],
-            )));
+      child: Column(
+        children: [
+          Expanded(
+            child: CandleChartComponentPage(etfPriceData: _etfPriceData),
+          ),
+        ],
+      ),
+    ));
   }
-
 }
 
 class CandleChartComponentPage extends StatefulWidget {
@@ -78,7 +85,8 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 620,
+      height: double.infinity, // Set the height to occupy the available space
+      width: double.infinity,
       child: Scaffold(
         backgroundColor: const Color(0xff17212F),
         body: SingleChildScrollView(
@@ -116,13 +124,15 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
         button("Remove Line", onPressed: () => isLine = false),
         button("MA", onPressed: () => _mainState = MainState.MA),
         button("BOLL", onPressed: () => _mainState = MainState.BOLL),
-        button("Remove Main State", onPressed: () => _mainState = MainState.NONE),
+        button("Remove Main State",
+            onPressed: () => _mainState = MainState.NONE),
         button("MACD", onPressed: () => _secondaryState = SecondaryState.MACD),
         button("KDJ", onPressed: () => _secondaryState = SecondaryState.KDJ),
         button("RSI", onPressed: () => _secondaryState = SecondaryState.RSI),
         button("WR", onPressed: () => _secondaryState = SecondaryState.WR),
-        button("Remove Secondary State", onPressed: () => _secondaryState = SecondaryState.NONE),
-        button(_volHidden ? "Show Volume" : "Hide Volumw",
+        button("Remove Secondary State",
+            onPressed: () => _secondaryState = SecondaryState.NONE),
+        button(_volHidden ? "Show Volume" : "Hide Volume",
             onPressed: () => _volHidden = !_volHidden)
       ],
     );
@@ -135,7 +145,7 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
           setState(() {});
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xff2E159D),
+          backgroundColor: Color.fromARGB(255, 44, 73, 101),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
