@@ -17,6 +17,11 @@ from stockV.machine_learning.flag import send_flag_plots
 from stockV.machine_learning.doubles import send_double_plots
 import datetime
 import requests
+import numpy as np
+import matplotlib.pyplot as plt
+from statsmodels.tsa.arima.model import ARIMA
+from statsmodels.tsa.stattools import adfuller
+from datetime import timedelta
 
 
 class AddUser(APIView):
@@ -395,5 +400,50 @@ class GeneratePredictions(APIView):
             highs = [float(candle[2]) for candle in data]
             lows = [float(candle[3]) for candle in data]
             closes = [float(candle[4]) for candle in data]
-            df = pd.DataFrame({'Date': dates, 'Open': opens,
-                              'High': highs, 'Low': lows, 'Close': closes})
+            df = pd.DataFrame({'Date': dates, 'Close': closes})
+            # Convert "Date" column to datetime format
+            df['Date'] = pd.to_datetime(df['Date'])
+            # Set "Date" column as the index
+            df.set_index('Date', inplace=True)
+            # Reorder the columns to match the original order
+            df = df[['Close']]
+
+            # Step 2: Generate 60 new rows with random Close values
+            last_date = df.index[-1]
+            new_rows = []
+            for i in range(10):
+                next_date = last_date + timedelta(days=1)
+                next_close = df['Close'].iloc[-1] + np.random.normal(0, 10)
+                new_rows.append(pd.DataFrame(
+                    {'Close': next_close}, index=[next_date]))
+                last_date = next_date
+
+            # Step 3: Concatenate the new rows to the existing DataFrame
+            df = pd.concat([df] + new_rows)
+
+            # Step 2: Clean the data
+            df.dropna(inplace=True)
+
+            # Step 3: Prepare the data for modeling
+
+            # Step 4: Check for stationarity
+            result = adfuller(df['Close'])
+            print(f'ADF Statistic: {result[0]}')
+            print(f'p-value: {result[1]}')
+
+            # Step 5: Fit the ARIMA model and make predictions
+            model = ARIMA(df['Close'], order=(1, 1, 1))
+            model_fit = model.fit()
+            pred_start_date = df.index[-10]  # start 10 days before the end
+            pred_end_date = df.index[-1]  # end at the last date in the file
+            predictions = model_fit.predict(
+                start=pred_start_date, end=pred_end_date, dynamic=False)
+            print(predictions)
+            print()
+
+            dummy_data = df['Close']
+
+            # Convert predictions Series to a list
+            predictions_list = predictions.tolist()
+
+            return JsonResponse(predictions_list, safe=False)

@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:stockv/Models/coin_graph_data.dart';
 
-Future<List<String>> generatePredictions(
-  String symbol,
-  int intervalValue,
-  String intervalCode,
-  int startTime,
-  int endTime,
-) async {
+Future<List<EtfPriceData>> generatePredictions(String symbol,
+    String intervalCode, int intervalValue, Duration duration) async {
   const url = 'http://10.0.2.2:8000/generate-predictions/';
   final request = http.Request('POST', Uri.parse(url));
+  final int startTime =
+      DateTime.now().subtract(duration).millisecondsSinceEpoch;
+  final int endTime = DateTime.now().millisecondsSinceEpoch;
   request.headers["Content-Type"] = "application/json";
   request.body = json.encode({
     'symbol': symbol,
@@ -26,9 +25,16 @@ Future<List<String>> generatePredictions(
   if (response.statusCode == 200) {
     final parsedResponse = json.decode(response.body);
 
-    // Convert the dynamic list to a List<String> of plots
-    List<String> fetchedPlot = List<String>.from(parsedResponse);
-    return fetchedPlot;
+    // Convert the dynamic list to a List<EtfPriceData>
+    List<EtfPriceData> etfPriceData = [];
+    DateTime currentDate = DateTime.now().add(Duration(days: 1));
+
+    for (double price in parsedResponse) {
+      etfPriceData.add(EtfPriceData(currentDate, price));
+      currentDate = currentDate.add(Duration(days: 1));
+    }
+
+    return etfPriceData;
   } else {
     throw Exception('Failed to fetch predictions');
   }
