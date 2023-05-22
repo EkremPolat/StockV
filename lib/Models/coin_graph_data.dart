@@ -9,31 +9,26 @@ class CoinGraphData {
   double amount = 0;
   double vol = 0;
 
-  CoinGraphData.withPrice({
-    required this.time,
-    required this.close
-  });
+  CoinGraphData.withPrice({required this.time, required this.close});
 
-  CoinGraphData.withOHLC({
-    required this.time,
-    required this.open,
-    required this.high,
-    required this.low,
-    required this.close,
-    required this.amount,
-    required this.vol
-  });
+  CoinGraphData.withOHLC(
+      {required this.time,
+      required this.open,
+      required this.high,
+      required this.low,
+      required this.close,
+      required this.amount,
+      required this.vol});
 
   factory CoinGraphData.fromJson(List<dynamic> json) {
     return CoinGraphData.withOHLC(
-      time: json[0],
-      open: double.parse(json[1]),
-      high: double.parse(json[2]),
-      low: double.parse(json[3]),
-      close: double.parse(json[4]),
-      amount: double.parse(json[5]),
-      vol: double.parse(json[7])
-    );
+        time: json[0],
+        open: double.parse(json[1]),
+        high: double.parse(json[2]),
+        low: double.parse(json[3]),
+        close: double.parse(json[4]),
+        amount: double.parse(json[5]),
+        vol: double.parse(json[7]));
   }
 
   KLineEntity toKLineEntity() {
@@ -47,4 +42,11 @@ class CoinGraphData {
       time: time,
     );
   }
+}
+
+class EtfPriceData {
+  final DateTime time;
+  final double etfPrice;
+
+  EtfPriceData(this.time, this.etfPrice);
 }

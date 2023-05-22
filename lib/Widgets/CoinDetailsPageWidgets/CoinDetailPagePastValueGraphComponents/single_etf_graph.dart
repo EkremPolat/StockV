@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:k_chart/flutter_k_chart.dart';
+import 'package:stockv/Models/coin_graph_data.dart';
 import 'package:stockv/Utilities/past_coin_history_functions.dart';
 
 class SingleEtfPastValueGraphComponent extends StatefulWidget {
@@ -47,6 +48,7 @@ class _SingleEtfPastValueGraphComponentState
     if (mounted) {
       setState(() {
         _etfPriceData = response[0].cast<KLineEntity>();
+        print(_etfPriceData);
       });
     }
   }
@@ -55,14 +57,13 @@ class _SingleEtfPastValueGraphComponentState
   Widget build(BuildContext context) {
     return Scaffold(
         body: Center(
-      child: Column(
-        children: [
-          Expanded(
-            child: CandleChartComponentPage(etfPriceData: _etfPriceData),
-          ),
-        ],
-      ),
-    ));
+            child: Column(
+      children: [
+        CandleChartComponentPage(
+          etfPriceData: _etfPriceData,
+        ),
+      ],
+    )));
   }
 }
 
@@ -132,7 +133,7 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
         button("WR", onPressed: () => _secondaryState = SecondaryState.WR),
         button("Remove Secondary State",
             onPressed: () => _secondaryState = SecondaryState.NONE),
-        button(_volHidden ? "Show Volume" : "Hide Volume",
+        button(_volHidden ? "Show Volume" : "Hide Volumw",
             onPressed: () => _volHidden = !_volHidden)
       ],
     );
