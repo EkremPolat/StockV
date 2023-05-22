@@ -68,46 +68,6 @@ class _ProfilePageState extends State<ProfilePageState> {
                 Image.asset('images/black.png'),
               ],
             ),
-            IconButton(
-              onPressed: () {
-                // Open the drawer.
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-              icon: const Icon(Icons.menu),
-            ),
-          ],
-        ),
-      ),
-      endDrawer: Drawer(
-        child: Column(
-          children: [
-            Container(
-              height: 130,
-              decoration: const BoxDecoration(
-                color: Colors.deepPurpleAccent,
-                image: DecorationImage(
-                  image: AssetImage('images/black.png'),
-                ),
-              ),
-              child: null,
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Transactions'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TransactionListPage(user: widget.user,)));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                // Do something when the user taps on the Settings button.
-              },
-            ),
           ],
         ),
       ),

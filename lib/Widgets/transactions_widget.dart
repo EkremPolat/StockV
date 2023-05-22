@@ -24,31 +24,10 @@ class _TransactionListPageState extends State<TransactionListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        leadingWidth: 400,
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                Image.asset('images/black.png'),
-              ],
-            ),
-          ],
-        ),
-      ),
       body: Column(
         children: [
           const SizedBox(
-            height: 10,
+            height: 15,
           ),
           const Text('Transaction List',
               style: TextStyle(
@@ -66,6 +45,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                   padding: const EdgeInsets.symmetric(
                       horizontal: 16.0, vertical: 8.0),
                   child: Container(
+                    height: 120,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10.0),
@@ -111,24 +91,33 @@ class _TransactionListPageState extends State<TransactionListPage> {
                           fontSize: 17.0,
                         ),
                       ),
-                      trailing: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            '\$${transactions[index].coinPrice.toStringAsFixed(2)}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                      trailing: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '\$${transactions[index].coinPrice.toStringAsFixed(2)}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0,
+                              ),
                             ),
-                          ),
-                          Text(
-                            transactions[index].coinAmount.toStringAsFixed(2),
-                            style: const TextStyle(
-                              fontSize: 18.0,
+                            Text(
+                              transactions[index].coinAmount.toStringAsFixed(3),
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                              ),
                             ),
-                          ),
-                        ],
+                            Text(
+                              (transactions[index].coinAmount * transactions[index].coinPrice).toStringAsFixed(3),
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

@@ -39,8 +39,8 @@ class _WalletPageState extends State<WalletPageState> {
         WalletCoin temp = WalletCoin(
           coinName: "US Dollar",
           coinSymbol: "USD",
-          amount: widget.user.getCurrency(),
-          usdValue: 1,
+          amount: 1,
+          usdValue: widget.user.getCurrency(),
           dailyChange: 0
         );
         wallet.add(temp);
@@ -121,7 +121,7 @@ class _WalletPageState extends State<WalletPageState> {
                       horizontal: 16.0, vertical: 8.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: coinSymbol == 'USD' ? Colors.green : Colors.white,
                       borderRadius: BorderRadius.circular(10.0),
                       boxShadow: [
                         BoxShadow(
@@ -153,12 +153,13 @@ class _WalletPageState extends State<WalletPageState> {
                           crossAxisAlignment: CrossAxisAlignment.end,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              wallet[index].amount.toStringAsFixed(2),
-                              style: const TextStyle(
-                                fontSize: 18.0,
+                            if (coinSymbol != 'USD')
+                              Text(
+                                wallet[index].amount.toStringAsFixed(2),
+                                style: const TextStyle(
+                                  fontSize: 18.0,
+                                ),
                               ),
-                            ),
                           Expanded(
                               child: Row(
                                 mainAxisSize: MainAxisSize
@@ -171,15 +172,16 @@ class _WalletPageState extends State<WalletPageState> {
                                       fontSize: 16.0,
                                     ),
                                   ),
-                                  Text(
-                                    ' (${wallet[index].dailyChange.toStringAsFixed(2)}%)',
-                                    style: TextStyle(
-                                      fontSize: 14.0,
-                                      color: wallet[index].dailyChange >= 0
-                                          ? Colors.green
-                                          : Colors.red,
+                                  if (coinSymbol != 'USD')
+                                    Text(
+                                      ' (${wallet[index].dailyChange.toStringAsFixed(2)}%)',
+                                      style: TextStyle(
+                                        fontSize: 14.0,
+                                        color: wallet[index].dailyChange >= 0
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
                                     ),
-                                  ),
                                 ],
                               ),
                             ),

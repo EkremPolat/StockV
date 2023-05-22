@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HorizontalDrawerMenuState extends StatefulWidget {
-  final List<String> menuItems = ['Home', 'Saved Coins'];
+  final List<String> menuItems = ['Saved Coins', 'Home'];
   final Function(int) callback;
 
   HorizontalDrawerMenuState({super.key, required this.callback});

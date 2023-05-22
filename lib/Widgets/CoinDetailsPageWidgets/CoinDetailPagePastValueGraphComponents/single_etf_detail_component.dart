@@ -15,7 +15,6 @@ import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGra
 import 'package:http/http.dart' as http;
 import '../loading_page.dart';
 import 'detect_chart_patterns.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 String coinVolume = '';
 String coinLowestPrice = '';
@@ -132,14 +131,6 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
       coinPrice = etfUpdatedPrice.toStringAsFixed(
           2); // Convert the price to a string and store it in coinPrice
     }
-    if (!mounted) return;
-    final now = DateTime.now();
-    setState(() {
-      /*_etfPriceData.add(EtfPriceData.withPrice(now, etfUpdatedPrice));
-      if (_etfPriceData.length > 100) {
-        _etfPriceData.removeAt(0);
-      }*/
-    });
   }
 
   Future<void> fetchPredictions(etfCode) async {
@@ -192,7 +183,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                     children: [
                       // New Text widget on the left side
 
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           '24 Hour Volume:',
                           style: TextStyle(
@@ -203,12 +194,12 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                           textAlign: TextAlign.right,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                           width:
                               10), // Add a space of 10 pixels between the two texts
                       Text(
                         coinVolume,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14.0, // Adjust the font size as desired
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -222,13 +213,13 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                     children: [
                       Text(
                         '\$$coinPrice',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 30.0,
                           color: Colors.white,
                         ),
                         textAlign: TextAlign.left,
                       ),
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'Highest Price:',
                           style: TextStyle(
@@ -239,12 +230,12 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                           textAlign: TextAlign.right,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                           width:
                               10), // Add a space of 10 pixels between the two texts
                       Text(
                         '\$$coinHighestPrice',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14.0, // Adjust the font size as desired
                           fontWeight: FontWeight.bold,
                           color: Colors.green,
@@ -269,7 +260,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         textAlign: TextAlign.left,
                       ),
 
-                      Expanded(
+                      const Expanded(
                         child: Text(
                           'Lowest Price:',
                           style: TextStyle(
@@ -280,12 +271,12 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                           textAlign: TextAlign.right,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                           width:
                               10), // Add a space of 10 pixels between the two texts
                       Text(
                         '\$$coinLowestPrice',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14.0, // Adjust the font size as desired
                           fontWeight: FontWeight.bold,
                           color: Colors.red,
@@ -304,13 +295,13 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                             flex: 1,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                primary: dropdownListValue == value
-                                    ? Color.fromARGB(255, 13, 45, 75)
-                                    : Color.fromARGB(255, 60, 94, 125),
+                                backgroundColor: dropdownListValue == value
+                                    ? const Color.fromARGB(255, 13, 45, 75)
+                                    : const Color.fromARGB(255, 60, 94, 125),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                minimumSize: Size(55,
+                                minimumSize: const Size(55,
                                     25), // Adjust the width and height as desired
                               ),
                               onPressed: () {
@@ -345,7 +336,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                               },
                               child: Text(
                                 value,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 12,
@@ -368,6 +359,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                       ),
                     ),
                   ]),
+                  const SizedBox(height: 15,),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -404,6 +396,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 15,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -453,31 +446,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                           ))
                     ],
                   ),
-                ]),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${widget.coin.symbol} Buy Price: \$${buySellPrices[0]}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Colors.deepPurpleAccent),
-                    )
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '${widget.coin.symbol} Sell Price: \$${buySellPrices[1]}',
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 25,
-                          color: Colors.deepPurpleAccent),
-                    )
-                  ],
-                ),
+                  const SizedBox(height: 15,),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -503,15 +472,17 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         child: const Text(
                           'BUY',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 25),
+                              fontWeight: FontWeight.bold, fontSize: 22),
                         )),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
+                          disabledBackgroundColor: Colors.grey,
                           backgroundColor: Colors.red,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
                         ),
+
                         onPressed: sellButtonDisabled
                             ? null
                             : () {
@@ -532,14 +503,16 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         child: const Text(
                           'SELL',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 25),
-                        ))
+                              color:Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
+                        ),),
                   ],
-                )
+                ),
+                  const SizedBox(height: 15,),
               ],
             ),
           ),
         ),
+      ),
       );
     }
   }

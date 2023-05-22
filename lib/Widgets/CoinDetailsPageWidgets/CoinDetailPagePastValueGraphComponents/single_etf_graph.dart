@@ -48,7 +48,6 @@ class _SingleEtfPastValueGraphComponentState
     if (mounted) {
       setState(() {
         _etfPriceData = response[0].cast<KLineEntity>();
-        print(_etfPriceData);
       });
     }
   }
@@ -59,8 +58,10 @@ class _SingleEtfPastValueGraphComponentState
         body: Center(
             child: Column(
       children: [
-        CandleChartComponentPage(
-          etfPriceData: _etfPriceData,
+        Expanded(
+          child: CandleChartComponentPage(
+            etfPriceData: _etfPriceData,
+          ),
         ),
       ],
     )));

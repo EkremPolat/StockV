@@ -9,6 +9,14 @@ import '../Utilities/global_variables.dart';
 import '../Utilities/user_wallet_information_requests.dart';
 import '../Widgets/CoinDetailsPageWidgets/loading_page.dart';
 
+void main() {
+  User user = User(
+      id: '49dede57-a704-47cd-b1ca-b16672f7aca6',
+      fullName: 'Ekrem Polat',
+      email: 'ekrempolat416@gmail.com');
+  runApp(HomePage(user: user));
+}
+
 class HomePage extends StatefulWidget {
   final User user;
   const HomePage({super.key, required this.user});
@@ -47,8 +55,19 @@ class _HomePageState extends State<HomePage> {
         coinList = coins;
         savedCoinList = savedCoins;
         transactions = transactionList;
-        wallet = userWallet;
         widget.user.balance = userBalance;
+
+        wallet = userWallet;
+        WalletCoin temp = WalletCoin(
+            coinName: "US Dollar",
+            coinSymbol: "USD",
+            amount: widget.user.getCurrency(),
+            usdValue: 1,
+            dailyChange: 0
+        );
+        wallet.add(temp);
+        wallet.sort((a, b) => (b.amount*b.usdValue).compareTo(a.amount * a.usdValue));
+
         isLoading = false;
       });
     }
