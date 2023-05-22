@@ -34,4 +34,5 @@ urlpatterns = [
     path('get-transaction-history/<str:pk>/', GetTransactionHistoryView.as_view(), name='get-transaction-history'),
     path('get-user-balance/<str:pk>/', GetUserBalanceView.as_view(), name='get-user-balance'),
     path('get-chart-patterns/', GenerateChartPatterns.as_view(), name='get-chart-patterns'),
+    path('create-checkout-session/', CreateCheckoutSessionView.as_view(), name='create-checkout-session'),
 ]

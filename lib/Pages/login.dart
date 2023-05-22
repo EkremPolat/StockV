@@ -1,21 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
+import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 import 'package:stockv/pages/signup.dart';
 
 import '../Utilities/http_request_functions.dart';
 import 'forgot_password.dart';
+import '../Models/user.dart';
 
 void main() {
   runApp(const LoginScreen());
 }
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  final User? user;
+
+  const LoginScreen({Key? key, this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-        debugShowCheckedModeBanner: false, home: LoginScreenHome());
+    // Check if the user is logged in
+    bool isLoggedIn = user?.isLoggedIn ?? false;
+
+    print(user);
+
+    // Return the appropriate screen based on the login status
+    if (isLoggedIn) {
+      User loggedInUser = user!;
+
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: HomePage(user: loggedInUser),
+      );
+    } else {
+      return const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: LoginScreenHome(),
+      );
+    }
   }
 }
 
@@ -128,15 +149,13 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.black,
-                                  width: 2),
+                              borderSide: const BorderSide(
+                                  color: Colors.black, width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                color: Colors.red,
-                                  width: 2
-                              ),
+                              borderSide:
+                                  const BorderSide(color: Colors.red, width: 2),
                             ),
                           ),
                           style: const TextStyle(
@@ -165,16 +184,12 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
                               borderSide: const BorderSide(
-                                color: Colors.black,
-                                  width: 2
-                              ),
+                                  color: Colors.black, width: 2),
                             ),
                             focusedBorder: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide: const BorderSide(
-                                  color: Colors.red,
-                                    width: 2
-                                )),
+                                    color: Colors.red, width: 2)),
                           ),
                           style: const TextStyle(
                               fontSize: 18, color: Colors.black),
@@ -193,10 +208,10 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               showMyDialog(context);
                               var response = await login(
                                   //TODO: This is for development purposes and will be deleted later on.
-                                 //'ekrempolat416@gmail.oom',
+                                  //'ekrempolat416@gmail.oom',
                                   _emailController.text,
-                                 // '1234');
-                              _passwordController.text);
+                                  // '1234');
+                                  _passwordController.text);
                               if (response != null) {
                                 setState(() {
                                   Navigator.pop(dialogContext);
@@ -222,10 +237,10 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                 }
 
                                 /*Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              LoginScreen()));*/
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LoginScreen()));*/
                                 else {
                                   setState(() {
                                     Navigator.pop(dialogContext);
@@ -286,8 +301,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          SignUpScreen()));
+                                      builder: (context) => SignUpScreen()));
                             });
                           },
                           child: const Text(
@@ -336,9 +350,9 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
     );
   }
 
-/*Future<bool> userExists(String uid) async {
-    return (await usersReferences!.where('uid', isEqualTo: uid).get())
-        .docs
-        .isEmpty;
-  }*/
+  /*Future<bool> userExists(String uid) async {
+      return (await usersReferences!.where('uid', isEqualTo: uid).get())
+          .docs
+          .isEmpty;
+    }*/
 }

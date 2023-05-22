@@ -35,7 +35,7 @@ const List<String> durationList = [
   '1 week',
   '1 month'
 ];
-String dropdownListValue = '4 hours';
+String dropdownListValue = '15 minutes';
 
 class SingleEtfGraphComponent extends StatefulWidget {
   final User user;

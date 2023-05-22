@@ -8,6 +8,7 @@ import '../../../Models/transaction.dart';
 import '../../../Models/user.dart';
 import '../../../Models/wallet_coin.dart';
 import '../../../Utilities/user_wallet_information_requests.dart';
+import 'package:stockv/Widgets/rootpage_widget.dart';
 
 class CoinBuyComponent extends StatefulWidget {
   final User user;
@@ -289,8 +290,10 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                      return RootPageState(user: widget.user, index: 0);
+                  }));
               },
               child: const Text('OK'),
             ),
@@ -314,8 +317,10 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
+                 Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                      return RootPageState(user: widget.user, index: 3);
+                  }));
               },
               child: const Text('OK', style: TextStyle(fontSize: 18)),
             ),

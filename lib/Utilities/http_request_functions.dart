@@ -35,7 +35,13 @@ Future<User?> login(String email, String password) async {
     String id = userData["id"];
     String email = userData["email"];
     String fullName = userData["full_name"];
-    User user = User(id: id, email: email, fullName: fullName);    //Or put here your next screen using Navigator.push() method
+    bool isLoggedIn = true;
+    User user = User(
+        id: id,
+        email: email,
+        fullName:
+            fullName,
+        isLoggedIn:isLoggedIn); //Or put here your next screen using Navigator.push() method
     return Future.value(user);
   } else {
     return Future.value(null);

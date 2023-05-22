@@ -81,7 +81,7 @@ class _WalletPageState extends State<WalletPageState> {
                       Row(
                         children: [
                           Text(
-                            '\$${(totalValue + widget.user.balance).toStringAsFixed(2)}',
+                            '\$${(totalValue).toStringAsFixed(2)}',
                             style: TextStyle(
                               fontSize: screenWidth * 0.08,
                               fontWeight: FontWeight.bold,

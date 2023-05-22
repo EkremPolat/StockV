@@ -3,8 +3,10 @@ class User {
   String fullName = "";
   double balance = 1000.0;
   String id = "";
+  bool isLoggedIn = false;
 
-  User({required this.id, required this.email, required this.fullName});
+
+  User({required this.id, required this.email, required this.fullName, this.isLoggedIn = false,});
 
   String getEmail() {
     return email;
@@ -25,5 +27,11 @@ class User {
   String getId() {
     return id;
   }
-  
+  void setLoggedIn(bool value) {
+    isLoggedIn = value;
+  }
+
+  bool isUserLoggedIn() {
+    return isLoggedIn;
+  }
 }

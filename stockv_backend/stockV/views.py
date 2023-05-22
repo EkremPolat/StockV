@@ -17,6 +17,13 @@ from stockV.machine_learning.flag import send_flag_plots
 from stockV.machine_learning.doubles import send_double_plots
 import datetime
 import requests
+from django.http import JsonResponse
+from django.views import View
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
+import stripe
+import json
+
 
 class AddUser(APIView):
     def post(self, request):
@@ -346,3 +353,31 @@ class GenerateChartPatterns(APIView):
 
             return JsonResponse(plots, safe=False)
         
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class CreateCheckoutSessionView(View):
+
+    stripe.api_key = 'sk_test_51Mq1jdFwDf5GmMciqCm1cXQvDJl0clcDBBWKjanFG78osYbkwMaSf5h9rOBY6XSAhQbLeH9mPQZ7b4JCooHjgmQE00nh15xHsh'  # Replace with your Stripe Secret Key
+    def post(self, request, *args, **kwargs):
+        data = json.loads(request.body)
+        price_id = data.get('priceId')
+
+        try:
+            checkout_session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[
+                    {
+                        'price': price_id,
+                        'quantity': 1,
+                    }
+                ],
+                mode='subscription',
+                success_url='your-app://success',
+                cancel_url='your-app://cancel',
+            )
+            return JsonResponse({
+                'sessionId': checkout_session['id']
+            })
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
