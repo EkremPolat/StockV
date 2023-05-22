@@ -190,7 +190,6 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                     ),
                   ),
                   onPressed: () { headAndShouldersPlots.isEmpty ? null :
-                      print(headAndShouldersPlots.length);
                   Navigator.push(
                       context,
                       MaterialPageRoute(

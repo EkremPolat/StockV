@@ -429,14 +429,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.4.16"
-  threading:
-    dependency: "direct main"
-    description:
-      name: threading
-      sha256: e44dbf1b6791f870d00f1081f30e93e48e54a72541952bfe71f18f6fe2c67ce3
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.10"
   tuple:
     dependency: transitive
     description:

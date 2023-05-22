@@ -31,9 +31,9 @@ class _HomePageState extends State<HomePageState> {
             children: [
               HorizontalDrawerMenuState(callback: _handleCallback),
               if (drawerIndex == 0)
-                Expanded(child: AllCoinsContainerState(user: widget.user)),
-              if (drawerIndex == 1)
                 Expanded(child: SavedCoinsContainerState(user: widget.user)),
+              if (drawerIndex == 1)
+                Expanded(child: AllCoinsContainerState(user: widget.user)),
             ],
           ),
         ),

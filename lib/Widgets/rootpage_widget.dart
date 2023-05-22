@@ -6,6 +6,7 @@ import 'package:stockv/Widgets/homepage_widget.dart';
 import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
+import 'package:stockv/Widgets/transactions_widget.dart';
 import 'package:stockv/Widgets/walletpage_widget.dart';
 import 'package:stockv/Widgets/CoinDetailsPageWidgets/CoinDetailPagePastValueGraphComponents/single_etf_detail_component.dart';
 
@@ -41,9 +42,9 @@ class _RootPageState extends State<RootPageState> {
   Widget build(BuildContext context) {
     final pages = [
       HomePageState(user: widget.user),
-      CoinsPageState(user: widget.user),
       const PremiumPageState(),
       WalletPageState(user: widget.user),
+      TransactionListPage(user: widget.user),
     ];
 
     return Scaffold(
@@ -130,12 +131,6 @@ class _RootPageState extends State<RootPageState> {
                 label: 'Home'),
             NavigationDestination(
                 icon: Icon(
-                  Icons.currency_bitcoin,
-                  color: index == 1 ? Colors.white : Colors.white.withOpacity(0.7),
-                ),
-                label: 'Coins'),
-            NavigationDestination(
-                icon: Icon(
                   Icons.diamond_outlined,
                   color: index == 2 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
@@ -146,6 +141,12 @@ class _RootPageState extends State<RootPageState> {
                   color: index == 3 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Wallet'),
+            NavigationDestination(
+                icon: Icon(
+                  Icons.currency_bitcoin,
+                  color: Color.fromARGB(255, 255, 255, 255),
+                ),
+                label: 'Transaction'),
           ],
         ),
       ),
