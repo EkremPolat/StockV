@@ -40,7 +40,6 @@ dependencies:
   flutter_secure_storage: ^7.0.1
   flutter_colorpicker: ^1.0.3
   web_socket_channel: ^2.2.0
-  threading: ^0.0.10
   syncfusion_flutter_charts: ^20.4.53
   flutter_charts: ^0.5.1
   k_chart: ^0.7.0

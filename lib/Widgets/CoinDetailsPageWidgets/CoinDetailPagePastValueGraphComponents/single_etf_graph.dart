@@ -86,7 +86,8 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 620,
+      height: double.infinity, // Set the height to occupy the available space
+      width: double.infinity,
       child: Scaffold(
         backgroundColor: const Color(0xff17212F),
         body: SingleChildScrollView(
@@ -145,7 +146,7 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
           setState(() {});
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xff2E159D),
+          backgroundColor: Color.fromARGB(255, 44, 73, 101),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
