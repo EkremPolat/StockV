@@ -172,7 +172,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return RootPageState(user: widget.user, index: 2);
+                            return RootPageState(user: widget.user, index: 1);
                           }));
                         },
                       ),

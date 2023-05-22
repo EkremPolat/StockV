@@ -132,19 +132,19 @@ class _RootPageState extends State<RootPageState> {
             NavigationDestination(
                 icon: Icon(
                   Icons.diamond_outlined,
-                  color: index == 2 ? Colors.white : Colors.white.withOpacity(0.7),
+                  color: index == 1 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Premium'),
             NavigationDestination(
                 icon: Icon(
                   Icons.wallet,
-                  color: index == 3 ? Colors.white : Colors.white.withOpacity(0.7),
+                  color: index == 2 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Wallet'),
             NavigationDestination(
                 icon: Icon(
                   Icons.currency_bitcoin,
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: index == 3 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Transaction'),
           ],
