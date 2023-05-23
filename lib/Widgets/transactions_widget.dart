@@ -24,27 +24,6 @@ class _TransactionListPageState extends State<TransactionListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.deepPurpleAccent,
-        leadingWidth: 400,
-        leading: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back),
-                ),
-                Image.asset('images/black.png'),
-              ],
-            ),
-          ],
-        ),
-      ),
       body: Column(
         children: [
           const SizedBox(
@@ -103,12 +82,12 @@ class _TransactionListPageState extends State<TransactionListPage> {
                       title: Text(
                         transactions[index].coinName,
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+                            fontWeight: FontWeight.bold, fontSize: 18),
                       ),
                       subtitle: Text(
                         transactions[index].date.toString(),
                         style: const TextStyle(
-                          fontSize: 17.0,
+                          fontSize: 16.0,
                         ),
                       ),
                       trailing: Column(
@@ -119,13 +98,20 @@ class _TransactionListPageState extends State<TransactionListPage> {
                             '\$${transactions[index].coinPrice.toStringAsFixed(2)}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
-                              fontSize: 20.0,
+                              fontSize: 14.0,
                             ),
                           ),
                           Text(
-                            transactions[index].coinAmount.toStringAsFixed(2),
+                            transactions[index].coinAmount.toStringAsFixed(3),
                             style: const TextStyle(
-                              fontSize: 18.0,
+                              fontSize: 14.0,
+                            ),
+                          ),
+                          Text(
+                              transactions[index].sellingTransaction ? '+\$${(transactions[index].coinAmount * transactions[index].coinPrice).toStringAsFixed(3)}' : '-\$${(transactions[index].coinAmount * transactions[index].coinPrice).toStringAsFixed(3)}',
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: transactions[index].sellingTransaction ? Colors.green : Colors.red
                             ),
                           ),
                         ],
@@ -143,7 +129,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
 
   Future<void> fetchTransactions(String userId) async {
     List<Transaction> transactionList =
-        await getUserTransactionHistory(widget.user.id);
+    await getUserTransactionHistory(widget.user.id);
     if (mounted) {
       setState(() {
         transactions = transactionList;
@@ -151,4 +137,3 @@ class _TransactionListPageState extends State<TransactionListPage> {
     }
   }
 }
-
