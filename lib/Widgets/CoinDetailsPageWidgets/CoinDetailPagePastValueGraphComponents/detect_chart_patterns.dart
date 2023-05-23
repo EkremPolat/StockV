@@ -36,7 +36,10 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
   List<String> flagPlots = [];
   List<String> doublePlots = [];
 
+  int patternNumber = 0;
+
   Future<void> fetchPlots(symbol, intervalValue, intervalCode, duration) async {
+    int counter = 0;
     final int startTime =
         DateTime.now().subtract(duration).millisecondsSinceEpoch;
     final int endTime = DateTime.now().millisecondsSinceEpoch;
@@ -64,6 +67,34 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
     List<String> double = await fetchChartPatterns(
         symbol, intervalValue, intervalCode, startTime, endTime, 'Double');
 
+    if (rectangles.isNotEmpty) {
+      counter++;
+    }
+    if (headAndShoulders.isNotEmpty) {
+      counter++;
+    }
+    if (triples.isNotEmpty) {
+      counter++;
+    }
+    if (wedge.isNotEmpty) {
+      counter++;
+    }
+    if (triangles.isNotEmpty) {
+      counter++;
+    }
+    if (supportAndResistance.isNotEmpty) {
+      counter++;
+    }
+    if (roundingBottom.isNotEmpty) {
+      counter++;
+    }
+    if (flags.isNotEmpty) {
+      counter++;
+    }
+    if (double.isNotEmpty) {
+      counter++;
+    }
+
     setState(() {
       rectanglePlots = rectangles;
       headAndShouldersPlots = headAndShoulders;
@@ -74,6 +105,7 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
       roundingBottomPlots = roundingBottom;
       flagPlots = flags;
       doublePlots = double;
+      patternNumber = counter;
       isLoading = false;
     });
   }
@@ -138,257 +170,309 @@ class _ChartPatternButtonsState extends State<ChartPatternButtons> {
                 },
                 icon: const Icon(Icons.arrow_back),
               ),
-              Image.asset('images/black.png'),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                child: SizedBox(child: Image.asset('images/black.png')),
+              ),
             ]),
           ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (rectanglePlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+          body: FractionallySizedBox(
+            widthFactor: 1.0,
+            child: Container(
+              color: const Color(0xff17212F),
+              child: FractionallySizedBox(
+                widthFactor: 0.96,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20,),
+                    Text('${widget.etfCode.toUpperCase()} CHART PATTERNS', style: const TextStyle(color: Colors.white, fontSize: 30),),
+                    const SizedBox(height: 20,),
+                    const Text('Total chart patterns: 9', style: TextStyle(color: Colors.white, fontSize: 18),),
+                    const SizedBox(height: 10,),
+                    Text('${widget.etfCode.toUpperCase()} detected chart patterns: $patternNumber', style: const TextStyle(color: Colors.white, fontSize: 18),),
+                    const SizedBox(height: 20,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (rectanglePlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { rectanglePlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: rectanglePlots, chartPatternType: 'Rectangle', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE RECTANGLE PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { rectanglePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: rectanglePlots, chartPatternType: 'Rectangle', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE RECTANGLE PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (headAndShouldersPlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (headAndShouldersPlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { headAndShouldersPlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: headAndShouldersPlots, chartPatternType: 'Head & Shoulders', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE HEAD & SHOULDERS PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { headAndShouldersPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: headAndShouldersPlots, chartPatternType: 'Head & Shoulders', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE HEAD & SHOULDERS PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (triplesPlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (triplesPlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { triplesPlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: triplesPlots, chartPatternType: 'Triples', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE TRIPLES PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { triplesPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: triplesPlots, chartPatternType: 'Triples', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE TRIPLES PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (wedgePlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (wedgePlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { wedgePlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: wedgePlots, chartPatternType: 'Wedge', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE WEDGE PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { wedgePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: wedgePlots, chartPatternType: 'Wedge', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE WEDGE PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (trianglePlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (trianglePlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { trianglePlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: trianglePlots, chartPatternType: 'Triangle', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE TRIANGLE PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { trianglePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: trianglePlots, chartPatternType: 'Triangle', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE TRIANGLE PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (supportAndResistancePlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (supportAndResistancePlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { supportAndResistancePlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: supportAndResistancePlots, chartPatternType: 'Support & Resistance', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE SUPPORT & RESISTANCE PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { supportAndResistancePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: supportAndResistancePlots, chartPatternType: 'Support & Resistance', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE SUPPORT & RESISTANCE PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (roundingBottomPlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (roundingBottomPlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { roundingBottomPlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: roundingBottomPlots, chartPatternType: 'Rounding Bottom', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE ROUNDING BOTTOM PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { roundingBottomPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: roundingBottomPlots, chartPatternType: 'Rounding Bottom', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE ROUNDING BOTTOM PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (flagPlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (flagPlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { flagPlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: flagPlots, chartPatternType: 'Flag', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE FLAG PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { flagPlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: flagPlots, chartPatternType: 'Flag', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE FLAG PATTERN',
-                  ),
-                ),
-                ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                      (Set<MaterialState> states) {
-                        if (doublePlots.isEmpty) {
-                          return Colors
-                              .grey; // Change the color for disabled state
-                        }
-                        return Colors.deepPurpleAccent; // Default color
-                      },
-                    ),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
+                    const SizedBox(height: 7,),
+                    FractionallySizedBox(
+                      widthFactor: 0.8,
+                      child: ElevatedButton(
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                              if (doublePlots.isEmpty) {
+                                return Colors
+                                    .grey; // Change the color for disabled state
+                              }
+                              return Colors.deepPurpleAccent; // Default color
+                            },
+                          ),
+                          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                        ),
+                        onPressed: () { doublePlots.isEmpty ? null :
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PlotDisplayScreen(plots: doublePlots, chartPatternType: 'Double', coinSymbol: widget.etfCode,)));
+                        },
+                        child: const Text(
+                          'SEE DOUBLE PATTERN',
+                        ),
                       ),
                     ),
-                  ),
-                  onPressed: () { doublePlots.isEmpty ? null :
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => PlotDisplayScreen(plots: doublePlots, chartPatternType: 'Double', coinSymbol: widget.etfCode,)));
-                  },
-                  child: const Text(
-                    'SEE DOUBLE PATTERN',
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ));
     }

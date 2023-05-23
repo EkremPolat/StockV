@@ -23,7 +23,7 @@ class _WalletPageState extends State<WalletPageState> {
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (mounted) {
         fetchUserWallet();
       }

@@ -260,7 +260,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            '${widget.coin.dailyChange >= 0 ? '+' : '-'}${widget.coin.dailyChange.toStringAsFixed(2)}%',
+                            '${widget.coin.dailyChange >= 0 ? '+' : ''}${widget.coin.dailyChange.toStringAsFixed(2)}%',
                             style: TextStyle(
                               fontSize: 16.0,
                               color: widget.coin.dailyChange > 0

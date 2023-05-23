@@ -52,16 +52,9 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                   alignment: WrapAlignment.center,
                   runSpacing: 10,
                   children: <Widget>[
-                    Container(
-                      height: 91.0,
-                      width: 300.0,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('images/black.png'),
-                          fit: BoxFit.cover,
-                        ),
-                        shape: BoxShape.rectangle,
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: SizedBox( height: 130, child: Image.asset('images/black.png'),),
                     ),
                     Column(
                       // replaced with column
@@ -71,9 +64,7 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                           style: TextStyle(
                             fontSize: 30.0,
                             fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            letterSpacing: 1.2,
-                          ),
+                            color: Colors.black),
                         ),
                         const SizedBox(
                           height: 20,
@@ -110,7 +101,7 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff2E159D),
+                              backgroundColor: Colors.deepPurpleAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),

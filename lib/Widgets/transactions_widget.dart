@@ -74,7 +74,7 @@ class _TransactionListPageState extends State<TransactionListPage> {
                                   ? "Sell"
                                   : "Purchase",
                               style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 14),
+                                  fontWeight: FontWeight.bold, fontSize: 12),
                             )
                           ],
                         ),

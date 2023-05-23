@@ -74,18 +74,22 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.deepPurpleAccent,
-          leadingWidth: 400,
-          leading: Row(children: [
-            IconButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              icon: const Icon(Icons.arrow_back),
-            ),
-            Image.asset('images/black.png'),
-          ]),
-        ),
+            backgroundColor: Colors.deepPurpleAccent,
+            leadingWidth: 400,
+            leading: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.arrow_back),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                  child: SizedBox(child: Image.asset('images/black.png')),
+                ),
+              ],
+            )),
         body: Center(
           child: FractionallySizedBox(
             widthFactor: 0.9,
@@ -95,7 +99,7 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
                   height: 10,
                 ),
                 Text(
-                  '${widget.coin.symbol}/USDT',
+                  widget.coin.name,
                   style: const TextStyle(
                     fontSize: 40.0,
                     fontWeight: FontWeight.bold,
@@ -276,7 +280,8 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
     widget.user.balance = await buyCrypto(userId, coinName, amount, totalCost);
     List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
     wallet = userWallet;
-    List<Transaction> transactionList = await getUserTransactionHistory(widget.user.id);
+    List<Transaction> transactionList =
+        await getUserTransactionHistory(widget.user.id);
     transactions = transactionList;
   }
 
@@ -290,10 +295,9 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                      return RootPageState(user: widget.user, index: 0);
-                  }));
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return RootPageState(user: widget.user, index: 0);
+                }));
               },
               child: const Text('OK'),
             ),
@@ -317,10 +321,9 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
-                 Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                      return RootPageState(user: widget.user, index: 3);
-                  }));
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return RootPageState(user: widget.user, index: 3);
+                }));
               },
               child: const Text('OK', style: TextStyle(fontSize: 18)),
             ),
