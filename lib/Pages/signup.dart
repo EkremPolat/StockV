@@ -58,16 +58,9 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                   alignment: WrapAlignment.center,
                   runSpacing: 10,
                   children: <Widget>[
-                    Container(
-                      height: 91.0,
-                      width: 300.0,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('images/black.png'),
-                          fit: BoxFit.cover,
-                        ),
-                        shape: BoxShape.rectangle,
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: SizedBox( height: 130, child: Image.asset('images/black.png'),),
                     ),
                     Column(
                       // replaced with column
@@ -222,7 +215,7 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff2E159D),
+                              backgroundColor: Colors.deepPurpleAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -259,19 +252,16 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                                   fontWeight: FontWeight.bold),
                             )),
                         const SizedBox(
-                          height: 40,
+                          height: 20,
                         ),
                         const Text(
                           "already a member?",
                           style: TextStyle(
                               color: Colors.black, fontWeight: FontWeight.bold),
                         ),
-                        const SizedBox(
-                          height: 5,
-                        ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2E159D),
+                            backgroundColor: Colors.deepPurpleAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),

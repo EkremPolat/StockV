@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stockv/Pages/homepage.dart';
 import 'package:stockv/Widgets/rootpage_widget.dart';
-import 'package:stockv/Widgets/transactions_widget.dart';
 
 import 'package:stockv/pages/login.dart';
 import '../Models/user.dart';
@@ -73,48 +71,6 @@ class _ProfilePageState extends State<ProfilePageState> {
                 ),
               ],
             ),
-            IconButton(
-              onPressed: () {
-                // Open the drawer.
-                _scaffoldKey.currentState?.openEndDrawer();
-              },
-              icon: const Icon(Icons.menu),
-            ),
-          ],
-        ),
-      ),
-      endDrawer: Drawer(
-        child: Column(
-          children: [
-            Container(
-              height: 130,
-              decoration: const BoxDecoration(
-                color: Colors.deepPurpleAccent,
-                image: DecorationImage(
-                  image: AssetImage('images/black.png'),
-                ),
-              ),
-              child: null,
-            ),
-            ListTile(
-              leading: const Icon(Icons.home),
-              title: const Text('Transactions'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => TransactionListPage(
-                              user: widget.user,
-                            )));
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings),
-              title: const Text('Settings'),
-              onTap: () {
-                // Do something when the user taps on the Settings button.
-              },
-            ),
           ],
         ),
       ),
@@ -160,7 +116,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                       width: 150,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2E159D),
+                          backgroundColor: Colors.deepPurpleAccent,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15),
                           ),
@@ -322,13 +278,13 @@ class _ProfilePageState extends State<ProfilePageState> {
                           ),
                         ])),
                     Container(
-                      margin: EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       child: SizedBox(
                         height: 50,
                         width: 200,
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2E159D),
+                            backgroundColor: Colors.deepPurpleAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),

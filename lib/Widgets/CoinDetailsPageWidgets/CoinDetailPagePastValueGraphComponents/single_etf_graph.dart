@@ -134,7 +134,7 @@ class _CandleChartComponentState extends State<CandleChartComponentPage> {
         button("WR", onPressed: () => _secondaryState = SecondaryState.WR),
         button("Remove Secondary State",
             onPressed: () => _secondaryState = SecondaryState.NONE),
-        button(_volHidden ? "Show Volume" : "Hide Volumw",
+        button(_volHidden ? "Show Volume" : "Hide Volume",
             onPressed: () => _volHidden = !_volHidden)
       ],
     );

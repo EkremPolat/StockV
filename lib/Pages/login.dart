@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
-import 'package:stockv/Utilities/user_wallet_information_requests.dart';
 import 'package:stockv/pages/signup.dart';
 
 import '../Utilities/http_request_functions.dart';
@@ -20,9 +19,6 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Check if the user is logged in
     bool isLoggedIn = user?.isLoggedIn ?? false;
-
-    print(user);
-
     // Return the appropriate screen based on the login status
     if (isLoggedIn) {
       User loggedInUser = user!;
@@ -81,16 +77,9 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                   alignment: WrapAlignment.center,
                   runSpacing: 10,
                   children: <Widget>[
-                    Container(
-                      height: 91.0,
-                      width: 300.0,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('images/black.png'),
-                          fit: BoxFit.cover,
-                        ),
-                        shape: BoxShape.rectangle,
-                      ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                      child: SizedBox( height: 130, child: Image.asset('images/black.png'),),
                     ),
                     Column(
                       // replaced with column
@@ -199,7 +188,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xff2E159D),
+                              backgroundColor: Colors.deepPurpleAccent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
@@ -257,7 +246,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             )),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2E159D),
+                            backgroundColor: Colors.deepPurpleAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),
@@ -291,7 +280,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xff2E159D),
+                            backgroundColor: Colors.deepPurpleAccent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(15),
                             ),

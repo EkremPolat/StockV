@@ -45,7 +45,6 @@ class _MultipleEtfContainerState extends State<AllCoinsContainerState> {
       itemBuilder: (context, index) {
         final coinValue = coinList[index];
         final coinSymbol = coinValue.symbol;
-        print(coinSymbol);
         final coinIcon = 'images/coin_icons/$coinSymbol.png';
 
         return Card(

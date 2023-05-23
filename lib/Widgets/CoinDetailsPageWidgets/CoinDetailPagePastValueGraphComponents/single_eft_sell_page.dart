@@ -85,7 +85,10 @@ class CoinSellComponentState extends State<CoinSellComponent> {
               },
               icon: const Icon(Icons.arrow_back),
             ),
-            Image.asset('images/black.png'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: SizedBox(child: Image.asset('images/black.png')),
+            ),
           ]),
         ),
         body: Center(
