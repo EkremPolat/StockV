@@ -159,360 +159,391 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
               },
               icon: const Icon(Icons.arrow_back),
             ),
-            Image.asset('images/black.png'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+              child: SizedBox(child: Image.asset('images/black.png')),
+            ),
           ]),
         ),
         body: Center(
           child: SingleChildScrollView(
-            child: Container(
-              color: const Color(0xff17212F),
-              // Set the background color to pink
-
-              child: Column(
-                children: [
-                  Text(
-                    '${widget.coin.symbol}/USDT',
-                    style: const TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: FractionallySizedBox(
+              widthFactor: 1.0,
+              child: Container(
+                color: const Color(0xff17212F),
+                child: FractionallySizedBox(
+                  widthFactor: 0.96,
+                  child: Column(
                     children: [
-                      // New Text widget on the left side
-
-                      const Expanded(
-                        child: Text(
-                          '24 Hour Volume:',
-                          style: TextStyle(
-                            fontSize: 14.0, // Adjust the font size as desired
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
-                      ),
                       const SizedBox(
-                          width:
-                              10), // Add a space of 10 pixels between the two texts
+                        height: 10,
+                      ),
                       Text(
-                        coinVolume,
+                        widget.coin.name.toUpperCase(),
                         style: const TextStyle(
-                          fontSize: 14.0, // Adjust the font size as desired
+                          fontSize: 36.0,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                        ),
-                        textAlign: TextAlign.right,
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '\$$coinPrice',
-                        style: const TextStyle(
-                          fontSize: 30.0,
-                          color: Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
-                      const Expanded(
-                        child: Text(
-                          'Highest Price:',
-                          style: TextStyle(
-                            fontSize: 14.0, // Adjust the font size as desired
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.right,
+                          fontFamily: 'Visby Round'
                         ),
                       ),
                       const SizedBox(
-                          width:
-                              10), // Add a space of 10 pixels between the two texts
-                      Text(
-                        '\$$coinHighestPrice',
-                        style: const TextStyle(
-                          fontSize: 14.0, // Adjust the font size as desired
-                          fontWeight: FontWeight.bold,
-                          color: Colors.green,
-                        ),
-                        textAlign: TextAlign.right,
+                        height: 10,
                       ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        '${widget.coin.dailyChange >= 0 ? '+' : '-'}${widget.coin.dailyChange.toStringAsFixed(2)}%',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          color: widget.coin.dailyChange > 0
-                              ? Colors.green
-                              : widget.coin.dailyChange < 0
-                                  ? Colors.red
-                                  : Colors.white,
-                        ),
-                        textAlign: TextAlign.left,
-                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // New Text widget on the left side
 
-                      const Expanded(
-                        child: Text(
-                          'Lowest Price:',
-                          style: TextStyle(
-                            fontSize: 14.0, // Adjust the font size as desired
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                          const Expanded(
+                            child: Text(
+                              '24 Hour Volume:',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                // Adjust the font size as desired
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
                           ),
-                          textAlign: TextAlign.right,
+                          const SizedBox(width: 10),
+                          // Add a space of 10 pixels between the two texts
+                          Text(
+                            coinVolume,
+                            style: const TextStyle(
+                              fontSize: 14.0, // Adjust the font size as desired
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '\$$coinPrice',
+                            style: const TextStyle(
+                              fontSize: 30.0,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          const Expanded(
+                            child: Text(
+                              'Highest Price:',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                // Adjust the font size as desired
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // Add a space of 10 pixels between the two texts
+                          Text(
+                            '\$$coinHighestPrice',
+                            style: const TextStyle(
+                              fontSize: 14.0, // Adjust the font size as desired
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            '${widget.coin.dailyChange >= 0 ? '+' : '-'}${widget.coin.dailyChange.toStringAsFixed(2)}%',
+                            style: TextStyle(
+                              fontSize: 16.0,
+                              color: widget.coin.dailyChange > 0
+                                  ? Colors.green
+                                  : widget.coin.dailyChange < 0
+                                      ? Colors.red
+                                      : Colors.white,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+
+                          const Expanded(
+                            child: Text(
+                              'Lowest Price:',
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                // Adjust the font size as desired
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          // Add a space of 10 pixels between the two texts
+                          Text(
+                            '\$$coinLowestPrice',
+                            style: const TextStyle(
+                              fontSize: 14.0, // Adjust the font size as desired
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ],
+                      ),
+                      Column(children: [
+                        SizedBox(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: durationList.map((String value) {
+                              return Flexible(
+                                flex: 1,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: dropdownListValue == value
+                                        ? const Color.fromARGB(255, 13, 45, 75)
+                                        : const Color.fromARGB(
+                                            255, 60, 94, 125),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    minimumSize: const Size(55,
+                                        25), // Adjust the width and height as desired
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      dropdownListValue = value;
+                                      if (value == '15m') {
+                                        duration = const Duration(hours: 24);
+                                        intervalCode = 'm';
+                                        intervalValue = 15;
+                                      } else if (value == '1h') {
+                                        duration = const Duration(days: 7);
+                                        intervalCode = 'h';
+                                        intervalValue = 1;
+                                      } else if (value == '4h') {
+                                        duration = const Duration(days: 7);
+                                        intervalCode = 'h';
+                                        intervalValue = 4;
+                                      } else if (value == '1d') {
+                                        duration = const Duration(days: 365);
+                                        intervalCode = 'd';
+                                        intervalValue = 1;
+                                      } else if (value == '1w') {
+                                        duration =
+                                            const Duration(days: 365 * 10);
+                                        intervalCode = 'w';
+                                        intervalValue = 1;
+                                      } else if (value == '1M') {
+                                        duration =
+                                            const Duration(days: 365 * 5);
+                                        intervalCode = 'M';
+                                        intervalValue = 1;
+                                      }
+                                    });
+                                  },
+                                  child: Text(
+                                    value,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                          ),
                         ),
+                        SizedBox(
+                          height: 600,
+                          child: SingleEtfPastValueGraphComponent(
+                            etfCode: widget.coin.symbol,
+                            intervalValue: intervalValue,
+                            duration: duration,
+                            intervalCode: intervalCode,
+                            key: ValueKey<String>(
+                                dropdownListValue), // Add a key to force component update
+                          ),
+                        ),
+                      ]),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                '${widget.coin.symbol} Buy Price: \$${buySellPrices[0]}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.green,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Center(
+                              child: Text(
+                                '${widget.coin.symbol} Sell Price: \$${buySellPrices[1]}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: Colors.red,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       const SizedBox(
-                          width:
-                              10), // Add a space of 10 pixels between the two texts
-                      Text(
-                        '\$$coinLowestPrice',
-                        style: const TextStyle(
-                          fontSize: 14.0, // Adjust the font size as desired
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                        textAlign: TextAlign.right,
+                        height: 15,
                       ),
-                    ],
-                  ),
-                  Column(children: [
-                    SizedBox(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: durationList.map((String value) {
-                          return Flexible(
-                            flex: 1,
-                            child: ElevatedButton(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: dropdownListValue == value
-                                    ? const Color.fromARGB(255, 13, 45, 75)
-                                    : const Color.fromARGB(255, 60, 94, 125),
+                                backgroundColor: Colors.deepPurpleAccent,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                 ),
-                                minimumSize: const Size(55,
-                                    25), // Adjust the width and height as desired
                               ),
                               onPressed: () {
-                                setState(() {
-                                  dropdownListValue = value;
-                                  if (value == '15m') {
-                                    duration = const Duration(hours: 24);
-                                    intervalCode = 'm';
-                                    intervalValue = 15;
-                                  } else if (value == '1h') {
-                                    duration = const Duration(days: 7);
-                                    intervalCode = 'h';
-                                    intervalValue = 1;
-                                  } else if (value == '4h') {
-                                    duration = const Duration(days: 7);
-                                    intervalCode = 'h';
-                                    intervalValue = 4;
-                                  } else if (value == '1d') {
-                                    duration = const Duration(days: 365);
-                                    intervalCode = 'd';
-                                    intervalValue = 1;
-                                  } else if (value == '1w') {
-                                    duration = const Duration(days: 365 * 10);
-                                    intervalCode = 'w';
-                                    intervalValue = 1;
-                                  } else if (value == '1M') {
-                                    duration = const Duration(days: 365 * 5);
-                                    intervalCode = 'M';
-                                    intervalValue = 1;
-                                  }
-                                });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => FuturePriceGraph(
+                                              etfPriceData: predictionList,
+                                              coin: widget.coin,
+                                            )));
                               },
-                              child: Text(
-                                value,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
+                              child: const Text(
+                                'SEE FUTURE VALUE PREDICTIONS',
+                              ))
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.deepPurpleAccent,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
                               ),
-                            ),
-                          );
-                        }).toList(),
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ChartPatternButtons(
+                                              intervalCode: intervalCode,
+                                              duration: duration,
+                                              etfCode: widget.coin.symbol,
+                                              intervalValue: intervalValue,
+                                            )));
+                              },
+                              child: const Text(
+                                'SEE CHART PATTERNS',
+                              ))
+                        ],
                       ),
-                    ),
-                    SizedBox(
-                      height: 600,
-                      child: SingleEtfPastValueGraphComponent(
-                        etfCode: widget.coin.symbol,
-                        intervalValue: intervalValue,
-                        duration: duration,
-                        intervalCode: intervalCode,
-                        key: ValueKey<String>(
-                            dropdownListValue), // Add a key to force component update
+                      const SizedBox(
+                        height: 15,
                       ),
-                    ),
-                  ]),
-                  const SizedBox(height: 15,),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            '${widget.coin.symbol} Buy Price: \$${buySellPrices[0]}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.green,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Center(
-                          child: Text(
-                            '${widget.coin.symbol} Sell Price: \$${buySellPrices[1]}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              color: Colors.red,
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 15,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurpleAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FuturePriceGraph(
-                                          etfPriceData: predictionList,
-                                        )));
-                          },
-                          child: const Text(
-                            'SEE FUTURE VALUE PREDICTIONS',
-                          ))
-                    ],
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurpleAccent,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChartPatternButtons(
-                                          intervalCode: intervalCode,
-                                          duration: duration,
-                                          etfCode: widget.coin.symbol,
-                                          intervalValue: intervalValue,
-                                        )));
-                          },
-                          child: const Text(
-                            'SEE CHART PATTERNS',
-                          ))
-                    ],
-                  ),
-                  const SizedBox(height: 15,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CoinBuyComponent(
-                                          user: widget.user,
-                                          coin: widget.coin,
-                                          coinBuyValue: buySellPrices[0],
-                                        )));
-                          });
-                        },
-                        child: const Text(
-                          'BUY',
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 22),
-                        )),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          disabledBackgroundColor: Colors.grey,
-                          backgroundColor: Colors.red,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-
-                        onPressed: sellButtonDisabled
-                            ? null
-                            : () {
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              onPressed: () {
                                 setState(() {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) =>
-                                              CoinSellComponent(
+                                              CoinBuyComponent(
                                                 user: widget.user,
                                                 coin: widget.coin,
-                                                maxSellableAmount:
-                                                    maxSellableAmount,
-                                                coinSellValue: buySellPrices[1],
+                                                coinBuyValue: buySellPrices[0],
                                               )));
                                 });
                               },
-                        child: const Text(
-                          'SELL',
-                          style: TextStyle(
-                              color:Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
-                        ),),
-                  ],
+                              child: const Text(
+                                'BUY',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 22),
+                              )),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              disabledBackgroundColor: Colors.grey,
+                              backgroundColor: Colors.red,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                            ),
+                            onPressed: sellButtonDisabled
+                                ? null
+                                : () {
+                                    setState(() {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CoinSellComponent(
+                                                    user: widget.user,
+                                                    coin: widget.coin,
+                                                    maxSellableAmount:
+                                                        maxSellableAmount,
+                                                    coinSellValue:
+                                                        buySellPrices[1],
+                                                  )));
+                                    });
+                                  },
+                            child: const Text(
+                              'SELL',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 22),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                    ],
+                  ),
                 ),
-                  const SizedBox(height: 15,),
-              ],
+              ),
             ),
           ),
         ),
-      ),
       );
     }
   }

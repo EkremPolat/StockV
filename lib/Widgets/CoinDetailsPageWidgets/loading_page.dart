@@ -27,10 +27,12 @@ class LoadingPage extends StatelessWidget {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Image(
+          children: const [
+            Image(
               image: AssetImage('images/black.png'),
+              width: 300,
             ),
+            SizedBox(height: 10,),
             CustomCircularProgressIndicator()
           ],
         ),
@@ -44,7 +46,7 @@ class CustomCircularProgressIndicator extends StatefulWidget {
   final Color color;
   final double strokeWidth;
 
-  CustomCircularProgressIndicator({super.key,
+  const CustomCircularProgressIndicator({super.key,
     this.size = 40.0,
     this.color = Colors.white12,
     this.strokeWidth = 4.0,

@@ -43,18 +43,12 @@ class _RootPageState extends State<RootPageState> {
       appBar: AppBar(
         backgroundColor: Colors.deepPurpleAccent,
         leadingWidth: 200,
-        leading: Container(
-          height: 5.0,
-          decoration: const BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('images/black.png'),
-            ),
-            shape: BoxShape.rectangle,
-          ),
+        leading: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+          child: SizedBox( child: Image.asset('images/black.png')),
         ),
         actions: [
           IconButton(
-            /////////////////////////////
             onPressed: () {
               showSearch(
                 context: context,

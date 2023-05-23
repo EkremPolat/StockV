@@ -75,6 +75,9 @@ flutter:
     - family: Brandon Grotesque
       fonts:
         - asset: fonts/brandon-grotesque.otf
+    - family: Visby Round
+      fonts:
+        - asset: fonts/Visby.otf
 
 
   # The following line ensures that the Material Icons font is

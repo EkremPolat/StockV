@@ -36,6 +36,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'Visby Round',
+      ),
       debugShowCheckedModeBanner: false,
       home:
           isLoading ? const LoadingScreen() : RootPageState(user: widget.user),
