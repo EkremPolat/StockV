@@ -9,7 +9,15 @@ class PremiumPageState extends StatefulWidget {
 }
 
 class _PremiumPageState extends State<PremiumPageState> {
+    bool _isPro = false;
+
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
+
   Widget build(BuildContext context) => Scaffold(
           body: Center(
               child: SingleChildScrollView(
@@ -250,7 +258,10 @@ class _PremiumPageState extends State<PremiumPageState> {
                 width: 150,
                 margin: EdgeInsets.all(10),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    
+
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xff2E159D),
                     shape: RoundedRectangleBorder(
@@ -262,7 +273,9 @@ class _PremiumPageState extends State<PremiumPageState> {
                     style: TextStyle(
                       color: Colors.white,
                     ),
+                    
                   ),
+                  
                 ),
               )
             ],

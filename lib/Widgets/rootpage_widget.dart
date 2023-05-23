@@ -14,8 +14,15 @@ import '../Models/user.dart';
 
 class RootPageState extends StatefulWidget {
   final User user;
+  final int index;
 
-  const RootPageState({super.key, required this.user});
+  const RootPageState({
+    Key? key,
+    required this.user,
+    this.index = 0,
+  }) : super(key: key);
+
+  
   @override
   State<RootPageState> createState() => _RootPageState();
 }
@@ -27,6 +34,8 @@ class _RootPageState extends State<RootPageState> {
   @override
   void initState() {
     super.initState();
+    index = widget.index;  // Use the index passed from the RootPageState
+
   }
 
   @override
@@ -99,6 +108,7 @@ class _RootPageState extends State<RootPageState> {
                 fontWeight: FontWeight.w500,
                 color: Color.fromARGB(255, 255, 255, 255)),
           ),
+          
         ),
         child: NavigationBar(
           height: 60,
@@ -106,29 +116,29 @@ class _RootPageState extends State<RootPageState> {
           //Color.fromARGB(255, 33, 0, 104),
           selectedIndex: index,
           onDestinationSelected: (index) => setState(() => this.index = index),
-          destinations: const [
+          destinations:  [
             NavigationDestination(
                 icon: Icon(
                   Icons.home,
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: index == 0 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Home'),
             NavigationDestination(
                 icon: Icon(
                   Icons.diamond_outlined,
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: index == 1 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Premium'),
             NavigationDestination(
                 icon: Icon(
                   Icons.wallet,
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: index == 2 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Wallet'),
             NavigationDestination(
                 icon: Icon(
                   Icons.currency_bitcoin,
-                  color: Color.fromARGB(255, 255, 255, 255),
+                  color: index == 3 ? Colors.white : Colors.white.withOpacity(0.7),
                 ),
                 label: 'Transaction'),
           ],

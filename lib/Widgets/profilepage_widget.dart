@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Pages/homepage.dart';
+import 'package:stockv/Widgets/rootpage_widget.dart';
 import 'package:stockv/Widgets/transactions_widget.dart';
 
 import 'package:stockv/pages/login.dart';
@@ -8,8 +9,8 @@ import '../Utilities/http_request_functions.dart';
 
 class ProfilePageState extends StatefulWidget {
   final User user;
-
-  const ProfilePageState({super.key, required this.user});
+  final int index;
+  const ProfilePageState({super.key, required this.user, this.index = 2});
 
   @override
   State<ProfilePageState> createState() => _ProfilePageState();
@@ -46,6 +47,7 @@ class _ProfilePageState extends State<ProfilePageState> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   bool isEditing = false;
+  bool _isVisible = false;
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -71,6 +73,48 @@ class _ProfilePageState extends State<ProfilePageState> {
                 ),
               ],
             ),
+            IconButton(
+              onPressed: () {
+                // Open the drawer.
+                _scaffoldKey.currentState?.openEndDrawer();
+              },
+              icon: const Icon(Icons.menu),
+            ),
+          ],
+        ),
+      ),
+      endDrawer: Drawer(
+        child: Column(
+          children: [
+            Container(
+              height: 130,
+              decoration: const BoxDecoration(
+                color: Colors.deepPurpleAccent,
+                image: DecorationImage(
+                  image: AssetImage('images/black.png'),
+                ),
+              ),
+              child: null,
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: const Text('Transactions'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => TransactionListPage(
+                              user: widget.user,
+                            )));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              onTap: () {
+                // Do something when the user taps on the Settings button.
+              },
+            ),
           ],
         ),
       ),
@@ -79,7 +123,7 @@ class _ProfilePageState extends State<ProfilePageState> {
           child: Column(
             children: <Widget>[
               Container(
-                margin: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                margin: const EdgeInsets.fromLTRB(30, 30, 30, 30),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
@@ -111,7 +155,6 @@ class _ProfilePageState extends State<ProfilePageState> {
                             const TextStyle(fontSize: 20, color: Colors.green),
                       ),
                     ),
-                    
                     SizedBox(
                       height: 50,
                       width: 150,
@@ -132,7 +175,7 @@ class _ProfilePageState extends State<ProfilePageState> {
                         onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            return HomePage(user: widget.user);
+                            return RootPageState(user: widget.user, index: 1);
                           }));
                         },
                       ),
@@ -149,7 +192,6 @@ class _ProfilePageState extends State<ProfilePageState> {
                     width: 3,
                   ),
                 ),
-                height: 450,
                 width: 400,
                 child: Column(
                   children: <Widget>[
@@ -191,169 +233,182 @@ class _ProfilePageState extends State<ProfilePageState> {
                         labelText: "Full Name",
                       ),
                     ),
-                    const Divider(
-                      color: Colors.black38,
-                      thickness: 3,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
-                    TextFormField(
-                      validator: (val) =>
-                          val!.isEmpty ? "Old password is empty!" : null,
-                      controller: _oldPasswordController,
-                      obscureText: true,
-                      enabled: isEditing,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      keyboardType: TextInputType.name,
-                      //    ...,other fields
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Color.fromARGB(255, 14, 14, 14),
-                        ),
-                        border: InputBorder.none,
-                        iconColor: Color.fromARGB(255, 14, 14, 14),
-                        labelText: "Old Password",
-                      ),
-                    ),
-                    const Divider(
-                      color: Colors.black38,
-                      thickness: 3,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
-                    TextFormField(
-                      validator: (val) =>
-                          val!.isEmpty ? "New password is empty!" : null,
-                      controller: _newPasswordController,
-                      obscureText: true,
-                      enabled: isEditing,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      keyboardType: TextInputType.name,
-                      //    ...,other fields
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Color.fromARGB(255, 14, 14, 14),
-                        ),
-                        border: InputBorder.none,
-                        iconColor: Color.fromARGB(255, 14, 14, 14),
-                        labelText: "New Password",
-                      ),
-                    ),
-                    const Divider(
-                      color: Colors.black38,
-                      thickness: 3,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
-                    TextFormField(
-                      validator: (val) =>
-                          val!.isEmpty ? "New password is empty!" : null,
-                      controller: _newPassword2Controller,
-                      obscureText: true,
-                      enabled: isEditing,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      keyboardType: TextInputType.name,
-                      //    ...,other fields
-                      decoration: const InputDecoration(
-                        prefixIcon: Icon(
-                          Icons.lock,
-                          color: Color.fromARGB(255, 14, 14, 14),
-                        ),
-                        border: InputBorder.none,
-                        iconColor: Color.fromARGB(255, 14, 14, 14),
-                        labelText: "New Password",
-                      ),
-                    ),
-                    const Divider(
-                      color: Colors.black38,
-                      thickness: 3,
-                      indent: 10,
-                      endIndent: 10,
-                    ),
-                    SizedBox(
-                      height: 50,
-                      width: 150,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xff2E159D),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
+                    Visibility(
+                        visible: _isVisible,
+                        child: Column(children: <Widget>[
+                          const Divider(
+                            color: Colors.black38,
+                            thickness: 3,
+                            indent: 10,
+                            endIndent: 10,
                           ),
-                        ),
-                        child: Text(
-                          isEditing ? "Save" : "Edit",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
+                          TextFormField(
+                            validator: (val) =>
+                                val!.isEmpty ? "Old password is empty!" : null,
+                            controller: _oldPasswordController,
+                            obscureText: true,
+                            enabled: isEditing,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            keyboardType: TextInputType.name,
+                            //    ...,other fields
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Color.fromARGB(255, 14, 14, 14),
+                              ),
+                              border: InputBorder.none,
+                              iconColor: Color.fromARGB(255, 14, 14, 14),
+                              labelText: "Old Password",
+                            ),
                           ),
-                        ),
-                        onPressed: () async {
-                          if(isEditing) {
-                            if (_oldPasswordController.text.isNotEmpty) {
-                              if (_newPasswordController.text ==
-                                  _newPassword2Controller.text) {
-                                var response = await passwordChange(
-                                    _nameController?.text,
-                                    _emailController?.text,
-                                    _oldPasswordController.text,
-                                    _newPasswordController.text);
-                                if (response != null) {
-                                  setState(() {
-                                    widget.user.setFullName(response);
-                                    ScaffoldMessenger.of(context)
-                                        .showSnackBar(successSnackBar);
-                                  });
+                          const Divider(
+                            color: Colors.black38,
+                            thickness: 3,
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                          TextFormField(
+                            validator: (val) =>
+                                val!.isEmpty ? "New password is empty!" : null,
+                            controller: _newPasswordController,
+                            obscureText: true,
+                            enabled: isEditing,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            keyboardType: TextInputType.name,
+                            //    ...,other fields
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Color.fromARGB(255, 14, 14, 14),
+                              ),
+                              border: InputBorder.none,
+                              iconColor: Color.fromARGB(255, 14, 14, 14),
+                              labelText: "New Password",
+                            ),
+                          ),
+                          const Divider(
+                            color: Colors.black38,
+                            thickness: 3,
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                          TextFormField(
+                            validator: (val) =>
+                                val!.isEmpty ? "New password is empty!" : null,
+                            controller: _newPassword2Controller,
+                            obscureText: true,
+                            enabled: isEditing,
+                            enableSuggestions: false,
+                            autocorrect: false,
+                            keyboardType: TextInputType.name,
+                            //    ...,other fields
+                            decoration: const InputDecoration(
+                              prefixIcon: Icon(
+                                Icons.lock,
+                                color: Color.fromARGB(255, 14, 14, 14),
+                              ),
+                              border: InputBorder.none,
+                              iconColor: Color.fromARGB(255, 14, 14, 14),
+                              labelText: "New Password",
+                            ),
+                          ),
+                          const Divider(
+                            color: Colors.black38,
+                            thickness: 3,
+                            indent: 10,
+                            endIndent: 10,
+                          ),
+                        ])),
+                    Container(
+                      margin: EdgeInsets.all(10),
+                      child: SizedBox(
+                        height: 50,
+                        width: 200,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff2E159D),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          child: Text(
+                            isEditing ? "Save" : "Change Password",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 17,
+                            ),
+                          ),
+                          onPressed: () async {
+                            if (isEditing) {
+                              if (_oldPasswordController.text.isNotEmpty) {
+                                if (_newPasswordController.text ==
+                                    _newPassword2Controller.text) {
+                                  var response = await passwordChange(
+                                      _nameController?.text,
+                                      _emailController?.text,
+                                      _oldPasswordController.text,
+                                      _newPasswordController.text);
+                                  if (response != null) {
+                                    setState(() {
+                                      widget.user.setFullName(response);
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(successSnackBar);
+                                      _isVisible = false;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(failSnackBar(
+                                              "Something went wrong!"));
+                                    });
+                                  }
                                 } else {
-                                  setState(() {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        failSnackBar("Something went wrong!"));
-                                  });
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      failSnackBar("Passwords do not match"));
                                 }
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    failSnackBar("Passwords do not match"));
+                                    failSnackBar(
+                                        "Old password cannot be empty!"));
                               }
                             } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  failSnackBar("Old password cannot be empty!"));
+                              setState(() {
+                                _isVisible = true;
+                                isEditing = true;
+                              });
                             }
-                          }
-                          else {
-                            setState(() {
-                              isEditing = true;
-                            });
-                          }
-                        },
+                          },
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
-              SizedBox(
-                height: 50,
-                width: 150,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 211, 9, 9),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+              Container(
+                margin: const EdgeInsets.all(8.0), // Adjust the value as needed
+                child: SizedBox(
+                  height: 50,
+                  width: 150,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 211, 9, 9),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
                     ),
+                    child: const Text(
+                      "Log Out",
+                      style: TextStyle(color: Colors.white, fontSize: 17),
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginScreen()),
+                      );
+                    },
                   ),
-                  child: const Text(
-                    "Log Out",
-                    style: TextStyle(color: Colors.white, fontSize: 17),
-                  ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => LoginScreen()),
-                    );
-                  },
                 ),
               ),
             ],

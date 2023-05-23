@@ -6,7 +6,6 @@ import '../Models/user.dart';
 
 class HomePageState extends StatefulWidget {
   final User user;
-
   const HomePageState({super.key, required this.user});
 
   @override

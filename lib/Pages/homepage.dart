@@ -19,7 +19,13 @@ void main() {
 
 class HomePage extends StatefulWidget {
   final User user;
-  const HomePage({super.key, required this.user});
+  final int index;
+
+  const HomePage({
+    Key? key,
+    required this.user,
+    this.index = 0,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
