@@ -2,7 +2,7 @@ class WalletCoin {
   final String coinName;
   final String coinSymbol;
   final double amount;
-  final double usdValue;
+  double usdValue;
   final double dailyChange;
 
   WalletCoin(

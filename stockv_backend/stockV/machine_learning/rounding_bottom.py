@@ -10,12 +10,6 @@ import io
 import base64
 
 def find_rounding_bottom_points(ohlc, back_candles):
-    """
-    Find all the rounding bottom points
-    :params ohlc         -> dataframe that has OHLC data
-    :params back_candles -> number of periods to lookback
-    :return all_points 
-    """
     all_points = []
     for candle_idx in range(back_candles+10, len(ohlc)):
 
@@ -49,13 +43,6 @@ def find_rounding_bottom_points(ohlc, back_candles):
 
 
 def save_plot(ohlc, all_points, back_candles):
-    """
-    Save all the rounding bottoms graphs
-    :params ohlc         -> dataframe that has OHLC data
-    :params all_points   -> rounding bottom points
-    :params back_candles -> number of periods to lookback
-    :return 
-    """
     total = len(all_points)
     plots = []
     plt.style.use('seaborn-darkgrid')
@@ -117,16 +104,14 @@ def send_rounding_bottom_plots(df):
     local_max = argrelextrema(ohlc["Close"].values, np.greater)[0]
     local_min = argrelextrema(ohlc["Close"].values, np.less)[0]   
 
-    # Set max points to `2` 
     for m in local_max:
         ohlc.loc[m, "Pivot"] = 2
         
-    # Set min points to `1`
     for m in local_min:
         ohlc.loc[m, "Pivot"] = 1
 
     # Find all the rounding bottom points
-    back_candles = 20
+    back_candles = 5
     all_points = find_rounding_bottom_points(ohlc, back_candles)
 
     # Save all the plots
@@ -151,7 +136,7 @@ if __name__ == "__main__":
         ohlc.loc[m, "Pivot"] = 1
 
     # Find all the rounding bottom points
-    back_candles = 20
+    back_candles = 5
     all_points = find_rounding_bottom_points(ohlc, back_candles)
     # Save all the plots
     save_plot(ohlc, all_points,back_candles)

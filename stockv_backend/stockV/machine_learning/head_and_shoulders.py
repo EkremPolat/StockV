@@ -216,7 +216,7 @@ def send_head_and_shoulder_plots(df):
     ohlc['ShortPivot'] = ohlc.apply(lambda x: pivot_id(df, x.name,5,5), axis=1)
     ohlc['PointPos'] = ohlc.apply(lambda row: pivot_point_position(row), axis=1)
  
-    back_candles = 14
+    back_candles = 10
     all_points_inverse = find_inverse_head_and_shoulders(ohlc, back_candles=back_candles)
 
     return save_plot(ohlc, all_points_inverse, back_candles, fname="inverse_head_and_shoulders", hs=False)
@@ -231,7 +231,7 @@ if __name__ == "__main__":
     ohlc['ShortPivot'] = ohlc.apply(lambda x: pivot_id(df, x.name,5,5), axis=1)
     ohlc['PointPos'] = ohlc.apply(lambda row: pivot_point_position(row), axis=1)
  
-    back_candles = 14
+    back_candles = 10
     all_points_inverse = find_inverse_head_and_shoulders(ohlc, back_candles=back_candles)
     
     # Save plots

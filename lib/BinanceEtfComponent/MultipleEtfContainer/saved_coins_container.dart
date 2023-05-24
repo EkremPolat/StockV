@@ -19,6 +19,7 @@ class SavedCoinsContainerState extends StatefulWidget {
 
 class _SavedCoinsContainerState extends State<SavedCoinsContainerState> {
   late Timer _timer;
+
   @override
   void initState() {
     super.initState();
@@ -40,23 +41,34 @@ class _SavedCoinsContainerState extends State<SavedCoinsContainerState> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: savedCoinList.length,
-      itemBuilder: (context, index) {
-        final coinValue = savedCoinList[index];
-        final coinSymbol = coinValue.symbol;
-        final coinIcon = 'images/coin_icons/$coinSymbol.png';
+    return savedCoinList.isEmpty
+        ? const FractionallySizedBox(
+            widthFactor: 0.94,
+            child: Center(
+            child: Text(
+              "You don't have any favourite coins. Start to add them!",
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
+              textAlign: TextAlign.center,
+            ),
+          ))
+        : ListView.builder(
+            itemCount: savedCoinList.length,
+            itemBuilder: (context, index) {
+              final coinValue = savedCoinList[index];
+              final coinSymbol = coinValue.symbol;
+              final coinIcon = 'images/coin_icons/$coinSymbol.png';
 
-        return Card(
-            elevation: 4.0,
-            margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-            child: CoinListTile(
-                coinValue: coinValue,
-                coinIcon: coinIcon,
-                user: widget.user,
-                fromHomePage: false));
-      },
-    );
+              return Card(
+                  elevation: 4.0,
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 6.0),
+                  child: CoinListTile(
+                      coinValue: coinValue,
+                      coinIcon: coinIcon,
+                      user: widget.user,
+                      fromHomePage: false));
+            },
+          );
   }
 
   Future<void> fetchSavedCoins() async {

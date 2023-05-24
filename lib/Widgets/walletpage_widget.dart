@@ -24,25 +24,22 @@ class _WalletPageState extends State<WalletPageState> {
   void initState() {
     super.initState();
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
         fetchUserWallet();
-      }
     });
   }
 
   Future<void> fetchUserWallet() async {
     List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
-
+    WalletCoin temp = WalletCoin(
+        coinName: "US Dollar",
+        coinSymbol: "USD",
+        amount: 1,
+        usdValue: widget.user.getCurrency(),
+        dailyChange: 0
+    );
     if (mounted) {
       setState(() {
         wallet = userWallet;
-        WalletCoin temp = WalletCoin(
-          coinName: "US Dollar",
-          coinSymbol: "USD",
-          amount: 1,
-          usdValue: widget.user.getCurrency(),
-          dailyChange: 0
-        );
         wallet.add(temp);
         wallet.sort((a, b) => (b.amount*b.usdValue).compareTo(a.amount * a.usdValue));
         changePercentage = calculateTotalChange(wallet);

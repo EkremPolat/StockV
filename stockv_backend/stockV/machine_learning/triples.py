@@ -203,7 +203,7 @@ def save_plot(ohlc, all_points, back_candles, fname="triple_tops", tt=True):
 def send_triple_plots(df):
     ohlc = df.loc[:, ["Date", "Open", "High", "Low", "Close"] ]
   
-    back_candles = 14
+    back_candles = 10
     ohlc["Pivot"] = ohlc.apply(lambda x: pivot_id(ohlc, x.name, 15, 15), axis=1)
     ohlc['ShortPivot'] = ohlc.apply(lambda x: pivot_id(df, x.name,5,5), axis=1)
     all_points = find_triple_top(ohlc, back_candles=14)
@@ -215,7 +215,7 @@ if __name__ == "__main__":
 
     ohlc = df.loc[:, ["Date", "Open", "High", "Low", "Close"] ]
   
-    back_candles = 14
+    back_candles = 10
     ohlc["Pivot"] = ohlc.apply(lambda x: pivot_id(ohlc, x.name, 15, 15), axis=1)
     ohlc['ShortPivot'] = ohlc.apply(lambda x: pivot_id(df, x.name,5,5), axis=1)
 

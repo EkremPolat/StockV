@@ -44,6 +44,8 @@ dependencies:
   flutter_charts: ^0.5.1
   k_chart: ^0.7.0
   photo_view: ^0.14.0
+  flutter_email_sender: ^5.2.0
+  random_string: ^2.3.1
 
 
 dev_dependencies:

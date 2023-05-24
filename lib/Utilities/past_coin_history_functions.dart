@@ -13,7 +13,6 @@ Future<List<dynamic>> fetchCoinValueHistory(String symbol,
   final response = await http.get(Uri.parse(
       '$baseUrl/klines?symbol=${symbol}USDT&interval=$intervalValue$intervalCode&startTime=$startTime&endTime=$endTime'));
 
-  print('$baseUrl/klines?symbol=${symbol}USDT&interval=$intervalValue$intervalCode&startTime=$startTime&endTime=$endTime');
   if (response.statusCode == 200) {
     final parsedResponse = json.decode(response.body);
     List<CoinGraphData> coinGraphDataList = List<CoinGraphData>.from(parsedResponse.map((data) => CoinGraphData.fromJson(data)));

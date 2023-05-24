@@ -22,6 +22,11 @@ class _TransactionListPageState extends State<TransactionListPage> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
@@ -38,7 +43,14 @@ class _TransactionListPageState extends State<TransactionListPage> {
             height: 10,
           ),
           Expanded(
-            child: ListView.builder(
+            child: transactions.isEmpty
+                ? const Center(
+                  child: Text(
+                    "You don't have any transactions yet! Start to buy coins!",
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                ) : ListView.builder(
               itemCount: transactions.length,
               itemBuilder: (BuildContext context, int index) {
                 return Padding(

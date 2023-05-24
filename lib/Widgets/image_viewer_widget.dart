@@ -8,31 +8,44 @@ class ImageViewerPage extends StatelessWidget {
   final List<String> imageUrls;
   final int initialIndex;
 
-  ImageViewerPage({required this.imageUrls, required this.initialIndex});
+  ImageViewerPage({Key? key, required this.imageUrls, required this.initialIndex})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: PhotoViewGallery.builder(
-          itemCount: imageUrls.length,
-          builder: (context, index) {
-            return PhotoViewGalleryPageOptions(
-              imageProvider: MemoryImage(
-                base64Decode(imageUrls[index]),
-              ),
-              minScale: PhotoViewComputedScale.contained * 0.8,
-              maxScale: PhotoViewComputedScale.covered * 2,
-            );
-          },
-          loadingBuilder: (context, event) => const Center(
-            child: CircularProgressIndicator(),
+      body: Stack(
+        children: [
+          PhotoViewGallery.builder(
+            itemCount: imageUrls.length,
+            builder: (context, index) {
+              return PhotoViewGalleryPageOptions(
+                imageProvider: MemoryImage(
+                  base64Decode(imageUrls[index]),
+                ),
+                minScale: PhotoViewComputedScale.contained * 0.8,
+                maxScale: PhotoViewComputedScale.covered * 2,
+              );
+            },
+            loadingBuilder: (context, event) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            backgroundDecoration: const BoxDecoration(
+              color: Colors.black,
+            ),
+            pageController: PageController(initialPage: initialIndex),
           ),
-          backgroundDecoration: const BoxDecoration(
-            color: Colors.black,
+          Positioned(
+            top: 40.0,
+            right: 16.0,
+            child: IconButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Close the page
+              },
+              icon: const Icon(Icons.close, color: Colors.white, size: 35),
+            ),
           ),
-          pageController: PageController(initialPage: initialIndex),
-        ),
+        ],
       ),
     );
   }

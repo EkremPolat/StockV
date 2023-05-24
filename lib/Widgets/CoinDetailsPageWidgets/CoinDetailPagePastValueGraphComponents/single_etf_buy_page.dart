@@ -70,6 +70,8 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,12 +253,21 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
                           ),
                           onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              _showSuccessPopup(context);
-                              await savePurchaseToDB(
-                                  widget.user.id,
-                                  widget.coin.name,
-                                  double.parse(_coinAmountValue.text),
-                                  double.parse(_coinPriceValue.text));
+                              setState(() {
+                                isLoading = true;
+                              });
+                              _timer?.cancel();
+                              savePurchaseToDB(
+                                      widget.user.id,
+                                      widget.coin.name,
+                                      double.parse(_coinAmountValue.text),
+                                      double.parse(_coinPriceValue.text))
+                                  .then((_) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                _showSuccessPopup(context);
+                              });
                             }
                           },
                           child: const Text(
@@ -269,6 +280,7 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
                         ),
                       ],
                     )),
+                if (isLoading) const CircularProgressIndicator(),
               ],
             ),
           ),
@@ -321,9 +333,13 @@ class CoinBuyComponentState extends State<CoinBuyComponent> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return RootPageState(user: widget.user, index: 3);
-                }));
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return RootPageState(user: widget.user, index: 3);
+                  }),
+                  (Route<dynamic> route) => false, // Remove all previous routes
+                );
               },
               child: const Text('OK', style: TextStyle(fontSize: 18)),
             ),

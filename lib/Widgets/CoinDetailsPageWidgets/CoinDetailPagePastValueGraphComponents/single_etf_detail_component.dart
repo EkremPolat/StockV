@@ -71,7 +71,8 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
     fetchEtfBuySellPrices();
     fetchDoesUserHasCrypto();
 
-    _timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      //print(buySellPrices);
       fetchEtfPrice();
       fetchEtfBuySellPrices();
       fetchDoesUserHasCrypto();
@@ -81,7 +82,6 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
   @override
   void dispose() {
     super.dispose();
-    // Cancel the timer when the widget is disposed
     _timer.cancel();
   }
 
@@ -98,6 +98,7 @@ class SingleEtfGraphComponentState extends State<SingleEtfGraphComponent> {
 
   Future<void> fetchEtfBuySellPrices() async {
     List<String> data = await fetchBuySellPrices(widget.coin.symbol);
+
     if (mounted) {
       setState(() {
         buySellPrices = data;

@@ -78,8 +78,16 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                           height: 20,
                         ),
                         TextFormField(
-                          validator: (val) =>
-                              val!.isEmpty ? "E-mail is empty!" : null,
+                          validator: (val) {
+                            if(val!.isEmpty) {
+                              return "E-mail is empty!";
+                            }
+                            if(!val.contains("@")) {
+                              return "Invalid email!";
+                            }
+                            return null;
+                          },
+
                           controller: _emailController,
                           autofocus: true,
                           keyboardType: TextInputType.emailAddress,
@@ -240,7 +248,7 @@ class _SignUpScreenHomeState extends State<SignUpScreenHomeState> {
                                   setState(() {
                                     Navigator.pop(dialogContext);
                                     warningMessage =
-                                        "An error occured, please try again!";
+                                        "Email already exists!";
                                   });
                                 }
                               }

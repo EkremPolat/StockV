@@ -195,7 +195,7 @@ def send_flag_plots(df):
     ohlc['PointPos'] = ohlc.apply(lambda row: pivot_point_position(row), axis=1)
 
     # Find all flag pattern points
-    back_candles = 20
+    back_candles = 10
     all_points = find_flag_points(ohlc, back_candles)
 
     # Plot the flag pattern graphs
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     ohlc['PointPos'] = ohlc.apply(lambda row: pivot_point_position(row), axis=1)
 
     # Find all flag pattern points
-    back_candles = 20
+    back_candles = 10
     all_points = find_flag_points(ohlc, back_candles)
     # Plot the flag pattern graphs
     save_plot(ohlc, all_points, back_candles)

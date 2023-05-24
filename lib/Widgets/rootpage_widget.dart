@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stockv/Models/coin.dart';
-import 'package:stockv/Utilities/Http_request_functions.dart';
 import 'package:stockv/Utilities/global_variables.dart';
 import 'package:stockv/Widgets/homepage_widget.dart';
-import 'package:stockv/Widgets/coinspage_widget.dart';
 import 'package:stockv/Widgets/premiumpage_widget.dart';
 import 'package:stockv/Widgets/profilepage_widget.dart';
 import 'package:stockv/Widgets/transactions_widget.dart';
@@ -69,16 +67,11 @@ class _RootPageState extends State<RootPageState> {
                           MaterialPageRoute(
                               builder: (context) => SingleEtfGraphComponent(
                                   user: widget.user, coin: selectedCoin)));
-                      //index = 1;
-                      //TODO: Custom search will be connected to save coins.
-                      //_savedCoins.add(selectedCoin);
                     });
-                    //Navigator.pop(context);
                   },
                 ),
               );
             },
-            /////////////////////////////
             icon: const Icon(Icons.search),
           ),
           IconButton(

@@ -79,7 +79,10 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                      child: SizedBox( height: 130, child: Image.asset('images/black.png'),),
+                      child: SizedBox(
+                        height: 130,
+                        child: Image.asset('images/black.png'),
+                      ),
                     ),
                     Column(
                       // replaced with column
@@ -195,11 +198,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                             ),
                             onPressed: () async {
                               showMyDialog(context);
-                              var response = await login(
-                                  //TODO: This is for development purposes and will be deleted later on.
-                                  //'ekrempolat416@gmail.oom',
-                                  _emailController.text,
-                                  // '1234');
+                              var response = await login(_emailController.text,
                                   _passwordController.text);
                               if (response != null) {
                                 setState(() {
@@ -207,9 +206,10 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => HomePage(
-                                              user: response,
-                                            )),
+                                      builder: (context) => HomePage(
+                                        user: response,
+                                      ),
+                                    ),
                                   );
                                 });
                               } else {
@@ -224,14 +224,9 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
                                     warningMessage = "Success!";
                                   });
                                 }
-
-                                /*Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoginScreen()));*/
                                 else {
                                   setState(() {
+                                    Navigator.pop(dialogContext);
                                     Navigator.pop(dialogContext);
                                     warningMessage = "Invalid Credentials!";
                                   });
@@ -339,7 +334,7 @@ class _LoginScreenHomeState extends State<LoginScreenHome> {
     );
   }
 
-  /*Future<bool> userExists(String uid) async {
+/*Future<bool> userExists(String uid) async {
       return (await usersReferences!.where('uid', isEqualTo: uid).get())
           .docs
           .isEmpty;

@@ -41,4 +41,5 @@ urlpatterns = [
          name='get-chart-patterns'),
     path('generate-predictions/', GeneratePredictions.as_view(),
          name='generate-predictions'),
+     path('reset-password/', ResetPassword.as_view(), name='reset-password'),
 ]

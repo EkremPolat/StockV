@@ -202,7 +202,7 @@ def send_wedge_plots(df):
     point_position_plot(ohlc, 50, 200)
 
     # # Find all wedge pattern points
-    back_candles = 20
+    back_candles = 10
     all_points   = find_wedge_points(ohlc, back_candles)
 
     return save_plot(ohlc, all_points, back_candles)
@@ -222,7 +222,7 @@ if __name__ == "__main__":
     point_position_plot(ohlc, 50, 200)
 
     # # Find all wedge pattern points
-    back_candles = 20
+    back_candles = 10
     all_points   = find_wedge_points(ohlc, back_candles)
 
     # Plot the wedge pattern graphs

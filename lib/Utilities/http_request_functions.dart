@@ -3,6 +3,20 @@ import 'package:http/http.dart' as http;
 import '../Models/user.dart';
 import '../Models/coin.dart';
 
+Future<String> resetPassword(String email) async {
+  var url = 'http://10.0.2.2:8000/reset-password/';
+  var response = await http.post(
+    Uri.parse(url),
+    body: json
+        .encode({'email': email,}),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  );
+  String message = jsonDecode(response.body)['message'];
+  return Future.value(message);
+}
+
 Future<bool> register(String fullName, String email, String password) async {
   var url = 'http://10.0.2.2:8000/signup/';
   var response = await http.post(
@@ -82,8 +96,6 @@ Future<String?> passwordChange(String? fullName, String? email,
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
-      print("data");
-      print(data);
       return Future.value(data["full_name"]);
     } else {
       return Future.value(null);

@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:random_string/random_string.dart';
+import 'package:stockv/Pages/login.dart';
+
+import '../Utilities/http_request_functions.dart';
 
 void main() {
   runApp(const ForgotPasswordScreen());
@@ -106,14 +111,12 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                             ),
-                            onPressed: () {
+                            onPressed: () async {
+                              showMyDialog(context);
+                              var response = await resetPassword(_emailController.text);
                               setState(() {
-                                warningMessage = "Mail sent successfully!";
-                                /*Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              ForgetPasswordScreen()));*/
+                                Navigator.pop(dialogContext);
+                                warningMessage = response;
                               });
                             },
                             child: const Text(
@@ -121,15 +124,34 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold),
-                            )),
-                        const SizedBox(
-                          height: 10,
+                            ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurpleAccent,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          onPressed: () async {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                    const LoginScreen()));
+                          },
+                          child: const Text(
+                            'BACK',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
                         ),
                         if (warningMessage != null)
                           Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15),
-                                color: Colors.green,
+                                color: warningMessage.toString().contains('Error') ? Colors.red : Colors.green,
                                 border: Border.all(color: Colors.black)),
                             child: ListTile(
                               title: Text(
@@ -182,10 +204,4 @@ class _ForgetPasswordScreenHomeState extends State<ForgetPasswordScreenHome> {
       },
     );
   }
-
-/*Future<bool> userExists(String uid) async {
-    return (await usersReferences!.where('uid', isEqualTo: uid).get())
-        .docs
-        .isEmpty;
-  }*/
 }

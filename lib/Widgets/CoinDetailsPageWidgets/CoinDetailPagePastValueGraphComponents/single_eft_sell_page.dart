@@ -30,7 +30,7 @@ class CoinSellComponent extends StatefulWidget {
 
 class CoinSellComponentState extends State<CoinSellComponent> {
   int _secondsRemaining = 120;
-  Timer? _timer;
+  late Timer _timer;
 
   final TextEditingController _coinAmountValue = TextEditingController();
   final TextEditingController _coinPriceValue = TextEditingController();
@@ -44,7 +44,7 @@ class CoinSellComponentState extends State<CoinSellComponent> {
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _timer.cancel();
     super.dispose();
   }
 
@@ -54,7 +54,7 @@ class CoinSellComponentState extends State<CoinSellComponent> {
       setState(() {
         if (mounted) {
           if (_secondsRemaining < 1) {
-            _timer?.cancel();
+            _timer.cancel();
             Future.delayed(Duration.zero, () {
               _showWarningPopup(context);
             });
@@ -71,6 +71,8 @@ class CoinSellComponentState extends State<CoinSellComponent> {
     int seconds = _secondsRemaining - (minutes * 60);
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
+
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -142,7 +144,7 @@ class CoinSellComponentState extends State<CoinSellComponent> {
                       children: <TextSpan>[
                         const TextSpan(text: 'Your Coin Amount: '),
                         TextSpan(
-                          text: widget.maxSellableAmount.toStringAsFixed(3),
+                          text: widget.maxSellableAmount.toString(),
                           style: const TextStyle(color: Colors.green),
                         ),
                       ],
@@ -279,15 +281,20 @@ class CoinSellComponentState extends State<CoinSellComponent> {
                               ),
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  // show the success popup immediately
-                                  _showSuccessPopup(context);
-
-                                  // run the async function in the background after a delay
+                                  _timer.cancel();
+                                  setState(() {
+                                    isLoading = true;
+                                  });
                                   await saveSellingToDB(
                                       widget.user.id,
                                       widget.coin.name,
                                       double.parse(_coinAmountValue.text),
-                                      double.parse(_coinPriceValue.text));
+                                      double.parse(_coinPriceValue.text)).then((_) {
+                                    setState(() {
+                                      isLoading = false;
+                                    });
+                                    _showSuccessPopup(context);
+                                  });
                                 }
                               },
                               child: const Text(
@@ -320,6 +327,8 @@ class CoinSellComponentState extends State<CoinSellComponent> {
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
+                            if (isLoading)
+                              const CircularProgressIndicator(),
                           ],
                         ),
 
@@ -338,8 +347,8 @@ class CoinSellComponentState extends State<CoinSellComponent> {
     List<WalletCoin> userWallet = await getUserWallet(widget.user.id);
     List<Transaction> transactionList =
         await getUserTransactionHistory(widget.user.id);
-    wallet = userWallet;
     transactions = transactionList;
+    wallet = userWallet;
   }
 
   void _showWarningPopup(BuildContext context) {
@@ -379,10 +388,13 @@ class CoinSellComponentState extends State<CoinSellComponent> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
               onPressed: () {
-                Navigator.push(context,
-                              MaterialPageRoute(builder: (context) {
-                      return RootPageState(user: widget.user, index: 3);
-                  }));
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) {
+                    return RootPageState(user: widget.user, index: 3);
+                  }),
+                      (Route<dynamic> route) => false, // Remove all previous routes
+                );
               },
               child: const Text('OK', style: TextStyle(fontSize: 18)),
             ),

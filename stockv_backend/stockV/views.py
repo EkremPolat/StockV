@@ -22,7 +22,9 @@ import matplotlib.pyplot as plt
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.stattools import adfuller
 from datetime import timedelta
-
+from django.contrib.auth.hashers import make_password
+from django.core.mail import send_mail
+from django.utils.crypto import get_random_string
 
 class AddUser(APIView):
     def post(self, request):
@@ -169,6 +171,34 @@ class GetWalletListView(APIView):
             name=ownedCoin.coin_name).first().price, 'dailyChange': Coin.objects.filter(name=ownedCoin.coin_name).first().dailyChange} for ownedCoin in ownedCoins]
         return JsonResponse(wallet_list, safe=False)
 
+class ResetPassword(APIView):
+    def post(self, request):
+        email = request.data['email']
+        user = User.objects.filter(email=email).first()
+
+        response = Response()
+        response.data = {
+            'message': 'Mail sent successfully!'
+        }
+        if user is None:
+            response.data['message'] = 'Error! User does not exist!'
+
+        else:
+            newPass = get_random_string(length=8, allowed_chars='abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
+
+            hashed_password = make_password(newPass)
+            user.password = hashed_password
+            user.save()
+
+            send_mail(
+                'StockV Password Change',
+                'Hello!\nWe have received your password change request.\nYou can find your new password below. Stay with StockV!\n\nNew password: ' + newPass + '\n\nStockV Team',
+                'stockvision.cs@gmail.com',
+                [email],
+                fail_silently=False,
+            )
+
+        return response
 
 class GetTransactionHistoryView(APIView):
     def get(self, request, pk):
@@ -306,10 +336,9 @@ class GenerateChartPatterns(APIView):
             highs = [float(candle[2]) for candle in data]
             lows = [float(candle[3]) for candle in data]
             closes = [float(candle[4]) for candle in data]
-            df = pd.DataFrame({'Date': dates, 'Open': opens,
-                              'High': highs, 'Low': lows, 'Close': closes})
+            df = pd.DataFrame({'Date': dates, 'Open': opens, 'High': highs, 'Low': lows, 'Close': closes})
 
-            # df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
+            #df   = pd.read_csv("stockV/machine_learning/eurusd-4h.csv")
 
             if chartType == "Rectangle":
                 plots = send_rectangle_plots(df)
@@ -393,7 +422,7 @@ class GeneratePredictions(APIView):
         if response.status_code == 200:
             print(response)
             data = response.json()
-            # Extract open, high, low, and close values as separate lists
+
             dates = [datetime.datetime.fromtimestamp(
                 entry[0] / 1000).strftime("%Y-%m-%d %H:%M:%S") for entry in data]
             opens = [float(candle[1]) for candle in data]
@@ -401,14 +430,12 @@ class GeneratePredictions(APIView):
             lows = [float(candle[3]) for candle in data]
             closes = [float(candle[4]) for candle in data]
             df = pd.DataFrame({'Date': dates, 'Close': closes})
-            # Convert "Date" column to datetime format
             df['Date'] = pd.to_datetime(df['Date'])
-            # Set "Date" column as the index
+
             df.set_index('Date', inplace=True)
-            # Reorder the columns to match the original order
+
             df = df[['Close']]
 
-            # Step 2: Generate 60 new rows with random Close values
             last_date = df.index[-1]
             new_rows = []
             for i in range(10):
@@ -418,32 +445,20 @@ class GeneratePredictions(APIView):
                     {'Close': next_close}, index=[next_date]))
                 last_date = next_date
 
-            # Step 3: Concatenate the new rows to the existing DataFrame
             df = pd.concat([df] + new_rows)
 
             # Step 2: Clean the data
             df.dropna(inplace=True)
 
-            # Step 3: Prepare the data for modeling
-
-            # Step 4: Check for stationarity
             result = adfuller(df['Close'])
-            print(f'ADF Statistic: {result[0]}')
-            print(f'p-value: {result[1]}')
 
-            # Step 5: Fit the ARIMA model and make predictions
             model = ARIMA(df['Close'], order=(1, 1, 1))
             model_fit = model.fit()
             pred_start_date = df.index[-10]  # start 10 days before the end
             pred_end_date = df.index[-1]  # end at the last date in the file
             predictions = model_fit.predict(
                 start=pred_start_date, end=pred_end_date, dynamic=False)
-            print(predictions)
-            print()
 
-            dummy_data = df['Close']
-
-            # Convert predictions Series to a list
             predictions_list = predictions.tolist()
 
             return JsonResponse(predictions_list, safe=False)
